@@ -1,0 +1,50 @@
+name: Bug Report
+description: Report a bug
+labels: [bug]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Before opening a bug report please check that your issue was not already discussed in the following:
+
+        * [Issues](https://github.com/KatsuteDev/Settings-Repository/issues?q=is%3Aissue+is%3Aopen+label%3Abug%2C%22critical+bug%22)
+
+        Please also check that:
+
+        * This is actually a bug and not a feature.
+        * You are running the latest version.
+
+  - type: input
+    attributes:
+      label: Operating System
+    validations:
+      required: true
+
+  - type: input
+    attributes:
+      label: VSCode Version
+    validations:
+      required: true
+
+  - type: input
+    attributes:
+      label: Extension Version
+      description: |
+        Do not write 'latest'.
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Issue
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: How to replicate
+      description: |
+        Include steps to reproduce this issue.
+    validations:
+      required: true

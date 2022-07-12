@@ -1,0 +1,31 @@
+name: Feature Request
+description: Suggest a new feature
+labels: [feature request]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Before opening a feature request please check that your idea was not already discussed in the following:
+
+        * [Issues](https://github.com/KatsuteDev/Settings-Repository/issues?q=is%3Aissue+is%3Aopen+label%3A%22feature+request%22)
+
+        Please also check that:
+
+        * This feature makes sense for the project.
+        * This feature does not already exist.
+        * You are running the latest version.
+
+  - type: textarea
+    attributes:
+      label: Feature
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Reason
+      description: |
+        Explain why you think this feature should be added.
+    validations:
+      required: true
