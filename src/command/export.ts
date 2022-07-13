@@ -18,7 +18,14 @@
 
 import * as vscode from "vscode";
 
-import { CommandQuickPickItem } from "./config";
+import * as path from "path";
+
+import * as extension from "../extension";
+import { Distribution } from "../distribution";
+
+import { CommandQuickPickItem } from "../quickpick";
+
+import * as AdmZip from "adm-zip";
 
 //
 
@@ -29,5 +36,21 @@ export const item: CommandQuickPickItem = {
 }
 
 export const command: vscode.Disposable = vscode.commands.registerCommand("settings-repository.exportSettings", () => {
+    const dist: Distribution = extension.distribution();
+    vscode.window.showSaveDialog({
+        title: "Export Settings",
+        defaultUri: vscode.Uri.file(path.join(dist.User, "settings.zip")),
+        filters: {"ZIP archive": ["zip"]}
+    }).then((uri: vscode.Uri | undefined) => {
+        if(!uri) return;
 
+        const zip = new AdmZip();
+
+        zip.addFile("extensions.json", Buffer.from(dist.getExtensions(), "utf-8"));
+        zip.addFile("keybindings.json", Buffer.from(dist.getKeybindings(), "utf-8"));
+        zip.addFile("settings.json", Buffer.from(dist.getSettings(), "utf-8"));
+        zip.addLocalFolder( dist.Snippets, "snippets");
+
+        zip.writeZip(uri.fsPath);
+    });
 });

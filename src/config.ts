@@ -18,18 +18,14 @@
 
 import * as vscode from "vscode";
 
-import { CommandQuickPickItem } from "../quickpick";
-
 //
 
-export const item: CommandQuickPickItem = {
-    label: "$(cloud-download) Overwrite Local",
-    description: "Overwrite local settings configuration",
-    onSelect: () => new Promise(() => vscode.commands.executeCommand("settings-repository.overwriteLocal"))
+const vsconfig = () => vscode.workspace.getConfiguration("settings-repository");
+
+export const get: (key: string) => any = (key: string) => {
+    return vsconfig().get(key);
 }
 
-export const command: vscode.Disposable = vscode.commands.registerCommand("settings-repository.overwriteLocal", () => {
-    vscode.window.showWarningMessage("todo!");
-
-    // git fetch
-});
+export const update: (key: string, value: any, skipWarning?: boolean) => void = (key: string, value: any) => {
+    vsconfig().update(key, value, vscode.ConfigurationTarget.Global);
+}

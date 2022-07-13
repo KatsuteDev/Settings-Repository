@@ -18,49 +18,13 @@
 
 import * as vscode from "vscode";
 
-import * as nport from "./import";
-import * as xport from "./export";
-import * as local from "./local";
-import * as remote from "./remote";
-
-//
-
-const vsconfig = () => vscode.workspace.getConfiguration("settings-repository");
-
-export const get: (key: string) => any = (key: string) => {
-    return vsconfig().get(key);
-}
-
-export const update: (key: string, value: any, skipWarning?: boolean) => void = (key: string, value: any) => {
-    vsconfig().update(key, value, vscode.ConfigurationTarget.Global);
-}
-
-//
-
-export const command: vscode.Disposable = vscode.commands.registerCommand("settings-repository.config", () => {
-    vscode.window.showQuickPick([
-        nport.item,
-        xport.item,
-        separator(),
-        local.item,
-        remote.item
-    ], options)
-    .then(handle);
-});
-
-//
-
-export const options: vscode.QuickPickOptions = {
-    title: "Settings Repository",
-    matchOnDetail: true,
-    matchOnDescription: true
-}
+// handle
 
 export const handle: (item?: CommandQuickPickItem) => void = (item?: CommandQuickPickItem) => {
     item && item.onSelect && item.onSelect(item);
 }
 
-// vsc quick pick
+// quick pick
 
 export const quickPickItem: (item: CommandQuickPickItem, current?: string) => CommandQuickPickItem = (item: CommandQuickPickItem, current?: string) => ({
     ...item,

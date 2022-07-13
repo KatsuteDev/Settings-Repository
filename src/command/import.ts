@@ -18,7 +18,7 @@
 
 import * as vscode from "vscode";
 
-import { CommandQuickPickItem } from "./config";
+import { CommandQuickPickItem } from "../quickpick";
 
 //
 
@@ -29,5 +29,7 @@ export const item: CommandQuickPickItem = {
 }
 
 export const command: vscode.Disposable = vscode.commands.registerCommand("settings-repository.importSettings", () => {
+    vscode.window.showWarningMessage("todo!");
 
+    // import from zip
 });

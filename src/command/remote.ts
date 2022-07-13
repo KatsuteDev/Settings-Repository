@@ -18,16 +18,18 @@
 
 import * as vscode from "vscode";
 
-import { CommandQuickPickItem } from "./config";
+import { CommandQuickPickItem } from "../quickpick";
 
 //
 
 export const item: CommandQuickPickItem = {
-    label: "Overwrite Remote",
+    label: "$(cloud-upload) Overwrite Remote",
     description: "Overwrite remote settings configuration",
     onSelect: () => new Promise(() => vscode.commands.executeCommand("settings-repository.overwriteRemote"))
 }
 
 export const command: vscode.Disposable = vscode.commands.registerCommand("settings-repository.overwriteRemote", () => {
+    vscode.window.showWarningMessage("todo!");
 
+    // git push
 });

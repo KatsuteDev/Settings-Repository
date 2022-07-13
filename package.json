@@ -21,13 +21,24 @@
         "url": "https://patreon.com/Katsute"
     },
     "activationEvents": [
-        "onStartupFinished"
+        "onStartupFinished",
+        "onCommand:settings-repository.config",
+        "onCommand:settings-repository.repository",
+        "onCommand:settings-repository.overwriteLocal",
+        "onCommand:settings-repository.overwriteRemote",
+        "onCommand:settings-repository.importSettings",
+        "onCommand:settings-repository.exportSettings"
     ],
     "contributes": {
         "commands": [
             {
                 "command": "settings-repository.config",
-                "title": "Repository",
+                "title": "Settings Repository",
+                "category": "Settings Repository"
+            },
+            {
+                "command": "settings-repository.repository",
+                "title": "Choose Settings Repository",
                 "category": "Settings Repository"
             },
             {
@@ -56,19 +67,19 @@
             "order": 0,
             "properties": {
                 "settings-repository.repository": {
-                    "markdownDescription": "Git repository to sync settings to",
+                    "markdownDescription": "The git repository to sync settings to",
                     "type": "string",
                     "order": 0,
                     "default": ""
                 },
                 "settings-repository.branch": {
-                    "markdownDescription": "Branch to sync settings to",
+                    "markdownDescription": "The branch to sync settings to",
                     "type": "string",
                     "order": 1,
                     "default": "main"
                 },
                 "settings-repository.autoSync": {
-                    "markdownDescription": "Sync settings when VSCode is closed",
+                    "markdownDescription": "Automatically sync settings when VSCode is closed",
                     "type": "boolean",
                     "order": 2,
                     "default": true
