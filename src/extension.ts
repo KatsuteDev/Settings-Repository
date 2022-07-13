@@ -26,6 +26,11 @@ import * as config from "./command/config";
 import * as repository from "./command/repository";
 
 import { statusbar } from "./statusbar";
+import { Distribution } from "./distribution";
+
+import * as extensions from "./parser/extensions";
+
+let dist: Distribution;
 
 export const activate: (context: vscode.ExtensionContext) => void = (context: vscode.ExtensionContext) => {
     context.subscriptions.push(nport.command);
@@ -38,4 +43,10 @@ export const activate: (context: vscode.ExtensionContext) => void = (context: vs
 
     context.subscriptions.push(statusbar);
     statusbar.show();
+
+    dist = new Distribution(context);
+
+    console.info(extensions.parse(dist.Extensions))
 }
+
+export const distribution: () => Distribution = (): Distribution => dist;
