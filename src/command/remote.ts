@@ -16,9 +16,20 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+import simpleGit from "simple-git";
+
 import * as vscode from "vscode";
 
+import * as fs from "fs";
+import * as os from "os";
+import * as path from "path";
+
+import * as config from "../config";
+import * as extension from "../extension";
+import { Distribution } from "../distribution";
+
 import { CommandQuickPickItem } from "../quickpick";
+import { authenticate, authorization } from "./repository";
 
 //
 
@@ -29,7 +40,29 @@ export const item: CommandQuickPickItem = {
 }
 
 export const command: vscode.Disposable = vscode.commands.registerCommand("settings-repository.overwriteRemote", () => {
-    vscode.window.showWarningMessage("todo!");
+    const dist: Distribution = extension.distribution();
+    const auth = authorization();
 
-    // git push
+    if(!auth) return authenticate();
+
+    const remote: string = `https://${auth.username}:${auth.password}@${config.get("repository").substring(8)}`;
+
+    const temp: string = fs.mkdtempSync(path.join(os.tmpdir(), "vscode-settings-sync"));
+
+    try{
+        fs.writeFileSync(path.join(temp, "extensions.json"), dist.getExtensions(), "utf-8");
+        fs.writeFileSync(path.join(temp, "keybindings.json"), dist.getKeybindings(), "utf-8");
+        fs.writeFileSync(path.join(temp, "settings.json"), dist.getSettings(), "utf-8");
+
+        simpleGit(temp)
+            .init()
+            .add("./*")
+            .addRemote("origin", remote)
+            .push("origin", config.get("branch") ?? "main");
+    }catch(error: any){
+        console.error(error);
+    }finally{
+        //if(temp)
+        //    fs.rmSync(temp, {recursive: true})
+    }
 });

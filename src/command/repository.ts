@@ -18,7 +18,9 @@
 
 import * as vscode from "vscode";
 
+import * as fs from "fs";
 import * as os from "os";
+import * as path from "path";
 
 import * as config from "../config";
 
@@ -30,6 +32,7 @@ import * as extension from "../extension";
 import { Distribution } from "../distribution";
 
 import { CommandQuickPickItem, handle, separator } from "../quickpick";
+import { Crypt } from "../encrypt";
 
 //
 
@@ -69,29 +72,58 @@ const repository: CommandQuickPickItem = {
             prompt: "The repository to sync settings to"
         }).then((repo: string | undefined) => {
             if(!repo) return;
-            vscode.window.showInputBox({
-                title: "Username",
-                placeHolder: "Username",
-                prompt: "Login to access the repository"
-            }).then((username: string | undefined) => {
-                if(!username) return;
-                vscode.window.showInputBox({
-                    title: "Password",
-                    placeHolder: "Password",
-                    password: true,
-                    prompt: "Password or token to authenticate with"
-                }).then((password: string | undefined) => {
-                    if(!password) return;
 
-                    const dist: Distribution = extension.distribution();
+            config.update("repository", repo);
 
-                    config.update("repository", repo);
-
-                    os.hostname();
-                });
-            });
+            authenticate();
         });
     })
+}
+
+const crypt: Crypt = new Crypt(os.hostname());
+
+type credentials = {
+    login: string,
+    auth: string
+}
+
+export const authenticate: () => void = () => {
+    const auth = authorization();
+    vscode.window.showInputBox({
+        title: "Username",
+        value: auth ? auth.username : undefined,
+        placeHolder: "Username",
+        prompt: "Login to access the repository"
+    }).then((username: string | undefined) => {
+        if(!username) return;
+        vscode.window.showInputBox({
+            title: "Password",
+            placeHolder: "Password",
+            password: true,
+            prompt: "Password or token to authenticate with"
+        }).then((password: string | undefined) => {
+            if(!password) return;
+
+            const dist: Distribution = extension.distribution();
+
+            fs.writeFileSync(path.join(dist.User, "credentials.json"), `{\n\t"login": "${username}",\n\t"auth": "${crypt.encrypt(password)}"\n}`, "utf-8");
+        });
+    });
+}
+
+export const authorization: () => {username: string, password: string} | undefined = () => {
+    const dist: Distribution = extension.distribution();
+
+    if(!fs.existsSync(path.join(dist.User, "credentials.json"))) return undefined;
+
+    const credentials: credentials = JSON.parse(fs.readFileSync(path.join(dist.User, "credentials.json"), "utf-8"));
+
+    if(credentials.login === undefined || credentials.auth === undefined) return undefined;
+
+    return {
+        username: credentials.login,
+        password: crypt.decrypt(credentials.auth)
+    };
 }
 
 const branch: CommandQuickPickItem = {
