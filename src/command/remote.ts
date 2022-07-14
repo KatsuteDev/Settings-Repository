@@ -16,7 +16,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-import simpleGit from "simple-git";
+import simpleGit, { GitError } from "simple-git";
 
 import * as vscode from "vscode";
 
@@ -49,20 +49,47 @@ export const command: vscode.Disposable = vscode.commands.registerCommand("setti
 
     const temp: string = fs.mkdtempSync(path.join(os.tmpdir(), "vscode-settings-sync"));
 
-    try{
-        fs.writeFileSync(path.join(temp, "extensions.json"), dist.getExtensions(), "utf-8");
-        fs.writeFileSync(path.join(temp, "keybindings.json"), dist.getKeybindings(), "utf-8");
-        fs.writeFileSync(path.join(temp, "settings.json"), dist.getSettings(), "utf-8");
+    if(!temp)
+        return vscode.window.showErrorMessage(`Push failed: failed to create temporary directory '${temp}'`);
 
-        simpleGit(temp)
-            .init()
-            .add("./*")
-            .addRemote("origin", remote)
-            .push("origin", config.get("branch") ?? "main");
-    }catch(error: any){
-        console.error(error);
-    }finally{
-        //if(temp)
-        //    fs.rmSync(temp, {recursive: true})
+    const gitHandle: (err: GitError | null) => void = (err: GitError | null) => {
+        if(err){
+            vscode.window.showErrorMessage(`Failed to push to ${config.get("repository")}:\n${err.name} ${err.message}`);
+            !fs.existsSync(temp) || fs.rmSync(temp, {recursive: true});
+        }
     }
+
+    const branch: string = config.get("branch") ?? "main";
+
+    simpleGit(temp)
+        .init(gitHandle)
+        .addRemote("origin", remote, gitHandle)
+        .fetch("origin", branch, gitHandle)
+        .checkout(branch, (err: GitError | null) => {
+            gitHandle(err);
+
+            if(!err){
+                fs.writeFileSync(path.join(temp, "extensions.json"), dist.getExtensions(), "utf-8");
+                fs.writeFileSync(path.join(temp, "keybindings.json"), dist.getKeybindings(), "utf-8");
+                fs.writeFileSync(path.join(temp, "settings.json"), dist.getSettings(), "utf-8");
+
+                const files: string[] = fs.readdirSync(dist.Snippets);
+                if(files.length > 0){
+                    const snippets: string = path.join(temp, "snippets");
+                    fs.mkdirSync(snippets);
+
+                    for(const file of files)
+                        fs.copyFileSync(path.join(dist.Snippets, file), path.join(snippets, file));
+                }
+            }
+        })
+        .add(".", gitHandle)
+        .commit(`VS-${vscode.version} ${config.get("includeHostnameInCommitMessage") ? `<${os.userInfo().username}@${os.hostname()}> ` : ""} Update settings repository`, gitHandle)
+        .push("origin", branch, {}, (err: GitError | null) => {
+            gitHandle(err);
+            if(!err){
+                !fs.existsSync(temp) || fs.rmSync(temp, {recursive: true});
+                vscode.window.showInformationMessage(`Pushed settings to ${config.get("repository")}@${branch}`);
+            }
+        });
 });

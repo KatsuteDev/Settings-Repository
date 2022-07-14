@@ -69,11 +69,19 @@ const repository: CommandQuickPickItem = {
             title: "Repository",
             value: config.get("repository"),
             placeHolder: "Repository",
-            prompt: "The repository to sync settings to"
+            prompt: "The repository to sync settings to",
+            validateInput: (value: string) => {
+                if(!value.startsWith("https://"))
+                    return "Repository should start with 'https://'";
+                if(!value.endsWith(".git"))
+                    return "Repository should end with '.git'";
+                return null;
+            }
         }).then((repo: string | undefined) => {
             if(!repo) return;
 
             config.update("repository", repo);
+            repository.description = repo;
 
             authenticate();
         });
@@ -135,6 +143,9 @@ const branch: CommandQuickPickItem = {
             value: config.get("branch"),
             placeHolder: "Branch",
             prompt: "The branch to sync settings to"
-        }).then((s: string | undefined) => config.update("branch", s));
+        }).then((s: string | undefined) => {
+            config.update("branch", s);
+            branch.description = s;
+        });
     })
 }

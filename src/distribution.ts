@@ -55,11 +55,11 @@ export class Distribution {
 
             const extension = vscode.extensions.getExtension(`${pkg.publisher}.${pkg.name}`);
 
-            extensions += `\t{
-\t\t"identifier": "${pkg.publisher}.${pkg.name}",
-\t\t"version": "${pkg.version}",
-\t\t"enabled": ${!!extension}
-\t},\n`;
+            extensions += `    {
+        "identifier": "${pkg.publisher}.${pkg.name}",
+        "version": "${pkg.version}",
+        "enabled": ${!!extension}
+    },\n`;
 }
 
     return extensions === ""
