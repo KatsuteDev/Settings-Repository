@@ -20,17 +20,16 @@ import * as vscode from "vscode";
 
 import * as path from "path";
 
+import * as AdmZip from "adm-zip";
+
 import * as extension from "../extension";
 import { Distribution } from "../distribution";
-
 import { CommandQuickPickItem } from "../quickpick";
-
-import * as AdmZip from "adm-zip";
 
 //
 
 export const item: CommandQuickPickItem = {
-    label: "Export Settings",
+    label: "$(file-zip) Export Settings",
     description: "Export settings to a zip file",
     onSelect: () => new Promise(() => vscode.commands.executeCommand("settings-repository.exportSettings"))
 }
@@ -41,16 +40,20 @@ export const command: vscode.Disposable = vscode.commands.registerCommand("setti
         title: "Export Settings",
         defaultUri: vscode.Uri.file(path.join(dist.User, "settings.zip")),
         filters: {"ZIP archive": ["zip"]}
-    }).then((uri: vscode.Uri | undefined) => {
+    }).then((uri?: vscode.Uri) => {
         if(!uri) return;
 
-        const zip = new AdmZip();
+        try{ // export to zip
+            const zip: AdmZip = new AdmZip();
 
-        zip.addFile("extensions.json", Buffer.from(dist.getExtensions(), "utf-8"));
-        zip.addFile("keybindings.json", Buffer.from(dist.getKeybindings(), "utf-8"));
-        zip.addFile("settings.json", Buffer.from(dist.getSettings(), "utf-8"));
-        zip.addLocalFolder( dist.Snippets, "snippets");
+            zip.addFile("extensions.json", Buffer.from(dist.getExtensions(), "utf-8"));
+            zip.addFile("keybindings.json", Buffer.from(dist.getKeybindings(), "utf-8"));
+            zip.addFile("settings.json", Buffer.from(dist.getSettings(), "utf-8"));
+            zip.addLocalFolder( dist.Snippets, "snippets");
 
-        zip.writeZip(uri.fsPath);
+            zip.writeZip(uri.fsPath);
+        }catch(error: any){
+            return vscode.window.showErrorMessage(`Failed to export settings: ${error}`);
+        }
     });
 });

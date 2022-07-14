@@ -18,6 +18,16 @@
 
 import * as vscode from "vscode";
 
+import * as fs from "fs";
+import * as os from "os";
+import * as path from "path";
+
+import simpleGit, { GitError } from "simple-git";
+
+import * as auth from "./auth";
+import * as config from "../config";
+import * as extension from "../extension";
+import { Distribution } from "../distribution";
 import { CommandQuickPickItem } from "../quickpick";
 
 //
@@ -29,7 +39,52 @@ export const item: CommandQuickPickItem = {
 }
 
 export const command: vscode.Disposable = vscode.commands.registerCommand("settings-repository.overwriteLocal", () => {
-    vscode.window.showWarningMessage("todo!");
+    const dist: Distribution = extension.distribution();
+    const cred: auth.credentials | undefined = auth.authorization();
 
-    // git fetch
+    if(!cred)
+        return auth.authenticate();
+
+    const temp: string = fs.mkdtempSync(path.join(os.tmpdir(), "vscode-settings-sync"));
+
+    if(!temp)
+        return vscode.window.showErrorMessage(`Pull failed: unable to create temporary directory '${temp}'`);
+
+    const branch: string = config.get("branch") ?? "main";
+
+    try{
+        const gitHandle: (err: GitError | null) => void = (err: GitError | null) => {
+            if(err){
+                vscode.window.showErrorMessage(`Failed to push to ${config.get("repository")}:\n${err.name} ${err.message}`);
+                !fs.existsSync(temp) || fs.rmSync(temp, {recursive: true});
+            }
+        }
+
+        const remote: string = `https://${cred.login}:${cred.auth}@${config.get("repository").substring(8)}`;
+
+        // todo: warn branch if missing
+
+        simpleGit(temp)
+            .init(gitHandle)
+            .addRemote("origin", remote, gitHandle)
+            .fetch("origin", branch, gitHandle)
+            .checkout(branch, (err: GitError | null) => {
+                gitHandle(err);
+
+                if(!err){
+                    // read from repo
+
+                    //todo
+
+                    // snippets
+
+                    //todo
+
+                }
+            });
+
+    }catch(error: any){
+        vscode.window.showErrorMessage(`Pull failed: ${error}`);
+        !fs.existsSync(temp) || fs.rmSync(temp, {recursive: true});
+    }
 });

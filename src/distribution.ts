@@ -26,7 +26,7 @@ export class Distribution {
     public readonly Code: string;
     public readonly User: string;
     public readonly Snippets: string;
-    public readonly Extensions: string | undefined;
+    public readonly Extensions?: string;
 
     constructor(context: vscode.ExtensionContext) {
         this.Code = path.join(context.globalStorageUri.fsPath, "../../../");
@@ -60,7 +60,7 @@ export class Distribution {
         "version": "${pkg.version}",
         "enabled": ${!!extension}
     },\n`;
-}
+        }
 
     return extensions === ""
         ? `[]`

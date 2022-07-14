@@ -18,19 +18,28 @@
 
 import * as vscode from "vscode";
 
+import * as config from "./config";
+import { statusbar } from "./statusbar";
+import * as auth from "./command/auth";
 import * as nport from "./command/import";
 import * as xport from "./command/export";
 import * as local from "./command/local";
 import * as remote from "./command/remote";
-import * as config from "./command/options";
+import * as options from "./command/options";
+import { Distribution } from "./distribution";
 import * as repository from "./command/repository";
 
-import { statusbar } from "./statusbar";
-import { Distribution } from "./distribution";
+//
 
 let dist: Distribution;
 
-let ct: vscode.ExtensionContext;
+export const distribution: () => Distribution = (): Distribution => dist;
+
+let ctx: vscode.ExtensionContext;
+
+export const context: () => vscode.ExtensionContext = () : vscode.ExtensionContext => ctx;
+
+//
 
 export const activate: (context: vscode.ExtensionContext) => void = (context: vscode.ExtensionContext) => {
     context.subscriptions.push(nport.command);
@@ -38,17 +47,19 @@ export const activate: (context: vscode.ExtensionContext) => void = (context: vs
     context.subscriptions.push(local.command);
     context.subscriptions.push(remote.command);
 
-    context.subscriptions.push(config.command);
+    context.subscriptions.push(auth.command);
+    context.subscriptions.push(options.command);
     context.subscriptions.push(repository.command);
 
     context.subscriptions.push(statusbar);
     statusbar.show();
 
-    ct = context;
+    ctx = context;
 
     dist = new Distribution(context);
 }
 
-export const context: () => vscode.ExtensionContext = () : vscode.ExtensionContext => ct;
-
-export const distribution: () => Distribution = (): Distribution => dist;
+export const deactivate: () => void = () => {
+    // if(config.get("autoSync") === true)
+    //     vscode.commands.executeCommand("settings-repository.overwriteRemote");
+}

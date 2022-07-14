@@ -24,6 +24,7 @@
         "onStartupFinished",
         "onCommand:settings-repository.config",
         "onCommand:settings-repository.repository",
+        "onCommand:settings-repository.authenticate",
         "onCommand:settings-repository.overwriteLocal",
         "onCommand:settings-repository.overwriteRemote",
         "onCommand:settings-repository.importSettings",
@@ -39,6 +40,11 @@
             {
                 "command": "settings-repository.repository",
                 "title": "Choose Settings Repository",
+                "category": "Settings Repository"
+            },
+            {
+                "command": "settings-repository.authenticate",
+                "title": "Update auth credentials",
                 "category": "Settings Repository"
             },
             {

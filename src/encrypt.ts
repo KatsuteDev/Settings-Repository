@@ -49,11 +49,11 @@ export class Crypt {
     public decrypt(value: string){
         const buf: Buffer = Buffer.from(value, "hex");
 
-        const iv  : Buffer = buf.slice(Crypt.SALT, Crypt.SALT + Crypt.IV);
-        const salt: Buffer = buf.slice(0, Crypt.SALT);
+        const iv  : Buffer = buf.subarray(Crypt.SALT, Crypt.SALT + Crypt.IV);
+        const salt: Buffer = buf.subarray(0, Crypt.SALT);
 
-        const enc : Buffer = buf.slice(Crypt.SALT + Crypt.IV + Crypt.AUTH);
-        const auth: Buffer = buf.slice(Crypt.SALT + Crypt.IV, Crypt.SALT + Crypt.IV + Crypt.AUTH);
+        const enc : Buffer = buf.subarray(Crypt.SALT + Crypt.IV + Crypt.AUTH);
+        const auth: Buffer = buf.subarray(Crypt.SALT + Crypt.IV, Crypt.SALT + Crypt.IV + Crypt.AUTH);
 
         const div: crypto.DecipherGCM = crypto.createDecipheriv("aes-256-gcm", this.getKey(salt), iv);
         div.setAuthTag(auth);

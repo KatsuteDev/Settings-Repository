@@ -21,7 +21,6 @@ import * as vscode from "vscode";
 import * as nport from "./import";
 import * as xport from "./export";
 import * as repo from "./repository";
-
 import { handle, separator } from "../quickpick";
 
 //

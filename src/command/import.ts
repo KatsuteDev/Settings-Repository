@@ -18,18 +18,43 @@
 
 import * as vscode from "vscode";
 
+import * as fs from "fs";
+
+import AdmZip = require("adm-zip");
+
+import * as extension from "../extension";
+import { Distribution } from "../distribution";
 import { CommandQuickPickItem } from "../quickpick";
 
 //
 
 export const item: CommandQuickPickItem = {
-    label: "Import Settings",
+    label: "$(file-zip) Import Settings",
     description: "Import settings from a zip file",
     onSelect: () => new Promise(() => vscode.commands.executeCommand("settings-repository.importSettings"))
 }
 
 export const command: vscode.Disposable = vscode.commands.registerCommand("settings-repository.importSettings", () => {
-    vscode.window.showWarningMessage("todo!");
+    const dist: Distribution = extension.distribution();
+    vscode.window.showOpenDialog({
+        title: "Import Settings",
+        defaultUri: vscode.Uri.file(dist.User),
+        filters: {"ZIP archive": ["zip"]},
+    }).then((uri?: vscode.Uri[]) => {
+        if(!uri || uri.length == 0) return;
 
-    // import from zip
+        const file: string = uri[0].fsPath;
+
+        if(!fs.existsSync(file))
+            return vscode.window.showErrorMessage("Failed to import settings: zip file did not exist");
+
+        try{ // import from zip
+            const zip: AdmZip = new AdmZip(file);
+
+            // todo
+
+        }catch(error: any){
+            return vscode.window.showErrorMessage(`Failed to import settings: ${error}`);
+        }
+    });
 });
