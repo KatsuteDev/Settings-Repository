@@ -28,3 +28,7 @@ export const statusbar: vscode.StatusBarItem = (() => {
 
     return item;
 })();
+
+export const setActive: (active?: boolean) => void = (active?: boolean) => {
+    statusbar.text = `$(gear${active === false ? "" : "gear~spin"}) Settings Repository`
+}

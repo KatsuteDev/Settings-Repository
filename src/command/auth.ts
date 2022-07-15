@@ -68,13 +68,13 @@ export const authenticate: () => void = () => {
     }).then((username?: string) => {
         if(!username) return;
         vscode.window.showInputBox({
-            title: "Password",
-            placeHolder: "Password",
+            title: "Token",
+            placeHolder: "Token",
             password: true,
-            prompt: "Password or token to authenticate with",
+            prompt: "Token to authenticate with, if repository is private make sure token is scoped correctly",
             validateInput: (value: string) => {
                 if(value.trim().length === 0)
-                    return "Password can not be blank";
+                    return "Token can not be blank";
             }
         }).then((password?: string) => {
             if(!password) return;

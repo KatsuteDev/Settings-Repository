@@ -59,7 +59,8 @@ export const activate: (context: vscode.ExtensionContext) => void = (context: vs
     dist = new Distribution(context);
 }
 
-export const deactivate: () => void = () => { // fixme
+// must be async, otherwise vscode closes without waiting
+export const deactivate: () => Promise<void> = async () => {
     if(config.get("autoSync") === true)
-        vscode.commands.executeCommand("settings-repository.overwriteRemote");
+        await remote.update();
 }

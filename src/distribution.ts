@@ -24,22 +24,34 @@ import * as path from "path";
 export class Distribution {
 
     public readonly Code: string;
-    public readonly User: string;
-    public readonly Snippets: string;
-    public readonly Extensions?: string;
+        public readonly User: string;
+            public readonly extensions: string;
+            public readonly keybindings: string;
+            public readonly locale: string;
+            public readonly settings: string;
+            public readonly Snippets: string;
+    public readonly dotVscode?: string;
+        public readonly Extensions?: string;
+        public readonly argv?: string;
 
     constructor(context: vscode.ExtensionContext) {
         this.Code = path.join(context.globalStorageUri.fsPath, "../../../");
         this.User = path.join(this.Code, "User");
-        this.Snippets = path.join(this.User, "snippets");
+        this.extensions  = path.join(this.User, "extensions.json");
+        this.keybindings = path.join(this.User, "keybindings.json");
+        this.locale      = path.join(this.User, "locale.json");
+        this.settings    = path.join(this.User, "settings.json");
+        this.Snippets    = path.join(this.User, "snippets");
 
         const exts: vscode.Extension<any>[] = vscode.extensions.all.filter(e => !e.packageJSON.isBuiltin);
 
         this.Extensions = exts[0] ? path.join(exts[0].extensionPath, "../") : undefined;
+        this.dotVscode  = this.Extensions ? path.join(this.Extensions, "../") : undefined;
+        this.argv       = this.dotVscode ? path.join(this.dotVscode, "argv.json") : undefined;
     }
 
-    public getExtensions(): string {
-        if(this.Extensions === undefined) return `[]`;
+    public getExtensions(): string | undefined {
+        if(!this.Extensions || !fs.existsSync(this.Extensions) || !fs.lstatSync(this.Extensions).isDirectory()) return undefined;
 
         let extensions: string = "";
 
@@ -62,19 +74,58 @@ export class Distribution {
     },\n`;
         }
 
-    return extensions === ""
-        ? `[]`
-        : `[
+    return extensions !== ""
+        ? `[
 ${extensions.slice(0, -2)}
-]`;
+]`
+        : undefined;
     }
 
-    public getSettings(): string {
-        return fs.readFileSync(path.join(this.User, "settings.json"), "utf-8").trim();
+    public updateExtensions(): void {
+
+        // todo: uninstall removed extensions
+
+        // todo: install missing extensions
+
+        // todo: handle enable/disable
+
     }
 
-    public getKeybindings(): string {
-        return fs.readFileSync(path.join(this.User, "keybindings.json"), "utf-8").trim();
+    public getSettings(): string | undefined {
+        return fs.existsSync(this.settings) && !fs.lstatSync(this.settings).isDirectory()
+            ? fs.readFileSync(this.settings, "utf-8").trim()
+            : undefined;
+    }
+
+    public getKeybindings(): string | undefined {
+        return fs.existsSync(this.keybindings) && !fs.lstatSync(this.keybindings).isDirectory()
+            ? fs.readFileSync(this.keybindings, "utf-8").trim()
+            : undefined;
+    }
+
+    private static readonly locale: RegExp = /(?<=^\s*"locale"\s*:\s*")[\w-]+(?=")/gm;
+
+    public getLocale(): string | undefined {
+        if(!this.argv || !fs.existsSync(this.argv) || fs.lstatSync(this.argv).isDirectory())
+            return undefined;
+
+        const argv: string = fs.readFileSync(this.argv!, "utf-8");
+
+        const match: RegExpExecArray | null = Distribution.locale.exec(argv);
+
+        return match && match.length > 0
+            ? `{
+    "locale": "${match[0]}"
+}`
+            : undefined;
+    }
+
+    public updateLocale(): void {
+
+        // todo: read locale
+
+        // todo: update locale
+
     }
 
 }

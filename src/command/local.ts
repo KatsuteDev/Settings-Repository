@@ -22,13 +22,15 @@ import * as fs from "fs";
 import * as os from "os";
 import * as path from "path";
 
-import simpleGit, { GitError } from "simple-git";
+import simpleGit, { GitError, SimpleGit } from "simple-git";
 
 import * as auth from "./auth";
 import * as config from "../config";
 import * as extension from "../extension";
+import * as statusbar from "../statusbar";
 import { Distribution } from "../distribution";
 import { CommandQuickPickItem } from "../quickpick";
+import AdmZip = require("adm-zip");
 
 //
 
@@ -52,9 +54,15 @@ export const command: vscode.Disposable = vscode.commands.registerCommand("setti
 
     const branch: string = config.get("branch") ?? "main";
 
-    const cleanup: () => void = () => !fs.existsSync(temp) || fs.rmSync(temp, {recursive: true});
+    const cleanup: () => void = () => {
+        !fs.existsSync(temp) || fs.rmSync(temp, {recursive: true, force: true, retryDelay: 5000, maxRetries: 5});
+        !fs.existsSync(temp) || fs.rmSync(temp);
+        statusbar.setActive(false);
+    };
 
     try{
+        statusbar.setActive(true);
+
         const gitHandle: (err: GitError | null) => void = (err: GitError | null) => {
             if(err){
                 console.error(`${auth.mask(err.message, cred)}`);
@@ -65,29 +73,48 @@ export const command: vscode.Disposable = vscode.commands.registerCommand("setti
 
         const remote: string = `https://${cred.login}:${cred.auth}@${config.get("repository").substring(8)}`;
 
-        // todo: warn branch if missing
+        const git: SimpleGit = simpleGit(temp);
 
-        simpleGit(temp)
-            .init(gitHandle)
-            .addRemote("origin", remote, gitHandle) // add repo
-            .checkout(["-B", branch], gitHandle) // checkout branch, create if null
-            .pull(["origin", branch], (err: GitError | null) => { // pull latest changes
-                gitHandle(err);
+        git.clone(remote, ".", ["-b", branch, "--depth", "1"], (err: GitError | null) => { // pull latest changes
+            gitHandle(err);
 
-                if(!err){
-                    // read from repo
+            if(!err){
+                // extensions
 
-                    //todo
+                const extensions: string = path.join(temp, "extensions.json");
+                fs.existsSync(extensions) && !fs.lstatSync(extensions).isDirectory() && fs.copyFileSync(extensions, dist.extensions);
 
-                    // snippets
+                dist.updateExtensions();
 
-                    //todo
+                // keybindings
 
-                }
-            });
+                const keybindings: string = path.join(temp, "keybindings.json");
+                fs.existsSync(keybindings) && !fs.lstatSync(keybindings).isDirectory() && fs.copyFileSync(keybindings, dist.keybindings);
 
+                // locale
+
+                const locale: string = path.join(temp, "locale.json");
+                fs.existsSync(locale) && !fs.lstatSync(locale).isDirectory() && fs.copyFileSync(locale, dist.locale);
+
+                dist.updateLocale();
+
+                // settings
+
+                const settings: string = path.join(temp, "settings.json");
+                fs.existsSync(settings) && !fs.lstatSync(settings).isDirectory() && fs.copyFileSync(settings, dist.settings);
+
+                // snippets
+
+                const snippets: string = path.join(temp, "snippets");
+                fs.existsSync(snippets) && fs.lstatSync(snippets).isDirectory() && false;
+
+                // todo: copy recursive ^
+
+            }
+        });
     }catch(error: any){
-        vscode.window.showErrorMessage(`Pull failed: ${error}`);
+        console.error(auth.mask(error, cred));
+        vscode.window.showErrorMessage(`Push failed: ${auth.mask(error, cred)}`);
         cleanup();
     }
 });

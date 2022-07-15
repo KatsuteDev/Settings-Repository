@@ -27,7 +27,7 @@ import { CommandQuickPickItem, handle, separator } from "../quickpick";
 //
 
 export const item: CommandQuickPickItem = {
-    label: "Settings Repository",
+    label: "$(gear) Settings Repository",
     description: "Choose which repository to sync to",
     onSelect: () => new Promise(() => vscode.commands.executeCommand("settings-repository.repository"))
 }
@@ -60,7 +60,7 @@ const repository: CommandQuickPickItem = {
             title: "Repository",
             value: config.get("repository"),
             placeHolder: "Repository",
-            prompt: "The repository to sync settings to",
+            prompt: "The repository to sync settings to, if repository is private make sure token is scoped correctly",
             validateInput: (value: string) => {
                 if(!value.startsWith("https://"))
                     return "Repository should start with 'https://'";
@@ -87,7 +87,7 @@ const branch: CommandQuickPickItem = {
             title: "Branch",
             value: config.get("branch"),
             placeHolder: "Branch",
-            prompt: "The branch to sync settings to",
+            prompt: "The branch to sync settings to, branch must already exist",
             validateInput: (value: string) => {
                 if(value.trim().length === 0)
                     return "Branch can not be blank";

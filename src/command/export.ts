@@ -18,6 +18,7 @@
 
 import * as vscode from "vscode";
 
+import * as fs from "fs";
 import * as path from "path";
 
 import * as AdmZip from "adm-zip";
@@ -46,10 +47,29 @@ export const command: vscode.Disposable = vscode.commands.registerCommand("setti
         try{ // export to zip
             const zip: AdmZip = new AdmZip();
 
-            zip.addFile("extensions.json", Buffer.from(dist.getExtensions(), "utf-8"));
-            zip.addFile("keybindings.json", Buffer.from(dist.getKeybindings(), "utf-8"));
-            zip.addFile("settings.json", Buffer.from(dist.getSettings(), "utf-8"));
-            zip.addLocalFolder( dist.Snippets, "snippets");
+            // extensions
+
+            const extensions: string | undefined = dist.getExtensions();
+            extensions && zip.addFile("extensions.json", Buffer.from(extensions, "utf-8"));
+
+            // keybindings
+
+            const keybindings: string | undefined = dist.getKeybindings();
+            keybindings && zip.addFile("keybindings.json", Buffer.from(keybindings, "utf-8"));
+
+            // locale
+
+            const locale: string | undefined = dist.getLocale();
+            locale && zip.addFile("locale.json", Buffer.from(locale));
+
+            // settings
+
+            const settings: string | undefined = dist.getSettings();
+            settings && zip.addFile("settings.json", Buffer.from(settings, "utf-8"));
+
+            // snippets
+
+            fs.existsSync(dist.Snippets) && fs.lstatSync(dist.Snippets).isDirectory() && zip.addLocalFolder(dist.Snippets, "snippets");
 
             zip.writeZip(uri.fsPath);
         }catch(error: any){

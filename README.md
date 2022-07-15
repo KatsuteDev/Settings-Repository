@@ -20,6 +20,14 @@
  - [👨‍💻 Contributing](#-contributing)
  - [💼 License](#-license)
 
+This extension currently syncs:
+
+ - Extensions
+ - Keybindings
+ - Locale
+ - Settings
+ - Snippets
+
 ## 📃 Installation
 
 > ⚠️ This extension is not compatible with remote distributions of VSCode (ex: Codespaces). Pull your settings from VSCode on desktop then use the **Settings Sync** that is included with VSCode.

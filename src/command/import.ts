@@ -51,7 +51,34 @@ export const command: vscode.Disposable = vscode.commands.registerCommand("setti
         try{ // import from zip
             const zip: AdmZip = new AdmZip(file);
 
-            // todo: write to disk
+            // extensions
+
+            const extensions: AdmZip.IZipEntry | null = zip.getEntry("extensions.json");
+            extensions && !extensions.isDirectory && zip.extractEntryTo("extensions.json", dist.Code);
+
+            dist.updateExtensions();
+
+            // keybindings
+
+            const keybindings: AdmZip.IZipEntry | null = zip.getEntry("keybindings.json");
+            keybindings && !keybindings.isDirectory && zip.extractEntryTo("keybindings.json", dist.Code);
+
+            // locale
+
+            const locale: AdmZip.IZipEntry | null = zip.getEntry("locale.json");
+            locale && !locale.isDirectory && zip.extractEntryTo("locale.json", dist.Code);
+
+            dist.updateLocale();
+
+            // settings
+
+            const settings: AdmZip.IZipEntry | null = zip.getEntry("settings.json");
+            settings && !settings.isDirectory && zip.extractEntryTo("settings.json", dist.Code);
+
+            // snippets
+
+            const snippets: AdmZip.IZipEntry | null = zip.getEntry("snippets");
+            snippets && snippets.isDirectory && zip.extractEntryTo("snippets", dist.Code);
 
         }catch(error: any){
             return vscode.window.showErrorMessage(`Failed to import settings: ${error}`);

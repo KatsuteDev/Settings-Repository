@@ -22,11 +22,12 @@ import * as fs from "fs";
 import * as os from "os";
 import * as path from "path";
 
-import simpleGit, { GitError } from "simple-git";
+import simpleGit, { GitError, SimpleGit } from "simple-git";
 
 import * as auth from "./auth";
 import * as config from "../config";
 import * as extension from "../extension";
+import * as statusbar from "../statusbar";
 import { Distribution } from "../distribution";
 import { CommandQuickPickItem } from "../quickpick";
 
@@ -39,22 +40,37 @@ export const item: CommandQuickPickItem = {
 }
 
 export const command: vscode.Disposable = vscode.commands.registerCommand("settings-repository.overwriteRemote", () => {
+    update();
+});
+
+// must be async for deactivate to work correctly
+export const update: () => Promise<void> = async () => {
     const dist: Distribution = extension.distribution();
     const cred: auth.credentials | undefined = auth.authorization();
 
-    if(!cred)
-        return auth.authenticate();
+    if(!cred){
+        auth.authenticate();
+        return;
+    }
 
-    const temp: string = fs.mkdtempSync(path.join(os.tmpdir(), "vscode-settings-sync"));
+    const temp: string = fs.mkdtempSync(path.join(os.tmpdir(), "vscode-settings-sync-"));
 
-    if(!temp)
-        return vscode.window.showErrorMessage(`Push failed: unable to create temporary directory '${temp}'`);
+    if(!temp){
+        vscode.window.showErrorMessage(`Push failed: unable to create temporary directory '${temp}'`);
+        return;
+    }
 
     const branch: string = config.get("branch") ?? "main";
 
-    const cleanup: () => void = () => !fs.existsSync(temp) || fs.rmSync(temp, {recursive: true});
+    const cleanup: () => void = () => {
+        !fs.existsSync(temp) || fs.rmSync(temp, {recursive: true, force: true, retryDelay: 5000, maxRetries: 5});
+        !fs.existsSync(temp) || fs.rmSync(temp);
+        statusbar.setActive(false);
+    };
 
     try{
+        statusbar.setActive(true);
+
         const gitHandle: (err: GitError | null) => void = (err: GitError | null) => {
             if(err){
                 console.error(`${auth.mask(err.message, cred)}`);
@@ -65,21 +81,36 @@ export const command: vscode.Disposable = vscode.commands.registerCommand("setti
 
         const remote: string = `https://${cred.login}:${cred.auth}@${config.get("repository").substring(8)}`;
 
-        simpleGit(temp)
-            .init(gitHandle)
-            .addRemote("origin", remote, gitHandle) // add repo
-            .checkout(["-B", branch], gitHandle) // checkout branch, create if null
-            .pull(["origin", branch], (err: GitError | null) => { // pull latest changes
-                gitHandle(err);
+        const git: SimpleGit = simpleGit(temp);
 
-                if(!err){
-                    try{
-                        // copy to repo
-                        fs.writeFileSync(path.join(temp, "extensions.json"), dist.getExtensions(), "utf-8");
-                        fs.writeFileSync(path.join(temp, "keybindings.json"), dist.getKeybindings(), "utf-8");
-                        fs.writeFileSync(path.join(temp, "settings.json"), dist.getSettings(), "utf-8");
+        await git.clone(remote, ".", ["-b", branch, "--depth", "1"], (err: GitError | null) => { // pull latest changes
+            gitHandle(err);
 
-                        // snippets
+            if(!err){
+                try{
+                    // extensions
+
+                    const extensions: string | undefined = dist.getExtensions();
+                    extensions && fs.writeFileSync(path.join(temp, "extensions.json"), extensions, "utf-8");
+
+                    // keybindings
+
+                    const keybindings: string | undefined = dist.getKeybindings();
+                    keybindings && fs.writeFileSync(path.join(temp, "keybindings.json"), keybindings, "utf-8");
+
+                    // locale
+
+                    const locale: string | undefined = dist.getLocale();
+                    locale && fs.writeFileSync(path.join(temp, "locale.json"), locale, "utf-8");
+
+                    // settings
+
+                    const settings: string | undefined = dist.getSettings();
+                    settings && fs.writeFileSync(path.join(temp, "settings.json"), settings, "utf-8");
+
+                    // snippets
+
+                    if(fs.existsSync(dist.Snippets)){ // todo: make recursive
                         const files: string[] = fs.readdirSync(dist.Snippets);
                         if(files.length > 0){
                             const snippets: string = path.join(temp, "snippets");
@@ -88,27 +119,28 @@ export const command: vscode.Disposable = vscode.commands.registerCommand("setti
                             for(const file of files)
                                 fs.copyFileSync(path.join(dist.Snippets, file), path.join(snippets, file));
                         }
-                    }catch(error: any){
-                        console.error(auth.mask(error, cred));
-                        vscode.window.showErrorMessage(`Push failed: ${auth.mask(error, cred)}`);
-                        cleanup();
                     }
-                }
-            })
-            .add(".", gitHandle) // add files
-            // commit changes
-            .commit(`VS-${vscode.version} ${config.get("includeHostnameInCommitMessage") ? `<${os.userInfo().username}@${os.hostname()}> ` : ""} Update settings repository`, gitHandle)
-            // push to remote
-            .push(["-u", "origin", "head"], (err: GitError | null) => {
-                gitHandle(err);
-                if(!err){ // cleanup
-                    vscode.window.showInformationMessage(`Pushed settings to ${config.get("repository")}@${branch}`);
+                }catch(error: any){
+                    console.error(auth.mask(error, cred));
+                    vscode.window.showErrorMessage(`Push failed: ${auth.mask(error, cred)}`);
                     cleanup();
                 }
-            });
+            }
+        })
+        .add(".", gitHandle) // add files
+        // commit changes
+        .commit(`VS-${vscode.version} ${config.get("includeHostnameInCommitMessage") ? `<${os.userInfo().username}@${os.hostname()}> ` : ""} Update settings repository`, gitHandle)
+        // push to remote
+        .push(["-u", "origin", "HEAD"], (err: GitError | null) => {
+            gitHandle(err);
+            if(!err){ // cleanup
+                vscode.window.showInformationMessage(`Pushed settings to ${config.get("repository")}@${branch}`);
+                cleanup();
+            }
+        });
     }catch(error: any){
         console.error(auth.mask(error, cred));
         vscode.window.showErrorMessage(`Push failed: ${auth.mask(error, cred)}`);
         cleanup();
     }
-});
+}
