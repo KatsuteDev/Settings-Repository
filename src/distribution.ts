@@ -70,11 +70,11 @@ ${extensions.slice(0, -2)}
     }
 
     public getSettings(): string {
-        return fs.readFileSync(path.join(this.User, "settings.json"), "utf-8");
+        return fs.readFileSync(path.join(this.User, "settings.json"), "utf-8").trim();
     }
 
     public getKeybindings(): string {
-        return fs.readFileSync(path.join(this.User, "keybindings.json"), "utf-8");
+        return fs.readFileSync(path.join(this.User, "keybindings.json"), "utf-8").trim();
     }
 
 }

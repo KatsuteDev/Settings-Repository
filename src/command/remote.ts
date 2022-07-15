@@ -52,27 +52,24 @@ export const command: vscode.Disposable = vscode.commands.registerCommand("setti
 
     const branch: string = config.get("branch") ?? "main";
 
+    const cleanup: () => void = () => !fs.existsSync(temp) || fs.rmSync(temp, {recursive: true});
+
     try{
         const gitHandle: (err: GitError | null) => void = (err: GitError | null) => {
             if(err){
-                vscode.window.showErrorMessage(`Failed to push to ${config.get("repository")}:\n${err.name} ${err.message}`);
-                !fs.existsSync(temp) || fs.rmSync(temp, {recursive: true});
+                console.error(`${auth.mask(err.message, cred)}`);
+                vscode.window.showErrorMessage(`Failed to push to ${config.get("repository")}:\n ${auth.mask(err.message, cred)}`);
+                cleanup();
             }
         }
 
         const remote: string = `https://${cred.login}:${cred.auth}@${config.get("repository").substring(8)}`;
 
-        // todo: create branch if missing
-
-        // todo: handle empty repo
-
-        // todo: handle no change
-
         simpleGit(temp)
             .init(gitHandle)
             .addRemote("origin", remote, gitHandle) // add repo
-            .fetch("origin", branch, gitHandle) // fetch origin
-            .checkout(branch, (err: GitError | null) => { // checkout branch
+            .checkout(["-B", branch], gitHandle) // checkout branch, create if null
+            .pull(["origin", branch], (err: GitError | null) => { // pull latest changes
                 gitHandle(err);
 
                 if(!err){
@@ -92,25 +89,26 @@ export const command: vscode.Disposable = vscode.commands.registerCommand("setti
                                 fs.copyFileSync(path.join(dist.Snippets, file), path.join(snippets, file));
                         }
                     }catch(error: any){
-                        vscode.window.showErrorMessage(`Push failed: ${error}`);
-                        !fs.existsSync(temp) || fs.rmSync(temp, {recursive: true});
+                        console.error(auth.mask(error, cred));
+                        vscode.window.showErrorMessage(`Push failed: ${auth.mask(error, cred)}`);
+                        cleanup();
                     }
                 }
             })
-            .add(".", gitHandle) // add file
-            // commit
+            .add(".", gitHandle) // add files
+            // commit changes
             .commit(`VS-${vscode.version} ${config.get("includeHostnameInCommitMessage") ? `<${os.userInfo().username}@${os.hostname()}> ` : ""} Update settings repository`, gitHandle)
-            // push changes
-            .push("origin", branch, {}, (err: GitError | null) => {
+            // push to remote
+            .push(["-u", "origin", "head"], (err: GitError | null) => {
                 gitHandle(err);
-                if(!err){
-                    // cleanup
-                    !fs.existsSync(temp) || fs.rmSync(temp, {recursive: true});
+                if(!err){ // cleanup
                     vscode.window.showInformationMessage(`Pushed settings to ${config.get("repository")}@${branch}`);
+                    cleanup();
                 }
             });
     }catch(error: any){
-        vscode.window.showErrorMessage(`Push failed: ${error}`);
-        !fs.existsSync(temp) || fs.rmSync(temp, {recursive: true});
+        console.error(auth.mask(error, cred));
+        vscode.window.showErrorMessage(`Push failed: ${auth.mask(error, cred)}`);
+        cleanup();
     }
 });

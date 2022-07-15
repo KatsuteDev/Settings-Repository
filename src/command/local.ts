@@ -52,11 +52,14 @@ export const command: vscode.Disposable = vscode.commands.registerCommand("setti
 
     const branch: string = config.get("branch") ?? "main";
 
+    const cleanup: () => void = () => !fs.existsSync(temp) || fs.rmSync(temp, {recursive: true});
+
     try{
         const gitHandle: (err: GitError | null) => void = (err: GitError | null) => {
             if(err){
-                vscode.window.showErrorMessage(`Failed to push to ${config.get("repository")}:\n${err.name} ${err.message}`);
-                !fs.existsSync(temp) || fs.rmSync(temp, {recursive: true});
+                console.error(`${auth.mask(err.message, cred)}`);
+                vscode.window.showErrorMessage(`Failed to push to ${config.get("repository")}:\n ${auth.mask(err.message, cred)}`);
+                cleanup();
             }
         }
 
@@ -66,9 +69,9 @@ export const command: vscode.Disposable = vscode.commands.registerCommand("setti
 
         simpleGit(temp)
             .init(gitHandle)
-            .addRemote("origin", remote, gitHandle)
-            .fetch("origin", branch, gitHandle)
-            .checkout(branch, (err: GitError | null) => {
+            .addRemote("origin", remote, gitHandle) // add repo
+            .checkout(["-B", branch], gitHandle) // checkout branch, create if null
+            .pull(["origin", branch], (err: GitError | null) => { // pull latest changes
                 gitHandle(err);
 
                 if(!err){
@@ -85,6 +88,6 @@ export const command: vscode.Disposable = vscode.commands.registerCommand("setti
 
     }catch(error: any){
         vscode.window.showErrorMessage(`Pull failed: ${error}`);
-        !fs.existsSync(temp) || fs.rmSync(temp, {recursive: true});
+        cleanup();
     }
 });

@@ -59,7 +59,7 @@ export const activate: (context: vscode.ExtensionContext) => void = (context: vs
     dist = new Distribution(context);
 }
 
-export const deactivate: () => void = () => {
-    // if(config.get("autoSync") === true)
-    //     vscode.commands.executeCommand("settings-repository.overwriteRemote");
+export const deactivate: () => void = () => { // fixme
+    if(config.get("autoSync") === true)
+        vscode.commands.executeCommand("settings-repository.overwriteRemote");
 }

@@ -51,7 +51,7 @@ export const command: vscode.Disposable = vscode.commands.registerCommand("setti
         try{ // import from zip
             const zip: AdmZip = new AdmZip(file);
 
-            // todo
+            // todo: write to disk
 
         }catch(error: any){
             return vscode.window.showErrorMessage(`Failed to import settings: ${error}`);

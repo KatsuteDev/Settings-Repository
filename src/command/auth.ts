@@ -50,6 +50,10 @@ const crypt: Crypt = new Crypt(os.hostname());
 
 //
 
+export const mask: (s: string, c: credentials) => string = (s: string, c: credentials) => {
+    return s.replace(new RegExp(c.auth, "gm"), "***");
+}
+
 export const authenticate: () => void = () => {
     const auth: credentials | undefined = authorization();
     vscode.window.showInputBox({
