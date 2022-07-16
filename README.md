@@ -1,12 +1,12 @@
 <div id="top" align="center">
     <br>
-    <a href="https://github.com/KatsuteDev/Settings-Repository">
+    <a href="https://github.com/KatsuteDev/Settings-Repository#readme">
         <img src="https://raw.githubusercontent.com/KatsuteDev/Settings-Repository/main/assets/icon.png" alt="icon" width="100" height="100">
     </a>
     <h3>Settings Sync</h3>
     <h5>Sync VSCode settings to a repository.</h5>
     <br>
-    <a href="https://marketplace.visualstudio.com/items?itemName=katsute.Settings-Repository">Visual Studio Marketplace</a>
+    <a href="https://marketplace.visualstudio.com/items?itemName=katsute.settings-repository">Visual Studio Marketplace</a>
     •
     <a href="https://github.com/KatsuteDev/Settings-Repository/releases">Releases</a>
 </div>
@@ -22,14 +22,6 @@
 
 Sync VSCode extensions, keybindings, locale, settings, and snippets to a git repository.
 
-This extension currently syncs:
-
- - Extensions
- - Keybindings
- - Locale
- - Settings
- - Snippets
-
 ## 📃 Installation
 
 > ⚠️ This extension is not compatible with remote distributions of VSCode (ex: Codespaces). Pull your settings from VSCode on desktop then use the **Settings Sync** that is included with VSCode.
@@ -38,7 +30,7 @@ This extension requires [git](https://git-scm.com/downloads) to be installed.
 
 #### 🛒 VSCode Marketplace (recommended)
 
- 1. Install from `katsute.Settings-Repository` in the extension marketplace in Visual Studio Code or install from the [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=katsute.Settings-Repository).
+ 1. Install from `katsute.settings-repository` in the extension marketplace in Visual Studio Code or install from the [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=katsute.settings-repository).
 
 #### 📦 Manual
 

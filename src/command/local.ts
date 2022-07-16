@@ -67,7 +67,7 @@ export const command: vscode.Disposable = vscode.commands.registerCommand("setti
                 vscode.window.showErrorMessage(`Failed to push to ${config.get("repository")}:\n ${auth.mask(err.message, cred)}`);
                 cleanup();
             }
-        }
+        };
 
         const part: string[] = config.get("repository").split("://");
         const remote: string = `${part[0]}://${cred.login}:${cred.auth}@${part.slice(1).join("://")}`;

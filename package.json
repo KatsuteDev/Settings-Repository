@@ -16,7 +16,27 @@
     "categories": [
         "Other"
     ],
-    "keywords": [],
+    "keywords": [
+        "sync",
+        "settings",
+        "settings-sync",
+        "settings sync",
+        "sync settings",
+        "vscode-settings-sync",
+        "vscode settings sync",
+        "sync vscode settings",
+        "vscode settings sync",
+        "extensions",
+        "sync extensions",
+        "extensions-sync",
+        "extensions sync",
+        "zip",
+        "repository",
+        "repo",
+        "import settings",
+        "export settings",
+        "settings zip"
+    ],
     "sponsor": {
         "url": "https://patreon.com/Katsute"
     },
