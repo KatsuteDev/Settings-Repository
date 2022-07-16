@@ -20,8 +20,8 @@ import * as vscode from "vscode";
 
 import * as fs from "fs";
 import * as os from "os";
-import * as path from "path";
 
+import * as files from "../files";
 import { Crypt } from "../encrypt";
 import * as extension from "../extension";
 import { Distribution } from "../distribution";
@@ -82,7 +82,7 @@ export const authenticate: () => void = () => {
             const dist: Distribution = extension.distribution();
 
             fs.writeFileSync(
-                path.join(dist.User, "credentials.json"),
+                dist.credentials,
 `{
     "login": "${username}",
     "auth": "${crypt.encrypt(password)}
@@ -95,13 +95,11 @@ export const authenticate: () => void = () => {
 export const authorization: () => credentials | undefined = () => {
     const dist: Distribution = extension.distribution();
 
-    if(!fs.existsSync(path.join(dist.User, "credentials.json")))
-        return undefined;
+    if(!files.isFile(dist.credentials)) return undefined;
 
-    const credentials: credentials = JSON.parse(fs.readFileSync(path.join(dist.User, "credentials.json"), "utf-8"));
+    const credentials: credentials = JSON.parse(fs.readFileSync(dist.credentials, "utf-8"));
 
-    if(credentials.login === undefined || credentials.auth === undefined)
-        return undefined;
+    if(credentials.login === undefined || credentials.auth === undefined) return undefined;
 
     return {
         login: credentials.login,

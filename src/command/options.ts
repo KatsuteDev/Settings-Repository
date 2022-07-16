@@ -25,7 +25,7 @@ import { handle, separator } from "../quickpick";
 
 //
 
-export const command: vscode.Disposable = vscode.commands.registerCommand("settings-repository.config", () => {
+export const command: vscode.Disposable = vscode.commands.registerCommand("settings-repository.options", () => {
     vscode.window.showQuickPick([
         repo.item,
         separator(),

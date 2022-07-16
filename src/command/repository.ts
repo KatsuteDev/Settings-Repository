@@ -63,9 +63,9 @@ const repository: CommandQuickPickItem = {
             prompt: "The repository to sync settings to, if repository is private make sure token is scoped correctly",
             validateInput: (value: string) => {
                 if(!value.startsWith("https://"))
-                    return "Repository should start with 'https://'";
+                    return "Repository url should contain '://'";
                 if(!value.endsWith(".git"))
-                    return "Repository should end with '.git'";
+                    return "Repository url should end with '.git'";
                 return null;
             }
         }).then((repo?: string) => {

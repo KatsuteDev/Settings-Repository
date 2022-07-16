@@ -25,6 +25,7 @@ import * as path from "path";
 import simpleGit, { GitError, SimpleGit } from "simple-git";
 
 import * as auth from "./auth";
+import * as files from "../files";
 import * as config from "../config";
 import * as extension from "../extension";
 import * as statusbar from "../statusbar";
@@ -44,21 +45,15 @@ export const command: vscode.Disposable = vscode.commands.registerCommand("setti
 });
 
 // must be async for deactivate to work correctly
-export const update: () => Promise<void> = async () => {
+export const update: () => Promise<any> = async () => {
     const dist: Distribution = extension.distribution();
     const cred: auth.credentials | undefined = auth.authorization();
 
-    if(!cred){
-        auth.authenticate();
-        return;
-    }
+    if(!cred) return auth.authenticate();
 
     const temp: string = fs.mkdtempSync(path.join(os.tmpdir(), "vscode-settings-sync-"));
 
-    if(!temp){
-        vscode.window.showErrorMessage(`Push failed: unable to create temporary directory '${temp}'`);
-        return;
-    }
+    if(!temp) return vscode.window.showErrorMessage(`Push failed: unable to create temporary directory '${temp}'`);
 
     const branch: string = config.get("branch") ?? "main";
 
@@ -79,7 +74,8 @@ export const update: () => Promise<void> = async () => {
             }
         }
 
-        const remote: string = `https://${cred.login}:${cred.auth}@${config.get("repository").substring(8)}`;
+        const part: string[] = config.get("repository").split("://");
+        const remote: string = `${part[0]}://${cred.login}:${cred.auth}@${part.slice(1).join("://")}`;
 
         const git: SimpleGit = simpleGit(temp);
 
@@ -110,16 +106,8 @@ export const update: () => Promise<void> = async () => {
 
                     // snippets
 
-                    if(fs.existsSync(dist.Snippets)){ // todo: make recursive
-                        const files: string[] = fs.readdirSync(dist.Snippets);
-                        if(files.length > 0){
-                            const snippets: string = path.join(temp, "snippets");
-                            fs.existsSync(snippets) || fs.mkdirSync(snippets);
+                    files.copyRecursiveSync(dist.Snippets, path.join(temp, "snippets"));
 
-                            for(const file of files)
-                                fs.copyFileSync(path.join(dist.Snippets, file), path.join(snippets, file));
-                        }
-                    }
                 }catch(error: any){
                     console.error(auth.mask(error, cred));
                     vscode.window.showErrorMessage(`Push failed: ${auth.mask(error, cred)}`);

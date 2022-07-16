@@ -21,7 +21,7 @@ import * as vscode from "vscode";
 export const statusbar: vscode.StatusBarItem = (() => {
     const item: vscode.StatusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right);
 
-    item.command = "settings-repository.config";
+    item.command = "settings-repository.options";
     item.name = "Settings Repository";
     item.text = "$(gear) Settings Repository";
     item.tooltip = "Open settings repository configuration";

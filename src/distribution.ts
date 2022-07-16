@@ -21,10 +21,13 @@ import * as vscode from "vscode";
 import * as fs from "fs";
 import * as path from "path";
 
+import * as files from "./files";
+
 export class Distribution {
 
     public readonly Code: string;
         public readonly User: string;
+            public readonly credentials: string;
             public readonly extensions: string;
             public readonly keybindings: string;
             public readonly locale: string;
@@ -37,6 +40,7 @@ export class Distribution {
     constructor(context: vscode.ExtensionContext) {
         this.Code = path.join(context.globalStorageUri.fsPath, "../../../");
         this.User = path.join(this.Code, "User");
+        this.credentials = path.join(this.User, "credentials.json");
         this.extensions  = path.join(this.User, "extensions.json");
         this.keybindings = path.join(this.User, "keybindings.json");
         this.locale      = path.join(this.User, "locale.json");
@@ -51,21 +55,26 @@ export class Distribution {
     }
 
     public getExtensions(): string | undefined {
-        if(!this.Extensions || !fs.existsSync(this.Extensions) || !fs.lstatSync(this.Extensions).isDirectory()) return undefined;
+        if(!files.isDirectory(this.Extensions)) return undefined;
 
         let extensions: string = "";
 
-        const installed: string[] = fs.readdirSync(this.Extensions, {withFileTypes: true})
+        const installed: string[] = fs.readdirSync(this.Extensions!, {withFileTypes: true})
                                         .filter(f => f.isDirectory())
                                         .map(f => f.name);
 
         for(const folder of installed){
-            if(!fs.existsSync(path.join(this.Extensions, folder, "package.json")))
-                continue;
+            if(!files.isDirectory(folder)) continue;
 
-            const pkg: any = JSON.parse(fs.readFileSync(path.join(this.Extensions, folder, "package.json"), "utf-8"));
+            const pkgFile: string = path.join(this.Extensions!, folder, "package.json");
 
-            const extension = vscode.extensions.getExtension(`${pkg.publisher}.${pkg.name}`);
+            if(!files.isFile(pkgFile)) continue;
+
+            const pkg: any = JSON.parse(fs.readFileSync(pkgFile, "utf-8"));
+
+            if(pkg.publisher === undefined || pkg.publisher === null || pkg.name === undefined || pkg.name === null) continue;
+
+            const extension: vscode.Extension<any> | undefined = vscode.extensions.getExtension(`${pkg.publisher}.${pkg.name}`);
 
             extensions += `    {
         "identifier": "${pkg.publisher}.${pkg.name}",
@@ -81,24 +90,63 @@ ${extensions.slice(0, -2)}
         : undefined;
     }
 
-    public updateExtensions(): void {
+    public updateExtensions(): void { // we cannot handle enable/disable at the moment, see <https://github.com/microsoft/vscode/issues/15466>
+        if(!files.isDirectory(this.Extensions) || !files.isFile(this.extensions)) return;
 
-        // todo: uninstall removed extensions
+        const extensions: [{
+            identifier: string,
+            version: string,
+            enabled: boolean
+        }] = JSON.parse(fs.readFileSync(this.extensions, "utf-8"));
 
-        // todo: install missing extensions
+        const installed: string[] = fs.readdirSync(this.Extensions!, {withFileTypes: true})
+                                        .filter(f => f.isDirectory())
+                                        .map(f => f.name);
 
-        // todo: handle enable/disable
+        // compare remote with installed
+        OUTER:
+        for(const extension of extensions){ // check remote extensions
+            if(vscode.extensions.getExtension(extension.identifier) !== undefined) continue; // extension exists and is enabled
 
+            const match: string = `${extension.identifier}-`;
+
+            for(const local of installed) // check local
+                if(files.isDirectory(local) && local.startsWith(match)) continue OUTER; // extension exists but is disabled
+
+            // not found locally, install this extension
+            vscode.commands.executeCommand("workbench.extensions.installExtension", extension.identifier);
+        }
+
+        // compare installed with remote
+        OUTER:
+        for(const local of installed){
+            const pkgFile: string = path.join(this.Extensions!, local, "package.json");
+
+            if(!files.isFile(pkgFile)) continue;
+
+            const pkg: any = JSON.parse(fs.readFileSync(pkgFile, "utf-8"));
+
+            if(pkg.publisher === undefined || pkg.publisher === null || pkg.name === undefined || pkg.name === null) continue;
+
+            const match: string = `${pkg.publisher}.${pkg.name}`;
+
+            for(const extension of extensions)
+                if(extension.identifier === match)
+                    continue OUTER; // extension exists on remote
+
+            // not found on remote, uninstall this extension
+            vscode.commands.executeCommand("workbench.extensions.uninstallExtension", match);
+        }
     }
 
     public getSettings(): string | undefined {
-        return fs.existsSync(this.settings) && !fs.lstatSync(this.settings).isDirectory()
+        return files.isFile(this.settings)
             ? fs.readFileSync(this.settings, "utf-8").trim()
             : undefined;
     }
 
     public getKeybindings(): string | undefined {
-        return fs.existsSync(this.keybindings) && !fs.lstatSync(this.keybindings).isDirectory()
+        return files.isFile(this.keybindings)
             ? fs.readFileSync(this.keybindings, "utf-8").trim()
             : undefined;
     }
@@ -106,8 +154,7 @@ ${extensions.slice(0, -2)}
     private static readonly locale: RegExp = /(?<=^\s*"locale"\s*:\s*")[\w-]+(?=")/gm;
 
     public getLocale(): string | undefined {
-        if(!this.argv || !fs.existsSync(this.argv) || fs.lstatSync(this.argv).isDirectory())
-            return undefined;
+        if(files.isFile(this.argv)) return undefined;
 
         const argv: string = fs.readFileSync(this.argv!, "utf-8");
 
@@ -121,11 +168,13 @@ ${extensions.slice(0, -2)}
     }
 
     public updateLocale(): void {
+        if(!files.isFile(this.argv) || !files.isFile(this.locale)) return;
 
-        // todo: read locale
+        const argv: string = fs.readFileSync(this.argv!, "utf-8");
+        const json: any = JSON.parse(fs.readFileSync(this.locale, "utf-8"));
 
-        // todo: update locale
-
+        if(json.locale !== undefined && json.locale !== null)
+            fs.writeFileSync(this.argv!, argv.replace(Distribution.locale, json.locale).trim());
     }
 
 }

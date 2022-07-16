@@ -18,11 +18,11 @@
 
 import * as vscode from "vscode";
 
-import * as fs from "fs";
 import * as path from "path";
 
 import * as AdmZip from "adm-zip";
 
+import * as files from "../files";
 import * as extension from "../extension";
 import { Distribution } from "../distribution";
 import { CommandQuickPickItem } from "../quickpick";
@@ -44,7 +44,7 @@ export const command: vscode.Disposable = vscode.commands.registerCommand("setti
     }).then((uri?: vscode.Uri) => {
         if(!uri) return;
 
-        try{ // export to zip
+        try{
             const zip: AdmZip = new AdmZip();
 
             // extensions
@@ -69,10 +69,16 @@ export const command: vscode.Disposable = vscode.commands.registerCommand("setti
 
             // snippets
 
-            fs.existsSync(dist.Snippets) && fs.lstatSync(dist.Snippets).isDirectory() && zip.addLocalFolder(dist.Snippets, "snippets");
+            files.isDirectory(dist.Snippets) && zip.addLocalFolder(dist.Snippets, "snippets");
 
-            zip.writeZip(uri.fsPath);
+            zip.writeZip(uri.fsPath, (error: Error | null) => {
+                if(error){
+                    console.error(error);
+                    return vscode.window.showErrorMessage(`Failed to export settings: ${error}`);
+                }
+            });
         }catch(error: any){
+            console.error(error);
             return vscode.window.showErrorMessage(`Failed to export settings: ${error}`);
         }
     });

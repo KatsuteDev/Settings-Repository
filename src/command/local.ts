@@ -25,12 +25,12 @@ import * as path from "path";
 import simpleGit, { GitError, SimpleGit } from "simple-git";
 
 import * as auth from "./auth";
+import * as files from "../files";
 import * as config from "../config";
 import * as extension from "../extension";
 import * as statusbar from "../statusbar";
 import { Distribution } from "../distribution";
 import { CommandQuickPickItem } from "../quickpick";
-import AdmZip = require("adm-zip");
 
 //
 
@@ -44,13 +44,11 @@ export const command: vscode.Disposable = vscode.commands.registerCommand("setti
     const dist: Distribution = extension.distribution();
     const cred: auth.credentials | undefined = auth.authorization();
 
-    if(!cred)
-        return auth.authenticate();
+    if(!cred) return auth.authenticate();
 
     const temp: string = fs.mkdtempSync(path.join(os.tmpdir(), "vscode-settings-sync"));
 
-    if(!temp)
-        return vscode.window.showErrorMessage(`Pull failed: unable to create temporary directory '${temp}'`);
+    if(!temp) return vscode.window.showErrorMessage(`Pull failed: unable to create temporary directory '${temp}'`);
 
     const branch: string = config.get("branch") ?? "main";
 
@@ -71,7 +69,8 @@ export const command: vscode.Disposable = vscode.commands.registerCommand("setti
             }
         }
 
-        const remote: string = `https://${cred.login}:${cred.auth}@${config.get("repository").substring(8)}`;
+        const part: string[] = config.get("repository").split("://");
+        const remote: string = `${part[0]}://${cred.login}:${cred.auth}@${part.slice(1).join("://")}`;
 
         const git: SimpleGit = simpleGit(temp);
 
@@ -82,33 +81,31 @@ export const command: vscode.Disposable = vscode.commands.registerCommand("setti
                 // extensions
 
                 const extensions: string = path.join(temp, "extensions.json");
-                fs.existsSync(extensions) && !fs.lstatSync(extensions).isDirectory() && fs.copyFileSync(extensions, dist.extensions);
+                files.isFile(extensions) && fs.copyFileSync(extensions, dist.extensions);
 
                 dist.updateExtensions();
 
                 // keybindings
 
                 const keybindings: string = path.join(temp, "keybindings.json");
-                fs.existsSync(keybindings) && !fs.lstatSync(keybindings).isDirectory() && fs.copyFileSync(keybindings, dist.keybindings);
+                files.isFile(keybindings) && fs.copyFileSync(keybindings, dist.keybindings);
 
                 // locale
 
                 const locale: string = path.join(temp, "locale.json");
-                fs.existsSync(locale) && !fs.lstatSync(locale).isDirectory() && fs.copyFileSync(locale, dist.locale);
+                files.isFile(locale) && fs.copyFileSync(locale, dist.locale);
 
                 dist.updateLocale();
 
                 // settings
 
                 const settings: string = path.join(temp, "settings.json");
-                fs.existsSync(settings) && !fs.lstatSync(settings).isDirectory() && fs.copyFileSync(settings, dist.settings);
+                files.isFile(settings) && fs.copyFileSync(settings, dist.settings);
 
                 // snippets
 
                 const snippets: string = path.join(temp, "snippets");
-                fs.existsSync(snippets) && fs.lstatSync(snippets).isDirectory() && false;
-
-                // todo: copy recursive ^
+                files.isDirectory(snippets) && files.copyRecursiveSync(snippets, dist.Snippets);
 
             }
         });
