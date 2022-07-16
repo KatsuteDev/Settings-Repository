@@ -13,14 +13,14 @@
 
 <br>
 
+Sync VSCode extensions, keybindings, locale, settings, and snippets to a git repository.
+
  - [📃 Installation](#-installation)
  - [✨ Features](#-features)
  - [💻 Commands](#-commands)
  - [⚙️ Configuration](#%EF%B8%8F-configuration)
  - [👨‍💻 Contributing](#-contributing)
  - [💼 License](#-license)
-
-Sync VSCode extensions, keybindings, locale, settings, and snippets to a git repository.
 
 ## 📃 Installation
 
@@ -47,7 +47,7 @@ Currently the enabled/disabled state of extensions can not be toggled (see [Micr
 
 #### ⚙️ Settings Sync
 
-Sync your settings, keybindings, snippets, and locale wherever you use VSCode. Mac not yet supported.
+Sync your settings, keybindings, snippets, and locale wherever you use VSCode. Cross-platform keybindings not yet supported.
 
 #### ☁️ Repository Sync
 
@@ -56,19 +56,19 @@ Use any git repository to backup your settings. For private repositories make su
 #### 📦 Import / Export to ZIP
 
 Share copies of your settings without needing a repository.
-Use `Settings Repository: Export Settings` to export settings to a zip file and use `Settings Repository: Import Settings` to import settings from a zip file.
+Use `Settings Repository: Export Settings` to export settings to a zip file and use `Settings Repository: Import Settings` to import settings from a zip file.
 
 ## 💻 Commands
 
 | Command | Description |
 |---|---|
-|`Settings Repository: Options`|Menu to access commands for this extension. Can be accessed by clicking `Settings Repository` on the statusbar.|
-|`Settings Repository: Choose Settings Repository`|Menu to access repository options and commands.|
-|`Settings Repository: Authenticate`|Update git authentication.|
-|`Settings Repository: Overwrite Local`|Overwrite local settings with ones from the git repository.|
-|`Settings Repository: Overwrite Remote`|Overwrite settings on the git repository with ones stored locally.
-|`Settings Repository: Import Settings`|Import settings from a zip file.|
-|`Settings Repository: Export Settings`|Export settings to a zip file.|
+|`Settings Repository: Options`|Menu to access commands for this extension. Can be accessed by clicking `Settings Repository` on the statusbar.|
+|`Settings Repository: Choose Settings Repository`|Menu to access repository options and commands.|
+|`Settings Repository: Authenticate`|Update git authentication.|
+|`Settings Repository: Overwrite Local`|Overwrite local settings with ones from the git repository.|
+|`Settings Repository: Overwrite Remote`|Overwrite settings on the git repository with ones stored locally.
+|`Settings Repository: Import Settings`|Import settings from a zip file.|
+|`Settings Repository: Export Settings`|Export settings to a zip file.|
 
 ## ⚙️ Configuration
 

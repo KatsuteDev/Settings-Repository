@@ -54,31 +54,31 @@ export const command: vscode.Disposable = vscode.commands.registerCommand("setti
             // extensions
 
             const extensions: AdmZip.IZipEntry | null = zip.getEntry("extensions.json");
-            extensions && !extensions.isDirectory && zip.extractEntryTo("extensions.json", dist.Code, undefined, true);
+            extensions && !extensions.isDirectory && zip.extractEntryTo("extensions.json", dist.User, undefined, true);
 
             dist.updateExtensions();
 
             // keybindings
 
             const keybindings: AdmZip.IZipEntry | null = zip.getEntry("keybindings.json");
-            keybindings && !keybindings.isDirectory && zip.extractEntryTo("keybindings.json", dist.Code, undefined, true);
+            keybindings && !keybindings.isDirectory && zip.extractEntryTo("keybindings.json", dist.User, undefined, true);
 
             // locale
 
             const locale: AdmZip.IZipEntry | null = zip.getEntry("locale.json");
-            locale && !locale.isDirectory && zip.extractEntryTo("locale.json", dist.Code, undefined, true);
+            locale && !locale.isDirectory && zip.extractEntryTo("locale.json", dist.User, undefined, true);
 
             dist.updateLocale();
 
             // settings
 
             const settings: AdmZip.IZipEntry | null = zip.getEntry("settings.json");
-            settings && !settings.isDirectory && zip.extractEntryTo("settings.json", dist.Code, undefined, true);
+            settings && !settings.isDirectory && zip.extractEntryTo("settings.json", dist.User, undefined, true);
 
             // snippets
 
             const snippets: AdmZip.IZipEntry | null = zip.getEntry("snippets");
-            snippets && snippets.isDirectory && zip.extractEntryTo("snippets", dist.Code, undefined, true);
+            snippets && snippets.isDirectory && zip.extractEntryTo("snippets", dist.User, undefined, true);
 
         }catch(error: any){
             console.error(error);
