@@ -64,7 +64,7 @@ export class Distribution {
                                         .map(f => f.name);
 
         for(const folder of installed){
-            if(!files.isDirectory(folder)) continue;
+            if(!files.isDirectory(path.join(this.Extensions!, folder))) continue;
 
             const pkgFile: string = path.join(this.Extensions!, folder, "package.json");
 
@@ -128,14 +128,14 @@ ${extensions.slice(0, -2)}
 
             if(pkg.publisher === undefined || pkg.publisher === null || pkg.name === undefined || pkg.name === null) continue;
 
-            const match: string = `${pkg.publisher}.${pkg.name}`;
+            const identifier: string = `${pkg.publisher}.${pkg.name}`;
 
             for(const extension of extensions)
-                if(extension.identifier === match)
+                if(extension.identifier === identifier)
                     continue OUTER; // extension exists on remote
 
             // not found on remote, uninstall this extension
-            vscode.commands.executeCommand("workbench.extensions.uninstallExtension", match);
+            vscode.commands.executeCommand("workbench.extensions.uninstallExtension", identifier);
         }
     }
 
