@@ -27,6 +27,7 @@ import simpleGit, { GitError, SimpleGit } from "simple-git";
 import * as auth from "./auth";
 import * as files from "../files";
 import * as config from "../config";
+import * as logger from "../logger";
 import * as extension from "../extension";
 import * as statusbar from "../statusbar";
 import { Distribution } from "../distribution";
@@ -68,14 +69,16 @@ export const update: () => Promise<any> = async () => {
 
         const gitHandle: (err: GitError | null) => void = (err: GitError | null) => {
             if(err){
-                console.error(`${auth.mask(err.message, cred)}`);
-                vscode.window.showErrorMessage(`Failed to push to ${config.get("repository")}:\n ${auth.mask(err.message, cred)}`);
+                vscode.window.showErrorMessage(logger.error(`Failed to push to ${config.get("repository")}:\n ${auth.mask(err.message, cred)}`));
                 cleanup();
             }
         };
 
         const part: string[] = config.get("repository").split("://");
         const remote: string = `${part[0]}://${cred.login}:${cred.auth}@${part.slice(1).join("://")}`;
+
+        logger.info(`Preparing to export settings to ${config.get("repository")}@${branch}`);
+        logger.debug(`includeHostnameInCommit: ${config.get("includeHostnameInCommitMessage")}`);
 
         const git: SimpleGit = simpleGit(temp);
 
@@ -87,31 +90,48 @@ export const update: () => Promise<any> = async () => {
                     // extensions
 
                     const extensions: string | undefined = dist.getExtensions();
-                    extensions && fs.writeFileSync(path.join(temp, "extensions.json"), extensions, "utf-8");
+
+                    if(extensions)
+                        fs.writeFileSync(path.join(temp, "extensions.json"), extensions, "utf-8");
+                    else
+                        logger.warn("Extensions not found");
 
                     // keybindings
 
                     const keybindings: string | undefined = dist.getKeybindings();
-                    keybindings && fs.writeFileSync(path.join(temp, "keybindings.json"), keybindings, "utf-8");
+
+                    if(keybindings)
+                        fs.writeFileSync(path.join(temp, "keybindings.json"), keybindings, "utf-8");
+                    else
+                        logger.warn("Keybindings not found");
 
                     // locale
 
                     const locale: string | undefined = dist.getLocale();
-                    locale && fs.writeFileSync(path.join(temp, "locale.json"), locale, "utf-8");
+
+                    if(locale)
+                        fs.writeFileSync(path.join(temp, "locale.json"), locale, "utf-8");
+                    else
+                        logger.warn("Locale not found");
 
                     // settings
 
                     const settings: string | undefined = dist.getSettings();
-                    settings && fs.writeFileSync(path.join(temp, "settings.json"), settings, "utf-8");
+
+                    if(settings)
+                        fs.writeFileSync(path.join(temp, "settings.json"), settings, "utf-8");
+                    else
+                        logger.warn("Settings not found");
 
                     // snippets
 
                     files.copyRecursiveSync(dist.Snippets, path.join(temp, "snippets"));
 
                 }catch(error: any){
-                    console.error(auth.mask(error, cred));
-                    vscode.window.showErrorMessage(`Push failed: ${auth.mask(error, cred)}`);
-                    cleanup();
+                    if(error){
+                        vscode.window.showErrorMessage(logger.error(`Push failed: ${auth.mask(error, cred)}`));
+                        cleanup();
+                    }
                 }
             }
         })
@@ -122,13 +142,13 @@ export const update: () => Promise<any> = async () => {
         .push(["-u", "origin", "HEAD"], (err: GitError | null) => {
             gitHandle(err);
             if(!err){ // cleanup
-                vscode.window.showInformationMessage(`Pushed settings to ${config.get("repository")}@${branch}`);
+                vscode.window.showInformationMessage(logger.info(`Pushed settings to ${config.get("repository")}@${branch}`));
                 cleanup();
             }
         });
     }catch(error: any){
-        console.error(auth.mask(error, cred));
-        vscode.window.showErrorMessage(`Push failed: ${auth.mask(error, cred)}`);
+        vscode.window.showErrorMessage(logger.error(`Push failed: ${auth.mask(error, cred)}`));
+    }finally{
         cleanup();
     }
 }

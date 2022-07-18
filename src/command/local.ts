@@ -27,6 +27,7 @@ import simpleGit, { GitError, SimpleGit } from "simple-git";
 import * as auth from "./auth";
 import * as files from "../files";
 import * as config from "../config";
+import * as logger from "../logger";
 import * as extension from "../extension";
 import * as statusbar from "../statusbar";
 import { Distribution } from "../distribution";
@@ -63,14 +64,15 @@ export const command: vscode.Disposable = vscode.commands.registerCommand("setti
 
         const gitHandle: (err: GitError | null) => void = (err: GitError | null) => {
             if(err){
-                console.error(`${auth.mask(err.message, cred)}`);
-                vscode.window.showErrorMessage(`Failed to push to ${config.get("repository")}:\n ${auth.mask(err.message, cred)}`);
+                vscode.window.showErrorMessage(logger.error(`Failed to push to ${config.get("repository")}:\n ${auth.mask(err.message, cred)}`));
                 cleanup();
             }
         };
 
         const part: string[] = config.get("repository").split("://");
         const remote: string = `${part[0]}://${cred.login}:${cred.auth}@${part.slice(1).join("://")}`;
+
+        logger.info(`Preparing to import settings from ${config.get("repository")}@${branch}`);
 
         const git: SimpleGit = simpleGit(temp);
 
@@ -81,37 +83,58 @@ export const command: vscode.Disposable = vscode.commands.registerCommand("setti
                 // extensions
 
                 const extensions: string = path.join(temp, "extensions.json");
-                files.isFile(extensions) && fs.copyFileSync(extensions, dist.extensions);
 
-                dist.updateExtensions();
+                if(files.isFile(extensions)){
+                    fs.copyFileSync(extensions, dist.extensions);
+
+                    dist.updateExtensions();
+                }else
+                    logger.warn("Extensions not found");
 
                 // keybindings
 
                 const keybindings: string = path.join(temp, "keybindings.json");
-                files.isFile(keybindings) && fs.copyFileSync(keybindings, dist.keybindings);
+
+                if(files.isFile(keybindings))
+                    fs.copyFileSync(keybindings, dist.keybindings);
+                else
+                    logger.warn("Keybindings not found");
 
                 // locale
 
                 const locale: string = path.join(temp, "locale.json");
-                files.isFile(locale) && fs.copyFileSync(locale, dist.locale);
 
-                dist.updateLocale();
+                if(files.isFile(locale)){
+                    fs.copyFileSync(locale, dist.locale);
+
+                    dist.updateLocale();
+                }else
+                    logger.warn("Locale not found");
 
                 // settings
 
                 const settings: string = path.join(temp, "settings.json");
-                files.isFile(settings) && fs.copyFileSync(settings, dist.settings);
+
+                if(files.isFile(settings))
+                    fs.copyFileSync(settings, dist.settings);
+                else
+                    logger.warn("Settings not found");
 
                 // snippets
 
                 const snippets: string = path.join(temp, "snippets");
-                files.isDirectory(snippets) && files.copyRecursiveSync(snippets, dist.Snippets);
 
+                if(files.isDirectory(snippets))
+                    files.copyRecursiveSync(snippets, dist.Snippets);
+                else
+                    logger.warn("Snippets not found");
+
+                vscode.window.showInformationMessage(logger.info(`Imported settings from ${config.get("repository")}@${branch}`));
             }
         });
     }catch(error: any){
-        console.error(auth.mask(error, cred));
-        vscode.window.showErrorMessage(`Push failed: ${auth.mask(error, cred)}`);
+        vscode.window.showErrorMessage(logger.error(`Push failed: ${auth.mask(error, cred)}`));
+    }finally{
         cleanup();
     }
 });

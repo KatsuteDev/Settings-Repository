@@ -74,7 +74,8 @@ const repository: CommandQuickPickItem = {
             config.update("repository", repo);
             repository.description = repo;
 
-            auth.authenticate();
+            if(!auth.authorization())
+                auth.authenticate();
         });
     })
 }

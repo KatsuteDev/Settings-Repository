@@ -22,6 +22,7 @@ import * as fs from "fs";
 import * as path from "path";
 
 import * as files from "./files";
+import * as logger from "./logger";
 
 export class Distribution {
 
@@ -52,6 +53,19 @@ export class Distribution {
         this.Extensions = exts[0] ? path.join(exts[0].extensionPath, "../") : undefined;
         this.dotVscode  = this.Extensions ? path.join(this.Extensions, "../") : undefined;
         this.argv       = this.dotVscode ? path.join(this.dotVscode, "argv.json") : undefined;
+
+        logger.debug(`Distribution:
+  Code: ${this.Code}
+  └ User: ${this.User}
+    ├ credentials: ${this.credentials}
+    ├ extensions:  ${this.extensions}
+    ├ keybindings: ${this.keybindings}
+    ├ locale:      ${this.locale}
+    ├ settings:    ${this.settings}
+    └  Snippets:   ${this.Snippets}
+  .Vscode: ${this.dotVscode}
+  ├  Extensions: ${this.Extensions}
+  └  argv:       ${this.argv}`);
     }
 
     public getExtensions(): string | undefined {
@@ -115,6 +129,7 @@ ${extensions.slice(0, -2)}
 
             // not found locally, install this extension
             vscode.commands.executeCommand("workbench.extensions.installExtension", extension.identifier);
+            logger.info(`${logger.check} Installed ${extension.identifier}`);
         }
 
         // compare installed with remote
@@ -136,6 +151,7 @@ ${extensions.slice(0, -2)}
 
             // not found on remote, uninstall this extension
             vscode.commands.executeCommand("workbench.extensions.uninstallExtension", identifier);
+            logger.info(`${logger.x} Uninstalled ${identifier}`);
         }
     }
 
@@ -151,10 +167,10 @@ ${extensions.slice(0, -2)}
             : undefined;
     }
 
-    private static readonly locale: RegExp = /(?<=^\s*"locale"\s*:\s*")[\w-]+(?=")/gm;
+    private static readonly locale: RegExp = /(?<=^\s*"locale"\s*:\s*")[\w-]+(?=")/m;
 
     public getLocale(): string | undefined {
-        if(files.isFile(this.argv)) return undefined;
+        if(!files.isFile(this.argv)) return undefined;
 
         const argv: string = fs.readFileSync(this.argv!, "utf-8");
 
@@ -173,7 +189,7 @@ ${extensions.slice(0, -2)}
         const argv: string = fs.readFileSync(this.argv!, "utf-8");
         const json: any = JSON.parse(fs.readFileSync(this.locale, "utf-8"));
 
-        if(json.locale !== undefined && json.locale !== null)
+        if(json.locale)
             fs.writeFileSync(this.argv!, argv.replace(Distribution.locale, json.locale).trim());
     }
 

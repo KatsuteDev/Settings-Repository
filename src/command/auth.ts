@@ -23,6 +23,7 @@ import * as os from "os";
 
 import * as files from "../files";
 import { Crypt } from "../encrypt";
+import * as logger from "../logger";
 import * as extension from "../extension";
 import { Distribution } from "../distribution";
 import { CommandQuickPickItem } from "../quickpick";
@@ -80,6 +81,8 @@ export const authenticate: () => void = () => {
             if(!password) return;
 
             const dist: Distribution = extension.distribution();
+
+            logger.info(`Updated authentication: ${username}`);
 
             fs.writeFileSync(
                 dist.credentials,

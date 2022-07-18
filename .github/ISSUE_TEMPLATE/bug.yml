@@ -48,3 +48,11 @@ body:
         Include steps to reproduce this issue.
     validations:
       required: true
+
+  - type: textarea
+    attributes:
+      label: Log
+      description: |
+        Logging information, find in the lower panel under Output > Settings Repository.
+    validations:
+      required: false

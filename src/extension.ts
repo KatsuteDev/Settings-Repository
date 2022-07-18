@@ -19,6 +19,7 @@
 import * as vscode from "vscode";
 
 import * as config from "./config";
+import * as logger from "./logger";
 import { statusbar } from "./statusbar";
 import * as auth from "./command/auth";
 import * as nport from "./command/import";
@@ -54,9 +55,15 @@ export const activate: (context: vscode.ExtensionContext) => void = (context: vs
     context.subscriptions.push(statusbar);
     statusbar.show();
 
+    logger.info("Added subscriptions");
+
     ctx = context;
 
     dist = new Distribution(context);
+
+    logger.info("Added distribution");
+
+    logger.info(`Auto sync is ${config.get("autoSync")}`);
 }
 
 // must be async, otherwise vscode closes without waiting

@@ -9,6 +9,10 @@
     <a href="https://marketplace.visualstudio.com/items?itemName=katsute.settings-repository">Visual Studio Marketplace</a>
     •
     <a href="https://github.com/KatsuteDev/Settings-Repository/releases">Releases</a>
+    <br>
+    <br>
+    <a href="https://marketplace.visualstudio.com/items?itemName=katsute.settings-repository"><img src="https://img.shields.io/visual-studio-marketplace/stars/katsute.settings-repository?style=flat-square&color=0098FF"></a>
+    <a href="https://marketplace.visualstudio.com/items?itemName=katsute.settings-repository"><img src="https://img.shields.io/visual-studio-marketplace/i/katsute.settings-repository?style=flat-square&color=0098FF"></a>
 </div>
 
 <br>
@@ -87,6 +91,8 @@ Use `Settings Repository: Export Settings` to export settings to a zip file and
     <p>GitHub Copilot is <b>strictly prohibited</b> on this repository.<br>Pulls using this will be rejected.</p>
 </table>
 <!-- GitHub Copilot Disclaimer -->
+
+Logging information is located in the lower panel under `Output > Settings Repository`.
 
  - Found a bug or have a suggestion? Post it in [issues](https://github.com/KatsuteDev/Settings-Repository/issues).
  - Want to further expand our project? [Fork](https://github.com/KatsuteDev/Settings-Repository/fork) this repository and submit a [pull request](https://github.com/KatsuteDev/Settings-Repository/pulls).
