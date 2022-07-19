@@ -21,8 +21,9 @@ import * as vscode from "vscode";
 import * as fs from "fs";
 import * as path from "path";
 
-import * as files from "./files";
+import * as files from "./lib/files";
 import * as logger from "./logger";
+import { isNotNull, isNull } from "./lib/is";
 
 export class Distribution {
 
@@ -86,7 +87,7 @@ export class Distribution {
 
             const pkg: any = JSON.parse(fs.readFileSync(pkgFile, "utf-8"));
 
-            if(pkg.publisher === undefined || pkg.publisher === null || pkg.name === undefined || pkg.name === null) continue;
+            if(isNull(pkg.publisher) || isNull(pkg.name)) continue;
 
             const extension: vscode.Extension<any> | undefined = vscode.extensions.getExtension(`${pkg.publisher}.${pkg.name}`);
 
@@ -120,7 +121,7 @@ ${extensions.slice(0, -2)}
         // compare remote with installed
         OUTER:
         for(const extension of extensions){ // check remote extensions
-            if(vscode.extensions.getExtension(extension.identifier) !== undefined) continue; // extension exists and is enabled
+            if(isNotNull(vscode.extensions.getExtension(extension.identifier))) continue; // extension exists and is enabled
 
             const match: string = `${extension.identifier}-`;
 
@@ -141,7 +142,7 @@ ${extensions.slice(0, -2)}
 
             const pkg: any = JSON.parse(fs.readFileSync(pkgFile, "utf-8"));
 
-            if(pkg.publisher === undefined || pkg.publisher === null || pkg.name === undefined || pkg.name === null) continue;
+            if(isNull(pkg.publisher) || isNull(pkg.name)) continue;
 
             const identifier: string = `${pkg.publisher}.${pkg.name}`;
 
@@ -189,7 +190,7 @@ ${extensions.slice(0, -2)}
         const argv: string = fs.readFileSync(this.argv!, "utf-8");
         const json: any = JSON.parse(fs.readFileSync(this.locale, "utf-8"));
 
-        if(json.locale)
+        if(isNotNull(json.locale))
             fs.writeFileSync(this.argv!, argv.replace(Distribution.locale, json.locale).trim());
     }
 

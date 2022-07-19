@@ -26,9 +26,8 @@ export const handle: (item?: CommandQuickPickItem) => void = (item?: CommandQuic
 
 // quick pick
 
-export const quickPickItem: (item: CommandQuickPickItem, current?: string) => CommandQuickPickItem = (item: CommandQuickPickItem, current?: string) => ({
-    ...item,
-    description: ((item.description ?? "") + (item.label === current ? " (selected)" : "")).trim()
+export const quickPickItem: (item: CommandQuickPickItem) => CommandQuickPickItem = (item: CommandQuickPickItem) => ({
+    ...item
 } as CommandQuickPickItem);
 
 export const separator: () => vscode.QuickPickItem = () => ({
@@ -36,11 +35,6 @@ export const separator: () => vscode.QuickPickItem = () => ({
     kind: vscode.QuickPickItemKind.Separator
 } as vscode.QuickPickItem);
 
-// types
-
-export type CommandQuickPickItemPromise = (item?: CommandQuickPickItem) => Promise<void>;
-
 export interface CommandQuickPickItem extends vscode.QuickPickItem {
     onSelect?: (item?: CommandQuickPickItem) => Promise<void>;
-    value?: string
 }

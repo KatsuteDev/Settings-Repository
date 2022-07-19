@@ -26,7 +26,6 @@ export class Crypt {
 
     private readonly secret: string;
 
-
     constructor(secret: string){
         this.secret = secret;
     }

@@ -16,20 +16,14 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-import * as vscode from "vscode";
+// return if object is strictly null or undefined
+export const isNull: (obj: any) => boolean = (obj: any) => obj === null || obj === undefined;
 
-import { push } from "../sync/git";
-import * as config from "../config";
-import { CommandQuickPickItem } from "../lib/quickpick";
+// return if object is strictly not null or defined
+export const isNotNull: (obj: any) => boolean = (obj: any) => !isNull(obj);
 
-//
+// return if object is strictly equal to false
+export const isFalse: (obj: any) => boolean = (obj: any) => obj === false;
 
-export const item: CommandQuickPickItem = {
-    label: "$(cloud-upload) Overwrite Remote",
-    description: "Overwrite remote settings configuration",
-    onSelect: () => new Promise(() => vscode.commands.executeCommand("settings-repository.overwriteRemote"))
-}
-
-export const command: vscode.Disposable = vscode.commands.registerCommand("settings-repository.overwriteRemote", () => {
-    config.get("repository") && push(config.get("repository"));
-});
+// return if object is strictly equal to true
+export const isTrue: (obj: any) => boolean = (obj: any) => obj === true;

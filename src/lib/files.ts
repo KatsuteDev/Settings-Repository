@@ -16,22 +16,26 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-
 import * as fs from "fs";
 import * as path from "path";
 
+import { isNotNull } from "./is";
+
+// file is directory and exists
 export const isDirectory: (dir: string | undefined | null) => boolean = (dir: string | undefined | null) => {
-    return dir !== undefined && dir !== null && fs.existsSync(dir) && fs.lstatSync(dir).isDirectory();
+    return isNotNull(dir) && fs.existsSync(dir!) && fs.lstatSync(dir!).isDirectory();
 }
 
+// file is file and exists
 export const isFile: (file: string | undefined | null) => boolean = (file: string | undefined | null) => {
-    return file !== undefined && file !== null && fs.existsSync(file) && !fs.lstatSync(file).isDirectory();
+    return isNotNull(file) && fs.existsSync(file!) && !fs.lstatSync(file!).isDirectory();
 }
 
+// copy recursively
 export const copyRecursiveSync: (src: string | undefined | null, dest: string) => void = (src: string | undefined | null, dest: string) => {
     if(!isDirectory(src)) return;
 
-    if(!fs.existsSync(dest)) fs.mkdirSync(dest);
+    fs.existsSync(dest) || fs.mkdirSync(dest);
 
     for(const file of fs.readdirSync(src!) || [])
         if(isFile(file))

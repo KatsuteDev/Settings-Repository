@@ -18,6 +18,7 @@
 
 import * as vscode from "vscode";
 
+import { push } from "./sync/git";
 import * as config from "./config";
 import * as logger from "./logger";
 import { statusbar } from "./statusbar";
@@ -69,5 +70,5 @@ export const activate: (context: vscode.ExtensionContext) => void = (context: vs
 // must be async, otherwise vscode closes without waiting
 export const deactivate: () => Promise<void> = async () => {
     if(config.get("autoSync") === true)
-        await remote.update();
+        config.get("repository") && await push(config.get("repository"));
 }

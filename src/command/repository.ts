@@ -22,7 +22,7 @@ import * as auth from "./auth";
 import * as local from "./local";
 import * as remote from "./remote";
 import * as config from "../config";
-import { CommandQuickPickItem, handle, separator } from "../quickpick";
+import { CommandQuickPickItem, handle, separator } from "../lib/quickpick";
 
 //
 

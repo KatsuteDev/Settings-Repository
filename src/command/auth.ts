@@ -21,12 +21,13 @@ import * as vscode from "vscode";
 import * as fs from "fs";
 import * as os from "os";
 
-import * as files from "../files";
-import { Crypt } from "../encrypt";
+import * as files from "../lib/files";
+import { Crypt } from "../lib/encrypt";
 import * as logger from "../logger";
+import { isNull } from "../lib/is";
 import * as extension from "../extension";
 import { Distribution } from "../distribution";
-import { CommandQuickPickItem } from "../quickpick";
+import { CommandQuickPickItem } from "../lib/quickpick";
 
 //
 
@@ -102,7 +103,7 @@ export const authorization: () => credentials | undefined = () => {
 
     const credentials: credentials = JSON.parse(fs.readFileSync(dist.credentials, "utf-8"));
 
-    if(credentials.login === undefined || credentials.auth === undefined) return undefined;
+    if(isNull(credentials.login) || isNull(credentials.auth)) return undefined;
 
     return {
         login: credentials.login,

@@ -18,14 +18,10 @@
 
 import * as vscode from "vscode";
 
-import * as fs from "fs";
-
-import AdmZip = require("adm-zip");
-
-import * as logger from "../logger";
+import { inport } from "../sync/zip";
 import * as extension from "../extension";
 import { Distribution } from "../distribution";
-import { CommandQuickPickItem } from "../quickpick";
+import { CommandQuickPickItem } from "../lib/quickpick";
 
 //
 
@@ -42,68 +38,6 @@ export const command: vscode.Disposable = vscode.commands.registerCommand("setti
         defaultUri: vscode.Uri.file(dist.User),
         filters: {"ZIP archive": ["zip"]},
     }).then((uri?: vscode.Uri[]) => {
-        if(!uri || uri.length == 0) return;
-
-        const file: string = uri[0].fsPath;
-
-        if(!fs.existsSync(file))
-            return vscode.window.showErrorMessage(logger.error("Failed to import settings: zip file did not exist"));
-
-        try{ // import from zip
-            const zip: AdmZip = new AdmZip(file);
-
-            logger.info(`Preparing to import settings from ${file}`);
-
-            // extensions
-
-            const extensions: AdmZip.IZipEntry | null = zip.getEntry("extensions.json");
-
-            if(extensions && !extensions.isDirectory){
-                zip.extractEntryTo("extensions.json", dist.User, undefined, true);
-
-                dist.updateExtensions();
-            }else
-                logger.warn("Extensions not found");
-
-            // keybindings
-
-            const keybindings: AdmZip.IZipEntry | null = zip.getEntry("keybindings.json");
-
-            if(keybindings && !keybindings.isDirectory)
-                zip.extractEntryTo("keybindings.json", dist.User, undefined, true);
-            else
-                logger.warn("Keybindings not found");
-
-            // locale
-
-            const locale: AdmZip.IZipEntry | null = zip.getEntry("locale.json");
-
-            if(locale && !locale.isDirectory){
-                zip.extractEntryTo("locale.json", dist.User, undefined, true);
-
-                dist.updateLocale();
-            }else
-                logger.warn("Locale not found");
-
-            // settings
-
-            const settings: AdmZip.IZipEntry | null = zip.getEntry("settings.json");
-
-            if(settings && !settings.isDirectory)
-                zip.extractEntryTo("settings.json", dist.User, undefined, true);
-
-            // snippets
-
-            const snippets: AdmZip.IZipEntry | null = zip.getEntry("snippets");
-
-            if(snippets && snippets.isDirectory)
-                zip.extractEntryTo("snippets", dist.User, undefined, true);
-            else
-                logger.warn("Settings not found");
-
-            vscode.window.showInformationMessage(logger.info(`Imported settings from ${file}`));
-        }catch(error: any){
-            return vscode.window.showErrorMessage(logger.error(`Failed to import settings: ${error}`));
-        }
+        uri && uri[0] && inport(uri[0].fsPath);
     });
 });

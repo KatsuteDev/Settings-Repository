@@ -20,13 +20,10 @@ import * as vscode from "vscode";
 
 import * as path from "path";
 
-import * as AdmZip from "adm-zip";
-
-import * as files from "../files";
-import * as logger from "../logger";
+import { xport } from "../sync/zip";
 import * as extension from "../extension";
 import { Distribution } from "../distribution";
-import { CommandQuickPickItem } from "../quickpick";
+import { CommandQuickPickItem } from "../lib/quickpick";
 
 //
 
@@ -43,64 +40,6 @@ export const command: vscode.Disposable = vscode.commands.registerCommand("setti
         defaultUri: vscode.Uri.file(path.join(dist.User, "settings.zip")),
         filters: {"ZIP archive": ["zip"]}
     }).then((uri?: vscode.Uri) => {
-        if(!uri) return;
-
-        try{
-            const zip: AdmZip = new AdmZip();
-
-            logger.info(`Preparing to export settings to ${uri.fsPath}`);
-
-            // extensions
-
-            const extensions: string | undefined = dist.getExtensions();
-
-            if(extensions)
-                zip.addFile("extensions.json", Buffer.from(extensions, "utf-8"));
-            else
-                logger.warn("Extensions not found");
-
-            // keybindings
-
-            const keybindings: string | undefined = dist.getKeybindings();
-
-            if(keybindings)
-                zip.addFile("keybindings.json", Buffer.from(keybindings, "utf-8"));
-            else
-                logger.warn("Keybindings not found");
-
-            // locale
-
-            const locale: string | undefined = dist.getLocale();
-
-            if(locale)
-                zip.addFile("locale.json", Buffer.from(locale));
-            else
-                logger.warn("Locale not found");
-
-            // settings
-
-            const settings: string | undefined = dist.getSettings();
-
-            if(settings)
-                zip.addFile("settings.json", Buffer.from(settings, "utf-8"));
-            else
-                logger.warn("Settings not found");
-
-            // snippets
-
-            if(files.isDirectory(dist.Snippets))
-                 zip.addLocalFolder(dist.Snippets, "snippets");
-            else
-                logger.warn("Snippets not found");
-
-            zip.writeZip(uri.fsPath, (error: Error | null) => {
-                if(error)
-                    return vscode.window.showErrorMessage(logger.error(`Failed to export settings: ${error}`));
-            });
-
-            vscode.window.showInformationMessage(logger.info(`Exported settings to ${uri.fsPath}`));
-        }catch(error: any){
-            return vscode.window.showErrorMessage(logger.error(`Failed to export settings: ${error}`));
-        }
+        uri && xport(uri.fsPath);
     });
 });

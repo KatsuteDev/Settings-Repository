@@ -30,27 +30,25 @@ const indent: (message: string) => string = (message: string) => {
     return message.replace(/^/gm, "      ").substring(6)
 }
 
-export const log: (message: string, icon?: string) => string = (message: string, icon: string = ' ') => {
+export const log: (message: string) => void = (message: string) => {
     logger.appendLine(`      ${indent(message)}`);
-    return message;
 }
 
-export const info: (message: string) => string = (message: string) => {
+export const info: (message: string, notify?: boolean) => void = (message: string, notify: boolean = false) => {
     logger.appendLine(`INFO  ${indent(message)}`);
-    return message;
+    notify && vscode.window.showInformationMessage(message);
 }
 
-export const warn: (message: string) => string = (message: string) => {
+export const warn: (message: string, notify?: boolean) => void = (message: string, notify: boolean = false) => {
     logger.appendLine(`WARN  ${indent(message)}`);
-    return message;
+    notify && vscode.window.showWarningMessage(message);
 }
 
-export const error: (message: string) => string = (message: string) => {
+export const error: (message: string, notify?: boolean) => void = (message: string, notify: boolean = false) => {
     logger.appendLine(`ERROR ${indent(message)}`);
-    return message;
+    notify && vscode.window.showErrorMessage(message);
 }
 
-export const debug: (message: string) => string = (message: string) => {
+export const debug: (message: string) => void = (message: string) => {
     logger.appendLine(`DEBUG ${indent(message)}`);
-    return message;
 }
