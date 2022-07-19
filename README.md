@@ -3,7 +3,7 @@
     <a href="https://github.com/KatsuteDev/Settings-Repository#readme">
         <img src="https://raw.githubusercontent.com/KatsuteDev/Settings-Repository/main/assets/icon.png" alt="icon" width="100" height="100">
     </a>
-    <h3>Settings Sync</h3>
+    <h3>Settings Repository</h3>
     <h5>Sync VSCode settings to a repository.</h5>
     <br>
     <a href="https://marketplace.visualstudio.com/items?itemName=katsute.settings-repository">Visual Studio Marketplace</a>
