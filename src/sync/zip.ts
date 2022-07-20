@@ -16,6 +16,8 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+import * as vscode from "vscode";
+
 import * as AdmZip from "adm-zip";
 
 import * as logger from "../logger";
@@ -84,6 +86,8 @@ export const inport: (fsPath: string) => void = (fsPath: string) => {
         }
 
         logger.info(`Imported settings from ${fsPath}`, true);
+
+        vscode.commands.executeCommand("workbench.action.reloadWindow");
     }catch(error: any){
         logger.error(`Failed to import settings: ${error}`, true);
     }

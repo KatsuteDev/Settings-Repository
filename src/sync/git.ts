@@ -135,6 +135,8 @@ export const pull: (repo: string) => void = async (repo: string) => {
                 logger.info(`Imported settings from ${config.get("repository")}@${branch}`, true);
 
                 cleanup(temp);
+
+                vscode.commands.executeCommand("workbench.action.reloadWindow");
             }
         });
     }catch(error: any){
