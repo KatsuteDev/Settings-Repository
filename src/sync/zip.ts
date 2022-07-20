@@ -16,7 +16,8 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-import * as vscode from "vscode";
+
+import * as fs from "fs";
 
 import * as AdmZip from "adm-zip";
 
@@ -62,8 +63,6 @@ export const inport: (fsPath: string) => void = (fsPath: string) => {
             const locale: AdmZip.IZipEntry | null = zip.getEntry("locale.json");
 
             if(locale && !locale.isDirectory){
-                zip.extractEntryTo("locale.json", dist.User, undefined, true);
-
                 dist.updateLocale();
             }else
                 logger.warn("Locale not found");
@@ -74,20 +73,26 @@ export const inport: (fsPath: string) => void = (fsPath: string) => {
 
             if(settings && !settings.isDirectory)
                 zip.extractEntryTo("settings.json", dist.User, undefined, true);
-        }
-
-        /* snippets */ {
-            const snippets: AdmZip.IZipEntry | null = zip.getEntry("snippets");
-
-            if(snippets && snippets.isDirectory)
-                zip.extractEntryTo("snippets", dist.User, undefined, true);
             else
                 logger.warn("Settings not found");
         }
 
+        /* snippets */ {
+            fs.existsSync(dist.Snippets) || fs.mkdirSync(dist.Snippets);
+
+            let hasSnippets: boolean = false;
+            for(const entry of zip.getEntries().filter(f => f.entryName.toLowerCase().startsWith("snippets/")).map(f => f.entryName)){
+                hasSnippets = true;
+                zip.extractEntryTo(entry, dist.User, undefined, true);
+            }
+
+            if(!hasSnippets)
+                logger.warn("Snippets not found");
+        }
+
         logger.info(`Imported settings from ${fsPath}`, true);
 
-        vscode.commands.executeCommand("workbench.action.reloadWindow");
+        extension.notify();
     }catch(error: any){
         logger.error(`Failed to import settings: ${error}`, true);
     }

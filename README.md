@@ -55,7 +55,7 @@ Sync your settings, keybindings, snippets, and locale wherever you use VSCode. C
 
 #### ☁️ Repository Sync
 
-Use any git repository to backup your settings. For private repositories make sure your token is scoped correctly.
+Use any git repository to backup your settings. For private repositories make sure your token is scoped correctly. Branch to sync to must already exist.
 
 #### 📦 Import / Export to ZIP
 

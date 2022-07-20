@@ -64,7 +64,7 @@ export class Distribution {
     ├ locale:      ${this.locale}
     ├ settings:    ${this.settings}
     └  Snippets:   ${this.Snippets}
-  .Vscode: ${this.dotVscode}
+  .vscode: ${this.dotVscode}
   ├  Extensions: ${this.Extensions}
   └  argv:       ${this.argv}`);
     }
@@ -123,10 +123,14 @@ ${extensions.slice(0, -2)}
         for(const extension of extensions){ // check remote extensions
             if(isNotNull(vscode.extensions.getExtension(extension.identifier))) continue; // extension exists and is enabled
 
-            const match: string = `${extension.identifier}-`;
+            /* vscode doesn't remove extension folder on uninstall, treat a disabled extension as missing
+
+            const match: string = `${extension.identifier.toLocaleLowerCase()}-`;
 
             for(const local of installed) // check local
-                if(files.isDirectory(local) && local.startsWith(match)) continue OUTER; // extension exists but is disabled
+                if(files.isDirectory(path.join(this.Extensions!, local)) && local.toLowerCase().startsWith(match)) continue OUTER; // extension exists but is disabled
+
+            */
 
             // not found locally, install this extension
             vscode.commands.executeCommand("workbench.extensions.installExtension", extension.identifier);

@@ -32,23 +32,28 @@ const indent: (message: string) => string = (message: string) => {
 
 export const log: (message: string) => void = (message: string) => {
     logger.appendLine(`      ${indent(message)}`);
+    console.log(message);
 }
 
 export const info: (message: string, notify?: boolean) => void = (message: string, notify: boolean = false) => {
     logger.appendLine(`INFO  ${indent(message)}`);
+    console.info(message);
     notify && vscode.window.showInformationMessage(message);
 }
 
 export const warn: (message: string, notify?: boolean) => void = (message: string, notify: boolean = false) => {
     logger.appendLine(`WARN  ${indent(message)}`);
+    console.warn(message);
     notify && vscode.window.showWarningMessage(message);
 }
 
 export const error: (message: string, notify?: boolean) => void = (message: string, notify: boolean = false) => {
     logger.appendLine(`ERROR ${indent(message)}`);
+    console.error(message);
     notify && vscode.window.showErrorMessage(message);
 }
 
 export const debug: (message: string) => void = (message: string) => {
     logger.appendLine(`DEBUG ${indent(message)}`);
+    console.debug(message);
 }

@@ -37,11 +37,13 @@ export const copyRecursiveSync: (src: string | undefined | null, dest: string) =
 
     fs.existsSync(dest) || fs.mkdirSync(dest);
 
-    for(const file of fs.readdirSync(src!) || [])
-        if(isFile(file))
-            fs.copyFileSync(path.join(src!, file), path.join(dest, file));
-        else if(isDirectory(file)){
+    for(const file of fs.readdirSync(src!) || []){
+        const fsPath: string = path.join(src!, file);
+        if(isFile(fsPath))
+            fs.copyFileSync(fsPath, path.join(dest, file));
+        else if(isDirectory(fsPath)){
             fs.mkdirSync(path.join(dest, file));
-            copyRecursiveSync(path.join(src!, file), path.join(dest, file));
+            copyRecursiveSync(fsPath, path.join(dest, file));
         }
+    }
 }

@@ -72,3 +72,10 @@ export const deactivate: () => Promise<void> = async () => {
     if(config.get("autoSync") === true)
         config.get("repository") && await push(config.get("repository"));
 }
+
+export const notify: () => void = () => {
+    vscode.window.showWarningMessage("Settings have been modified, a reload is required to see changes.", "Reload", "Ignore").then((value?: string) => {
+        if(value === "Reload")
+            vscode.commands.executeCommand("workbench.action.reloadWindow");
+    });
+}

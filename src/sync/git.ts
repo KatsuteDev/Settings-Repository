@@ -41,6 +41,11 @@ const cleanup: (fsPath: string) => void = (fsPath: string) => {
     statusbar.setActive(false);
 };
 
+const parseRepo: (repo: string, cred: auth.credentials) => string = (repo: string, cred: auth.credentials) => {
+    const part: string[] = repo.split("://");
+    return `${part[0]}://${cred.login}:${cred.auth}@${part.slice(1).join("://")}`;
+}
+
 export const pull: (repo: string) => void = async (repo: string) => {
     const dist: Distribution = extension.distribution();
     const cred: auth.credentials | undefined = auth.authorization();
@@ -55,8 +60,7 @@ export const pull: (repo: string) => void = async (repo: string) => {
 
     // repo
 
-    const part: string[] = repo.split("://");
-    const remote: string = `${part[0]}://${cred.login}:${cred.auth}@${part.slice(1).join("://")}`;
+    const remote: string = parseRepo(repo, cred);
 
     const branch: string = config.get("branch") ?? "main";
 
@@ -74,6 +78,7 @@ export const pull: (repo: string) => void = async (repo: string) => {
     statusbar.setActive(true);
 
     logger.info(`Preparing to import settings from ${config.get("repository")}@${branch}`);
+    logger.debug(`Clone to ${temp}`);
 
     try{
         const git: SimpleGit = simpleGit(temp);
@@ -136,7 +141,7 @@ export const pull: (repo: string) => void = async (repo: string) => {
 
                 cleanup(temp);
 
-                vscode.commands.executeCommand("workbench.action.reloadWindow");
+                extension.notify();
             }
         });
     }catch(error: any){
@@ -160,8 +165,7 @@ export const push: (repo: string) => Promise<void> = async (repo: string) => {
 
     // repo
 
-    const part: string[] = repo.split("://");
-    const remote: string = `${part[0]}://${cred.login}:${cred.auth}@${part.slice(1).join("://")}`;
+    const remote: string = parseRepo(repo, cred);
 
     const branch: string = config.get("branch") ?? "main";
 
@@ -179,6 +183,7 @@ export const push: (repo: string) => Promise<void> = async (repo: string) => {
     statusbar.setActive(true);
 
     logger.info(`Preparing to export settings to ${config.get("repository")}@${branch}`);
+    logger.debug(`Clone to ${temp}`);
     logger.debug(`includeHostnameInCommit: ${config.get("includeHostnameInCommitMessage")}`);
 
     try{
@@ -227,7 +232,13 @@ export const push: (repo: string) => Promise<void> = async (repo: string) => {
                     }
 
                     /* snippets */ {
-                        files.copyRecursiveSync(dist.Snippets, path.join(temp, "snippets"));
+                        const snippets: string = path.join(temp, "snippets");
+
+                        // remove remote, always use local copy
+                        fs.rmSync(snippets, {recursive: true, force: true});
+                        fs.mkdirSync(snippets);
+
+                        files.copyRecursiveSync(dist.Snippets, snippets);
                     }
                 }catch(error: any){
                     if(error){
