@@ -18,11 +18,11 @@
 
 import * as vscode from "vscode";
 
-import { push } from "./sync/git";
 import * as config from "./config";
 import * as logger from "./logger";
-import { statusbar } from "./statusbar";
 import * as auth from "./command/auth";
+import { statusbar } from "./statusbar";
+import { pull, push } from "./sync/git";
 import * as nport from "./command/import";
 import * as xport from "./command/export";
 import * as local from "./command/local";
@@ -65,6 +65,9 @@ export const activate: (context: vscode.ExtensionContext) => void = (context: vs
     logger.info("Added distribution");
 
     logger.info(`Auto sync is ${config.get("autoSync")}`);
+
+    if(config.get("autoSync") === true)
+        config.get("repository") && pull(config.get("repository"));
 }
 
 // must be async, otherwise vscode closes without waiting
@@ -74,7 +77,7 @@ export const deactivate: () => Promise<void> = async () => {
 }
 
 export const notify: () => void = () => {
-    vscode.window.showWarningMessage("Settings have been modified, a reload is required to see changes.", "Reload", "Ignore").then((value?: string) => {
+    vscode.window.showWarningMessage("Settings have been modified, a reload is required to see changes. Locale changes require a full restart.", "Reload", "Ignore").then((value?: string) => {
         if(value === "Reload")
             vscode.commands.executeCommand("workbench.action.reloadWindow");
     });

@@ -18,23 +18,20 @@
     ],
     "keywords": [
         "sync",
-        "settings",
         "settings sync",
         "settings repository",
+        "settings repo",
+        "settings zip",
         "sync settings",
-        "vscode settings sync",
-        "vscode settings repository",
-        "sync vscode settings",
-        "vscode settings sync",
-        "extensions",
-        "sync extensions",
         "extensions sync",
+        "sync extensions",
+        "vscode settings sync",
+        "locale sync",
+        "sync locale",
+        "language sync",
+        "sync language",
         "zip",
-        "repository",
-        "repo",
-        "import settings",
-        "export settings",
-        "settings zip"
+        "git"
     ],
     "sponsor": {
         "url": "https://patreon.com/Katsute"
@@ -92,7 +89,7 @@
             "order": 0,
             "properties": {
                 "settings-repository.repository": {
-                    "markdownDescription": "The git repository to sync settings with.",
+                    "markdownDescription": "The git repository to sync settings with. Make sure the token has access to this repository.",
                     "type": "string",
                     "order": 0,
                     "default": ""
@@ -104,7 +101,7 @@
                     "default": "main"
                 },
                 "settings-repository.autoSync": {
-                    "markdownDescription": "Automatically sync settings when VSCode closes.",
+                    "markdownDescription": "Automatically sync settings when VSCode opens and closes.",
                     "type": "boolean",
                     "order": 2,
                     "default": true

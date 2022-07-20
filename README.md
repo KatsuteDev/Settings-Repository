@@ -28,7 +28,7 @@ Sync VSCode extensions, keybindings, locale, settings, and snippets to a git rep
 
 ## 📃 Installation
 
-> ⚠️ This extension is not compatible with remote distributions of VSCode (ex: Codespaces). Pull your settings from VSCode on desktop then use the **Settings Sync** that is included with VSCode.
+> ⚠️ This extension is not compatible with remote distributions of VSCode (ex: Codespaces). Pull your settings from VSCode on desktop then use the [**Settings Sync**](https://code.visualstudio.com/docs/editor/settings-sync) that is included with VSCode.
 
 This extension requires [git](https://git-scm.com/downloads) to be installed.
 
@@ -47,15 +47,19 @@ This extension requires [git](https://git-scm.com/downloads) to be installed.
 #### ✨ Extension Sync
 
 Sync all of the extensions that you use, including disabled ones.
-Currently the enabled/disabled state of extensions can not be toggled (see [Microsoft/vscode#15466](https://github.com/microsoft/vscode/issues/15466)), extensions will be enabled/disabled based on the local settings.
+Currently the enabled/disabled state of extensions can not be toggled (see [Microsoft/vscode#15466](https://github.com/microsoft/vscode/issues/15466#issuecomment-724147661)), extensions will be enabled/disabled based on the local settings.
 
 #### ⚙️ Settings Sync
 
-Sync your settings, keybindings, snippets, and locale wherever you use VSCode. Cross-platform keybindings not yet supported.
+Sync your settings, keybindings, snippets, wherever you use VSCode. Cross-platform keybindings not yet supported.
+
+#### 🌎 Locale Sync
+
+Sync the language that VSCode uses. Requires a restart to see changes.
 
 #### ☁️ Repository Sync
 
-Use any git repository to backup your settings. For private repositories make sure your token is scoped correctly. Branch to sync to must already exist.
+Use any git repository to backup your settings. For private repositories make sure your token is scoped correctly. Branch must already exist.
 
 #### 📦 Import / Export to ZIP
 

@@ -54,7 +54,7 @@ export const pull: (repo: string) => void = async (repo: string) => {
 
     // init directory
 
-    const temp: string = fs.mkdtempSync(path.join(os.tmpdir(), "vscode-settings-sync"));
+    const temp: string = fs.mkdtempSync(path.join(os.tmpdir(), "vscode-settings-repository"));
 
     if(!fs.existsSync(temp)) return logger.error(`Pull failed: unable to create temporary directory '${temp}'`, true);
 
@@ -131,6 +131,9 @@ export const pull: (repo: string) => void = async (repo: string) => {
                 /* snippets */ {
                     const snippets: string = path.join(temp, "snippets");
 
+                    // remove local, use remote copy
+                    fs.rmSync(dist.Snippets, {recursive: true, force: true});
+
                     if(files.isDirectory(snippets))
                         files.copyRecursiveSync(snippets, dist.Snippets);
                     else
@@ -159,7 +162,7 @@ export const push: (repo: string) => Promise<void> = async (repo: string) => {
 
     // init directory
 
-    const temp: string = fs.mkdtempSync(path.join(os.tmpdir(), "vscode-settings-sync-"));
+    const temp: string = fs.mkdtempSync(path.join(os.tmpdir(), "vscode-settings-repository-"));
 
     if(!fs.existsSync(temp)) return logger.error(`Push failed: unable to create temporary directory '${temp}'`, true);
 
@@ -234,11 +237,13 @@ export const push: (repo: string) => Promise<void> = async (repo: string) => {
                     /* snippets */ {
                         const snippets: string = path.join(temp, "snippets");
 
-                        // remove remote, always use local copy
+                        // remove remote, use local copy
                         fs.rmSync(snippets, {recursive: true, force: true});
-                        fs.mkdirSync(snippets);
 
-                        files.copyRecursiveSync(dist.Snippets, snippets);
+                        if(files.isDirectory(dist.Snippets))
+                            files.copyRecursiveSync(dist.Snippets, snippets);
+                        else
+                            logger.warn("Snippets noit found");
                     }
                 }catch(error: any){
                     if(error){

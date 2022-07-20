@@ -63,7 +63,7 @@ export class Distribution {
     ├ keybindings: ${this.keybindings}
     ├ locale:      ${this.locale}
     ├ settings:    ${this.settings}
-    └  Snippets:   ${this.Snippets}
+    └ Snippets:    ${this.Snippets}
   .vscode: ${this.dotVscode}
   ├  Extensions: ${this.Extensions}
   └  argv:       ${this.argv}`);
@@ -105,7 +105,7 @@ ${extensions.slice(0, -2)}
         : undefined;
     }
 
-    public updateExtensions(): void { // we cannot handle enable/disable at the moment, see <https://github.com/microsoft/vscode/issues/15466>
+    public updateExtensions(): void { // we cannot handle enable/disable at the moment, see <https://github.com/microsoft/vscode/issues/15466#issuecomment-724147661>
         if(!files.isDirectory(this.Extensions) || !files.isFile(this.extensions)) return;
 
         const extensions: [{
@@ -123,7 +123,7 @@ ${extensions.slice(0, -2)}
         for(const extension of extensions){ // check remote extensions
             if(isNotNull(vscode.extensions.getExtension(extension.identifier))) continue; // extension exists and is enabled
 
-            /* vscode doesn't remove extension folder on uninstall, treat a disabled extension as missing
+            /* vscode doesn't remove extension folder on uninstall, see <https://github.com/microsoft/vscode/issues/81046#issuecomment-532317549>
 
             const match: string = `${extension.identifier.toLocaleLowerCase()}-`;
 
@@ -133,7 +133,7 @@ ${extensions.slice(0, -2)}
             */
 
             // not found locally, install this extension
-            vscode.commands.executeCommand("workbench.extensions.installExtension", extension.identifier);
+            vscode.commands.executeCommand("workbench.extensions.installExtension", extension.identifier); // works even if already installed
             logger.info(`${logger.check} Installed ${extension.identifier}`);
         }
 
@@ -155,7 +155,9 @@ ${extensions.slice(0, -2)}
                     continue OUTER; // extension exists on remote
 
             // not found on remote, uninstall this extension
-            vscode.commands.executeCommand("workbench.extensions.uninstallExtension", identifier);
+            try{
+                vscode.commands.executeCommand("workbench.extensions.uninstallExtension", identifier);
+            }finally{} // ignore failed uninstall (already uninstalled)
             logger.info(`${logger.x} Uninstalled ${identifier}`);
         }
     }

@@ -16,9 +16,6 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-
-import * as fs from "fs";
-
 import * as AdmZip from "adm-zip";
 
 import * as logger from "../logger";
@@ -63,6 +60,8 @@ export const inport: (fsPath: string) => void = (fsPath: string) => {
             const locale: AdmZip.IZipEntry | null = zip.getEntry("locale.json");
 
             if(locale && !locale.isDirectory){
+                zip.extractEntryTo("locale.json", dist.User, undefined, true);
+
                 dist.updateLocale();
             }else
                 logger.warn("Locale not found");
@@ -78,8 +77,6 @@ export const inport: (fsPath: string) => void = (fsPath: string) => {
         }
 
         /* snippets */ {
-            fs.existsSync(dist.Snippets) || fs.mkdirSync(dist.Snippets);
-
             let hasSnippets: boolean = false;
             for(const entry of zip.getEntries().filter(f => f.entryName.toLowerCase().startsWith("snippets/")).map(f => f.entryName)){
                 hasSnippets = true;
