@@ -64,7 +64,12 @@ export const activate: (context: vscode.ExtensionContext) => void = (context: vs
 
     logger.info("Added distribution");
 
-    logger.info(`Auto sync is ${config.get("autoSync")}`);
+    logger.debug(`repo: ${config.get("repository")}`);
+    logger.debug(`branch: ${config.get("branch")}`);
+    logger.debug(`autoSync: ${config.get("autoSync")}`);
+    logger.debug(`includeHostnameInCommitMessage: ${config.get("includeHostnameInCommitMessage")}`);
+    logger.debug(`authenticated: ${!!auth.authorization()}`);
+
 
     if(config.get("autoSync") === true)
         config.get("repository") && pull(config.get("repository"));

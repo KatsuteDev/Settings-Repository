@@ -54,7 +54,7 @@ export const pull: (repo: string) => void = async (repo: string) => {
 
     // init directory
 
-    const temp: string = fs.mkdtempSync(path.join(os.tmpdir(), "vscode-settings-repository"));
+    const temp: string = fs.mkdtempSync(path.join(os.tmpdir(), "vscode-settings-repository-"));
 
     if(!fs.existsSync(temp)) return logger.error(`Pull failed: unable to create temporary directory '${temp}'`, true);
 
@@ -78,7 +78,7 @@ export const pull: (repo: string) => void = async (repo: string) => {
     statusbar.setActive(true);
 
     logger.info(`Preparing to import settings from ${config.get("repository")}@${branch}`);
-    logger.debug(`Clone to ${temp}`);
+    logger.debug(`Git clone ${auth.mask(remote, cred)}`);
 
     try{
         const git: SimpleGit = simpleGit(temp);
@@ -186,7 +186,7 @@ export const push: (repo: string) => Promise<void> = async (repo: string) => {
     statusbar.setActive(true);
 
     logger.info(`Preparing to export settings to ${config.get("repository")}@${branch}`);
-    logger.debug(`Clone to ${temp}`);
+    logger.debug(`Git clone ${auth.mask(remote, cred)}`);
     logger.debug(`includeHostnameInCommit: ${config.get("includeHostnameInCommitMessage")}`);
 
     try{

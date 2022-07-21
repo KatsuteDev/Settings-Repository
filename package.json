@@ -126,10 +126,6 @@
         "compile": "tsc --outDir dist",
         "build": "npm run compile",
         "prepare": "npm run clean && npm run build",
-        "// -- test -- //": "",
-        "watch": "tsc -watch -p ./",
-        "pretest": "npm run compile",
-        "test": "npm run pretest",
         "// -- deploy -- //": "",
         "package": "vsce package"
     },
