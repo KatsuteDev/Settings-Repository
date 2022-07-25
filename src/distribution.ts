@@ -25,6 +25,8 @@ import * as files from "./lib/files";
 import * as logger from "./logger";
 import { isNotNull, isNull } from "./lib/is";
 
+//
+
 export class Distribution {
 
     public readonly Code: string;
@@ -38,6 +40,8 @@ export class Distribution {
     public readonly dotVscode?: string;
         public readonly Extensions?: string;
         public readonly argv?: string;
+
+    public readonly macos: boolean = process.platform === "darwin";
 
     constructor(context: vscode.ExtensionContext) {
         this.Code = path.join(context.globalStorageUri.fsPath, "../../../");
@@ -168,13 +172,27 @@ ${extensions.slice(0, -2)}
             : undefined;
     }
 
+    private static readonly ctrl: RegExp = /(?<=^\s*"key"\s*:\s*".*)\bctrl\b(?=.*",?$)/mi; // ⌃ ctrl
+    private static readonly cmd:  RegExp = /(?<=^\s*"key"\s*:\s*".*)\bcmd\b(?=.*",?$)/mi;  // ⌘ cmd
+
     public getKeybindings(): string | undefined {
         return files.isFile(this.keybindings)
             ? fs.readFileSync(this.keybindings, "utf-8").trim()
             : undefined;
     }
 
-    private static readonly locale: RegExp = /(?<=^\s*"locale"\s*:\s*")[\w-]+(?=")/m;
+    public formatKeybindings(keybindings: string, ctrl: "ctrl" | "cmd" = "ctrl"): string {
+        return keybindings.replace(ctrl === "ctrl" ? Distribution.ctrl : Distribution.cmd, ctrl); // ⌃ ctrl ↔ ⌘ cmd
+    }
+
+    public updateKeybindings(): void {
+        if(!files.isFile(this.keybindings)) return;
+
+        // replace local keybindings with OS specific keybinds
+        fs.writeFileSync(this.keybindings, this.formatKeybindings(fs.readFileSync(this.keybindings, "utf-8"), this.macos ? "cmd" : "ctrl"));
+    }
+
+    private static readonly locale: RegExp = /(?<=^\s*"locale"\s*:\s*")[\w-]+(?=")/mi;
 
     public getLocale(): string | undefined {
         if(!files.isFile(this.argv)) return undefined;

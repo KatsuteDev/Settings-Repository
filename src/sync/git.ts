@@ -102,9 +102,11 @@ export const pull: (repo: string) => void = async (repo: string) => {
                 /* keybindings */ {
                     const keybindings: string = path.join(temp, "keybindings.json");
 
-                    if(files.isFile(keybindings))
+                    if(files.isFile(keybindings)){
                         fs.copyFileSync(keybindings, dist.keybindings);
-                    else
+
+                        dist.updateKeybindings(); // replace with OS specific keybinds
+                    }else
                         logger.warn("Keybindings not found");
                 }
 
@@ -210,8 +212,8 @@ export const push: (repo: string) => Promise<void> = async (repo: string) => {
                     /* keybindings */ {
                         const keybindings: string | undefined = dist.getKeybindings();
 
-                        if(keybindings)
-                            fs.writeFileSync(path.join(temp, "keybindings.json"), keybindings, "utf-8");
+                        if(keybindings) // force keybindings to be saved as ctrl
+                            fs.writeFileSync(path.join(temp, "keybindings.json"), dist.formatKeybindings(keybindings, "ctrl"), "utf-8");
                         else
                             logger.warn("Keybindings not found");
                     }

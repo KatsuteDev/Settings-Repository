@@ -51,7 +51,11 @@ Currently the enabled/disabled state of extensions can not be toggled (see [Micr
 
 #### ⚙️ Settings Sync
 
-Sync your settings, keybindings, snippets, wherever you use VSCode. Cross-platform keybindings not yet supported.
+Sync your settings, snippets, wherever you use VSCode.
+
+#### ⌘ Keybindings Sync
+
+Sync keybindings between Windows and Mac, automatically swaps between <kbd>ctrl</kbd> and <kbd>⌘</kbd> command.
 
 #### 🌎 Locale Sync
 

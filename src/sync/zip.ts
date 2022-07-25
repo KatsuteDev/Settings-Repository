@@ -50,9 +50,11 @@ export const inport: (fsPath: string) => void = (fsPath: string) => {
         /* keybindings */ {
             const keybindings: AdmZip.IZipEntry | null = zip.getEntry("keybindings.json");
 
-            if(keybindings && !keybindings.isDirectory)
+            if(keybindings && !keybindings.isDirectory){
                 zip.extractEntryTo("keybindings.json", dist.User, undefined, true);
-            else
+
+                dist.updateKeybindings(); // replace with OS specific keybinds
+            }else
                 logger.warn("Keybindings not found");
         }
 
@@ -115,8 +117,8 @@ export const xport: (fsPath: string) => void = (fsPath: string) => {
         /* keybindings */ {
             const keybindings: string | undefined = dist.getKeybindings();
 
-            if(keybindings)
-                zip.addFile("keybindings.json", Buffer.from(keybindings, "utf-8"));
+            if(keybindings) // force keybindings to be saved as ctrl
+                zip.addFile("keybindings.json", Buffer.from(dist.formatKeybindings(keybindings), "utf-8"));
             else
                 logger.warn("Keybindings not found");
         }
