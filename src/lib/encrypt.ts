@@ -18,6 +18,8 @@
 
 import * as crypto from "crypto";
 
+//
+
 export class Crypt {
 
     private static readonly IV: number = 16;

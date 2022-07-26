@@ -21,8 +21,8 @@ import * as vscode from "vscode";
 import * as fs from "fs";
 import * as path from "path";
 
-import * as files from "./lib/files";
 import * as logger from "./logger";
+import * as files from "./lib/files";
 import { isNotNull, isNull } from "./lib/is";
 
 //
@@ -70,7 +70,8 @@ export class Distribution {
     └ Snippets:    ${this.Snippets}
   .vscode: ${this.dotVscode}
   ├  Extensions: ${this.Extensions}
-  └  argv:       ${this.argv}`);
+  └  argv:       ${this.argv}
+  macos: ${this.macos}`);
     }
 
     public getExtensions(): string | undefined {
@@ -172,8 +173,8 @@ ${extensions.slice(0, -2)}
             : undefined;
     }
 
-    private static readonly ctrl: RegExp = /(?<=^\s*"key"\s*:\s*".*)\bctrl\b(?=.*",?$)/mi; // ⌃ ctrl
-    private static readonly cmd:  RegExp = /(?<=^\s*"key"\s*:\s*".*)\bcmd\b(?=.*",?$)/mi;  // ⌘ cmd
+    private static readonly ctrl: RegExp = /(?<=^\s*"key"\s*:\s*".*)\bctrl\b(?=.*",?$)/gmi; // ⌃ ctrl
+    private static readonly cmd:  RegExp = /(?<=^\s*"key"\s*:\s*".*)\bcmd\b(?=.*",?$)/gmi;  // ⌘ cmd
 
     public getKeybindings(): string | undefined {
         return files.isFile(this.keybindings)
@@ -182,7 +183,7 @@ ${extensions.slice(0, -2)}
     }
 
     public formatKeybindings(keybindings: string, ctrl: "ctrl" | "cmd" = "ctrl"): string {
-        return keybindings.replace(ctrl === "ctrl" ? Distribution.ctrl : Distribution.cmd, ctrl); // ⌃ ctrl ↔ ⌘ cmd
+        return keybindings.replace(ctrl === "ctrl" ? Distribution.cmd : Distribution.ctrl, ctrl); // ⌃ ctrl ↔ ⌘ cmd
     }
 
     public updateKeybindings(): void {

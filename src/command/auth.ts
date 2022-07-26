@@ -21,10 +21,10 @@ import * as vscode from "vscode";
 import * as fs from "fs";
 import * as os from "os";
 
+import { isNull } from "../lib/is";
+import * as logger from "../logger";
 import * as files from "../lib/files";
 import { Crypt } from "../lib/encrypt";
-import * as logger from "../logger";
-import { isNull } from "../lib/is";
 import * as extension from "../extension";
 import { Distribution } from "../distribution";
 import { CommandQuickPickItem } from "../lib/quickpick";

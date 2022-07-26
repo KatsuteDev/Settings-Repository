@@ -23,9 +23,9 @@ import * as logger from "./logger";
 import * as auth from "./command/auth";
 import { statusbar } from "./statusbar";
 import { pull, push } from "./sync/git";
+import * as local from "./command/local";
 import * as nport from "./command/import";
 import * as xport from "./command/export";
-import * as local from "./command/local";
 import * as remote from "./command/remote";
 import * as options from "./command/options";
 import { Distribution } from "./distribution";
@@ -82,8 +82,9 @@ export const deactivate: () => Promise<void> = async () => {
 }
 
 export const notify: () => void = () => {
-    vscode.window.showWarningMessage("Settings have been modified, a reload is required to see changes. Locale changes require a full restart.", "Reload", "Ignore").then((value?: string) => {
-        if(value === "Reload")
+    const select: string = "Reload";
+    vscode.window.showWarningMessage("Settings have been modified, a reload is required to see changes. Some changes require a full restart.", select, "Ignore").then((value?: string) => {
+        if(value === select)
             vscode.commands.executeCommand("workbench.action.reloadWindow");
     });
 }

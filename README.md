@@ -51,11 +51,11 @@ Currently the enabled/disabled state of extensions can not be toggled (see [Micr
 
 #### ⚙️ Settings Sync
 
-Sync your settings, snippets, wherever you use VSCode.
+Sync your settings and snippets wherever you use VSCode.
 
 #### ⌘ Keybindings Sync
 
-Sync keybindings between Windows and Mac, automatically swaps between <kbd>ctrl</kbd> and <kbd>⌘</kbd> command.
+Sync keybindings between Windows and Mac, automatically swaps between <kbd>ctrl</kbd> and <kbd>⌘</kbd>.
 
 #### 🌎 Locale Sync
 
@@ -100,7 +100,7 @@ Use `Settings Repository: Export Settings` to export settings to a zip file and
 </table>
 <!-- GitHub Copilot Disclaimer -->
 
-Logging information is located in the lower panel under `Output > Settings Repository`.
+Logging information is located in the lower panel under `Output > Settings Repository`.
 
  - Found a bug or have a suggestion? Post it in [issues](https://github.com/KatsuteDev/Settings-Repository/issues).
  - Want to further expand our project? [Fork](https://github.com/KatsuteDev/Settings-Repository/fork) this repository and submit a [pull request](https://github.com/KatsuteDev/Settings-Repository/pulls).

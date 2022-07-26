@@ -21,6 +21,8 @@ import * as path from "path";
 
 import { isNotNull } from "./is";
 
+//
+
 // file is directory and exists
 export const isDirectory: (dir: string | undefined | null) => boolean = (dir: string | undefined | null) => {
     return isNotNull(dir) && fs.existsSync(dir!) && fs.lstatSync(dir!).isDirectory();
