@@ -17,7 +17,7 @@
 
 <br>
 
-Sync VSCode extensions, keybindings, locale, settings, and snippets to a git repository.
+Sync VSCode settings, extensions, keybindings, and more to a git repository.
 
  - [📃 Installation](#-installation)
  - [✨ Features](#-features)
