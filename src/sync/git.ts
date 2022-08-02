@@ -46,11 +46,11 @@ const parseRepo: (repo: string, cred: auth.credentials) => string = (repo: strin
     return `${part[0]}://${cred.login}:${cred.auth}@${part.slice(1).join("://")}`;
 }
 
-export const pull: (repo: string) => void = async (repo: string) => {
+export const pull: (repo: string, startup?: boolean) => void = async (repo: string, skipNotify: boolean = false) => {
     const dist: Distribution = extension.distribution();
     const cred: auth.credentials | undefined = auth.authorization();
 
-    if(!cred) return auth.authenticate();
+    if(!cred) return skipNotify || auth.authenticate();
 
     // init directory
 
@@ -146,7 +146,7 @@ export const pull: (repo: string) => void = async (repo: string) => {
 
                 cleanup(temp);
 
-                extension.notify();
+                skipNotify || extension.notify();
             }
         });
     }catch(error: any){

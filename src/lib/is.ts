@@ -27,3 +27,13 @@ export const isFalse: (obj: any) => boolean = (obj: any) => obj === false;
 
 // return if object is strictly equal to true
 export const isTrue: (obj: any) => boolean = (obj: any) => obj === true;
+
+// return if JSON is valid
+export const isValidJson: (json: string) => boolean = (json: string) => {
+    try{
+        JSON.parse(json);
+        return true;
+    }catch(error: any){
+        return false;
+    }
+}

@@ -23,7 +23,7 @@ import * as path from "path";
 
 import * as logger from "./logger";
 import * as files from "./lib/files";
-import { isNotNull, isNull } from "./lib/is";
+import { isNotNull, isNull, isValidJson } from "./lib/is";
 
 //
 
@@ -90,7 +90,11 @@ export class Distribution {
 
             if(!files.isFile(pkgFile)) continue;
 
-            const pkg: any = JSON.parse(fs.readFileSync(pkgFile, "utf-8"));
+            const json: string = fs.readFileSync(pkgFile, "utf-8");
+
+            if(!isValidJson(json)) continue;
+
+            const pkg: any = JSON.parse(json);
 
             if(isNull(pkg.publisher) || isNull(pkg.name)) continue;
 
@@ -113,11 +117,13 @@ ${extensions.slice(0, -2)}
     public updateExtensions(): void { // we cannot handle enable/disable at the moment, see <https://github.com/microsoft/vscode/issues/15466#issuecomment-724147661>
         if(!files.isDirectory(this.Extensions) || !files.isFile(this.extensions)) return;
 
+        const json: string = fs.readFileSync(this.extensions, "utf-8");
+
         const extensions: [{
             identifier: string,
             version: string,
             enabled: boolean
-        }] = JSON.parse(fs.readFileSync(this.extensions, "utf-8"));
+        }] = isValidJson(json) ? JSON.parse(json) : [];
 
         const installed: string[] = fs.readdirSync(this.Extensions!, {withFileTypes: true})
                                         .filter(f => f.isDirectory())
@@ -149,7 +155,11 @@ ${extensions.slice(0, -2)}
 
             if(!files.isFile(pkgFile)) continue;
 
-            const pkg: any = JSON.parse(fs.readFileSync(pkgFile, "utf-8"));
+            const json: string = fs.readFileSync(pkgFile, "utf-8");
+
+            if(!isValidJson(json)) continue;
+
+            const pkg: any = JSON.parse(json);
 
             if(isNull(pkg.publisher) || isNull(pkg.name)) continue;
 
@@ -213,10 +223,15 @@ ${extensions.slice(0, -2)}
         if(!files.isFile(this.argv) || !files.isFile(this.locale)) return;
 
         const argv: string = fs.readFileSync(this.argv!, "utf-8");
-        const json: any = JSON.parse(fs.readFileSync(this.locale, "utf-8"));
 
-        if(isNotNull(json.locale))
-            fs.writeFileSync(this.argv!, argv.replace(Distribution.locale, json.locale).trim());
+        const json: string = fs.readFileSync(this.locale, "utf-8");
+
+        if(!isValidJson(json)) return;
+
+        const locale: any = JSON.parse(json);
+
+        if(isNotNull(locale.locale))
+            fs.writeFileSync(this.argv!, argv.replace(Distribution.locale, locale.locale).trim());
     }
 
 }

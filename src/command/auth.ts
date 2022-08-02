@@ -21,7 +21,7 @@ import * as vscode from "vscode";
 import * as fs from "fs";
 import * as os from "os";
 
-import { isNull } from "../lib/is";
+import { isNull, isValidJson } from "../lib/is";
 import * as logger from "../logger";
 import * as files from "../lib/files";
 import { Crypt } from "../lib/encrypt";
@@ -89,7 +89,7 @@ export const authenticate: () => void = () => {
                 dist.credentials,
 `{
     "login": "${username}",
-    "auth": "${crypt.encrypt(password)}
+    "auth": "${crypt.encrypt(password)}"
 }`,
                 "utf-8");
         });
@@ -101,7 +101,11 @@ export const authorization: () => credentials | undefined = () => {
 
     if(!files.isFile(dist.credentials)) return undefined;
 
-    const credentials: credentials = JSON.parse(fs.readFileSync(dist.credentials, "utf-8"));
+    const json: string = fs.readFileSync(dist.credentials, "utf-8");
+
+    if(!isValidJson(json)) return undefined;
+
+    const credentials: credentials = JSON.parse(json);
 
     if(isNull(credentials.login) || isNull(credentials.auth)) return undefined;
 

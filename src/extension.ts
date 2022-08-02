@@ -72,7 +72,7 @@ export const activate: (context: vscode.ExtensionContext) => void = (context: vs
 
 
     if(config.get("autoSync") === true)
-        config.get("repository") && pull(config.get("repository"));
+        config.get("repository") && pull(config.get("repository"), true);
 }
 
 // must be async, otherwise vscode closes without waiting
