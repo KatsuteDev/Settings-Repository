@@ -35,12 +35,14 @@ This extension requires [git](https://git-scm.com/downloads) to be installed.
 #### 🛒 VSCode Marketplace (recommended)
 
  1. Install from `katsute.settings-repository` in the extension marketplace in Visual Studio Code or install from the [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=katsute.settings-repository).
+ 2. Run `Settings Repository: Choose Settings Repository` to set the repository.
 
 #### 📦 Manual
 
  1. Install the latest release from the [releases](https://github.com/KatsuteDev/Settings-Repository/releases) tab.
  2. Open Visual Studio Code in the folder with the extension.
  3. Right click the extension and select **Install Extension VSIX**.
+ 4. Run `Settings Repository: Choose Settings Repository` to set the repository.
 
 ## ✨ Features
 
@@ -68,19 +70,19 @@ Use any git repository to backup your settings. For private repositories make su
 #### 📦 Import / Export to ZIP
 
 Share copies of your settings without needing a repository.
-Use `Settings Repository: Export Settings` to export settings to a zip file and use `Settings Repository: Import Settings` to import settings from a zip file.
+Use `Settings Repository: Export Settings` to export settings to a zip file and use `Settings Repository: Import Settings` to import settings from a zip file.
 
 ## 💻 Commands
 
 | Command | Description |
 |---|---|
-|`Settings Repository: Options`|Menu to access commands for this extension. Can be accessed by clicking `Settings Repository` on the statusbar.|
-|`Settings Repository: Choose Settings Repository`|Menu to access repository options and commands.|
-|`Settings Repository: Authenticate`|Update git authentication.|
-|`Settings Repository: Overwrite Local`|Overwrite local settings with ones from the git repository.|
-|`Settings Repository: Overwrite Remote`|Overwrite settings on the git repository with ones stored locally.
-|`Settings Repository: Import Settings`|Import settings from a zip file.|
-|`Settings Repository: Export Settings`|Export settings to a zip file.|
+|`Settings Repository: Options`|Menu to access commands for this extension. Can be accessed by clicking `Settings Repository` on the statusbar.|
+|`Settings Repository: Choose Settings Repository`|Menu to access repository options and commands.|
+|`Settings Repository: Authenticate`|Update git authentication.|
+|`Settings Repository: Overwrite Local`|Overwrite local settings with ones from the git repository.|
+|`Settings Repository: Overwrite Remote`|Overwrite settings on the git repository with ones stored locally.
+|`Settings Repository: Import Settings`|Import settings from a zip file.|
+|`Settings Repository: Export Settings`|Export settings to a zip file.|
 
 ## ⚙️ Configuration
 
@@ -101,7 +103,7 @@ Use `Settings Repository: Export Settings` to export settings to a zip file and
 </table>
 <!-- GitHub Copilot Disclaimer -->
 
-Logging information is located in the lower panel under `Output > Settings Repository`.
+Logging information is located in the lower panel under `Output > Settings Repository`.
 
  - Found a bug or have a suggestion? Post it in [issues](https://github.com/KatsuteDev/Settings-Repository/issues).
  - Want to further expand our project? [Fork](https://github.com/KatsuteDev/Settings-Repository/fork) this repository and submit a [pull request](https://github.com/KatsuteDev/Settings-Repository/pulls).

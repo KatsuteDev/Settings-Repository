@@ -24,6 +24,7 @@ import * as path from "path";
 
 import simpleGit, { GitError, SimpleGit } from "simple-git";
 
+import { isNull } from "../lib/is";
 import * as config from "../config";
 import * as logger from "../logger";
 import * as files from "../lib/files";
@@ -46,7 +47,9 @@ const parseRepo: (repo: string, cred: auth.credentials) => string = (repo: strin
     return `${part[0]}://${cred.login}:${cred.auth}@${part.slice(1).join("://")}`;
 }
 
-export const pull: (repo: string, startup?: boolean) => void = async (repo: string, skipNotify: boolean = false) => {
+export const pull: (repo: string, skipNotify?: boolean) => void = async (repo: string, skipNotify: boolean = false) => {
+    if(isNull(repo)) return;
+
     const dist: Distribution = extension.distribution();
     const cred: auth.credentials | undefined = auth.authorization();
 
@@ -133,12 +136,12 @@ export const pull: (repo: string, startup?: boolean) => void = async (repo: stri
                 /* snippets */ {
                     const snippets: string = path.join(temp, "snippets");
 
-                    // remove local, use remote copy
-                    fs.rmSync(dist.Snippets, {recursive: true, force: true});
+                    if(files.isDirectory(snippets)){
+                        // remove local, use remote copy
+                        fs.rmSync(dist.Snippets, {recursive: true, force: true});
 
-                    if(files.isDirectory(snippets))
                         files.copyRecursiveSync(snippets, dist.Snippets);
-                    else
+                    }else
                         logger.warn("Snippets not found");
                 }
 
@@ -156,11 +159,13 @@ export const pull: (repo: string, startup?: boolean) => void = async (repo: stri
     }
 }
 
-export const push: (repo: string) => Promise<void> = async (repo: string) => {
+export const push: (repo: string, ignoreBadAuth?: boolean) => Promise<void> = async (repo: string, ignoreBadAuth: boolean = false) => {
+    if(isNull(repo)) return;
+
     const dist: Distribution = extension.distribution();
     const cred: auth.credentials | undefined = auth.authorization();
 
-    if(!cred) return auth.authenticate();
+    if(!cred) return ignoreBadAuth ? undefined : auth.authenticate();
 
     // init directory
 

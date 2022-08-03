@@ -56,3 +56,11 @@ body:
         Logging information, find in the lower panel under Output > Settings Repository.
     validations:
       required: false
+
+  - type: textarea
+    attributes:
+      label: Additional information
+      description: |
+        Any additional information that might be relevant like config or extension json.
+    validations:
+      required: false

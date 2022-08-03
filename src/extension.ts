@@ -78,7 +78,7 @@ export const activate: (context: vscode.ExtensionContext) => void = (context: vs
 // must be async, otherwise vscode closes without waiting
 export const deactivate: () => Promise<void> = async () => {
     if(config.get("autoSync") === true)
-        config.get("repository") && await push(config.get("repository"));
+        config.get("repository") && await push(config.get("repository"), true);
 }
 
 export const notify: () => void = () => {
