@@ -35,14 +35,17 @@ This extension requires [git](https://git-scm.com/downloads) to be installed.
 #### 🛒 VSCode Marketplace (recommended)
 
  1. Install from `katsute.settings-repository` in the extension marketplace in Visual Studio Code or install from the [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=katsute.settings-repository).
- 2. Run `Settings Repository: Choose Settings Repository` to set the repository.
-
 #### 📦 Manual
 
  1. Install the latest release from the [releases](https://github.com/KatsuteDev/Settings-Repository/releases) tab.
  2. Open Visual Studio Code in the folder with the extension.
  3. Right click the extension and select **Install Extension VSIX**.
- 4. Run `Settings Repository: Choose Settings Repository` to set the repository.
+
+##
+
+Run `Settings Repository: Choose Settings Repository` and select `Repository` to setup and authenticate with a repository, make sure you have your access token ready.
+
+By default this extension will use the `main` branch, if you are using a different branch make sure it has already been created before you push.
 
 ## ✨ Features
 
