@@ -41,7 +41,7 @@ This extension requires [git](https://git-scm.com/downloads) to be installed.
  2. Open Visual Studio Code in the folder with the extension.
  3. Right click the extension and select **Install Extension VSIX**.
 
-##
+## &nbsp;
 
 Run `Settings Repository: Choose Settings Repository` and select `Repository` to setup and authenticate with a repository, make sure you have your access token ready.
 
