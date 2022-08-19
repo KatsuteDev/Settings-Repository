@@ -111,14 +111,11 @@ export class Distribution {
 
         let json: string = "";
 
-        for(const e in extensions){
-            const ext: {
-                version: string,
-                enabled: boolean
-            } = extensions[e];
+        for(const id in extensions){
+            const ext: {version: string, enabled: boolean} = extensions[id];
 
             json += `    {
-        "identifier": "${e}",
+        "identifier": "${id}",
         "version": "${ext.version}",
         "enabled": ${ext.enabled}
     },\n`;
