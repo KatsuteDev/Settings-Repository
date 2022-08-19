@@ -77,7 +77,7 @@ export class Distribution {
     public getExtensions(): string | undefined {
         if(!files.isDirectory(this.Extensions)) return undefined;
 
-        let extensions: string = "";
+        let extensions: {[extension: string]: {version: string, enabled: boolean}} = {};
 
         const installed: string[] = fs.readdirSync(this.Extensions!, {withFileTypes: true})
                                         .filter(f => f.isDirectory())
@@ -100,16 +100,30 @@ export class Distribution {
 
             const extension: vscode.Extension<any> | undefined = vscode.extensions.getExtension(`${pkg.publisher}.${pkg.name}`);
 
-            extensions += `    {
-        "identifier": "${pkg.publisher}.${pkg.name}",
-        "version": "${pkg.version}",
-        "enabled": ${!!extension}
+            const id: string = `${pkg.publisher}.${pkg.name}`;
+
+            if(!extensions[id] || pkg.version > extensions[id].version) // add if missing or higher version
+                extensions[id] = {
+                    version: pkg.version,
+                    enabled: !!extension
+                };
+        }
+
+        let json: string = "";
+
+        for(const id in extensions){
+            const ext: {version: string, enabled: boolean} = extensions[id];
+
+            json += `    {
+        "identifier": "${id}",
+        "version": "${ext.version}",
+        "enabled": ${ext.enabled}
     },\n`;
         }
 
-    return extensions !== ""
+    return json !== ""
         ? `[
-${extensions.slice(0, -2)}
+${json.slice(0, -2)}
 ]`
         : undefined;
     }
