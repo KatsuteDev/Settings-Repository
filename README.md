@@ -113,4 +113,4 @@ Logging information is located in the lower panel under `Output > Settings Repos
 
 ### 💼 License
 
-This extension is released under the [GNU General Public License (GPL) v2.0](https://github.com/KatsuteDev/Settings-Repository/main/LICENSE).
+This extension is released under the [GNU General Public License (GPL) v2.0](https://github.com/KatsuteDev/Settings-Repository/blob/main/LICENSE).
