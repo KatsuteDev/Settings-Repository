@@ -35,6 +35,7 @@ This extension requires [git](https://git-scm.com/downloads) to be installed.
 #### 🛒 VSCode Marketplace (recommended)
 
  1. Install from `katsute.settings-repository` in the extension marketplace in Visual Studio Code or install from the [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=katsute.settings-repository).
+
 #### 📦 Manual
 
  1. Install the latest release from the [releases](https://github.com/KatsuteDev/Settings-Repository/releases) tab.
