@@ -33,9 +33,6 @@
         "zip",
         "git"
     ],
-    "sponsor": {
-        "url": "https://patreon.com/Katsute"
-    },
     "activationEvents": [
         "onStartupFinished",
         "onCommand:settings-repository.options",
