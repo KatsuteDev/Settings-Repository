@@ -33,6 +33,9 @@
         "zip",
         "git"
     ],
+    "sponsor": {
+        "url": "https://ko-fi.com/katsute"
+    },
     "activationEvents": [
         "onStartupFinished",
         "onCommand:settings-repository.options",
