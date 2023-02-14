@@ -1,5 +1,22 @@
 # Changelog
 
+## 1.0.3
+
+### 📘 Dependencies
+
+* Bump simple-git from 3.15.0 to 3.15.1 [#40](https://github.com/KatsuteDev/Settings-Repository/pull/40) ([@dependabot](https://github.com/dependabot))
+* Bump vsce from 2.14.0 to 2.15.0 [#41](https://github.com/KatsuteDev/Settings-Repository/pull/41) ([@dependabot](https://github.com/dependabot))
+* Bump typescript from 4.9.3 to 4.9.4 [#42](https://github.com/KatsuteDev/Settings-Repository/pull/42) ([@dependabot](https://github.com/dependabot))
+* Bump adm-zip from 0.5.9 to 0.5.10 [#44](https://github.com/KatsuteDev/Settings-Repository/pull/44) ([@dependabot](https://github.com/dependabot))
+* Bump @vscode/vsce from 2.15.0 to 2.16.0 [#45](https://github.com/KatsuteDev/Settings-Repository/pull/45) ([@dependabot](https://github.com/dependabot))
+* Bump simple-git from 3.15.1 to 3.16.0 [#49](https://github.com/KatsuteDev/Settings-Repository/pull/49) ([@dependabot](https://github.com/dependabot))
+* Bump @vscode/vsce from 2.16.0 to 2.17.0 [#50](https://github.com/KatsuteDev/Settings-Repository/pull/50) ([@dependabot](https://github.com/dependabot))
+* Bump typescript from 4.9.4 to 4.9.5 [#51](https://github.com/KatsuteDev/Settings-Repository/pull/51) ([@dependabot](https://github.com/dependabot))
+* Bump @types/vscode from 1.74.0 to 1.75.0 [#53](https://github.com/KatsuteDev/Settings-Repository/pull/53) ([@dependabot](https://github.com/dependabot))
+* Bump @types/node from 18.11.11 to 18.13.0 [#54](https://github.com/KatsuteDev/Settings-Repository/pull/54) ([@dependabot](https://github.com/dependabot))
+
+**Full Changelog**: [`1.0.2...1.0.3`](https://github.com/KatsuteDev/Settings-Repository/compare/1.0.2...1.0.3)
+
 ## 1.0.2
 
 ### 📘 Dependencies

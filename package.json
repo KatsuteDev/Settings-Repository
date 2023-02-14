@@ -8,7 +8,7 @@
         "theme": "dark"
     },
     "publisher": "Katsute",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "private": true,
     "engines": {
         "vscode": "^1.75.0"
@@ -37,14 +37,7 @@
         "url": "https://ko-fi.com/katsute"
     },
     "activationEvents": [
-        "onStartupFinished",
-        "onCommand:settings-repository.options",
-        "onCommand:settings-repository.repository",
-        "onCommand:settings-repository.authenticate",
-        "onCommand:settings-repository.overwriteLocal",
-        "onCommand:settings-repository.overwriteRemote",
-        "onCommand:settings-repository.importSettings",
-        "onCommand:settings-repository.exportSettings"
+        "onStartupFinished"
     ],
     "extensionKind": [
         "ui"

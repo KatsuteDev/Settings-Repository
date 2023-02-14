@@ -1,6 +1,9 @@
 .gitignore
+
+.vscode
 .vscodeignore
 
+.devcontainer
 .github
 
 assets/*
