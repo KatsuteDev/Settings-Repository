@@ -109,9 +109,6 @@ Use `Settings Repository: Export Settings` to export settings to a zip file and 
 
 Logging information is located in the lower panel under `Output > Settings Repository`.
 
- - Found a bug or have a suggestion? Post it in [issues](https://github.com/KatsuteDev/Settings-Repository/issues).
- - Want to further expand our project? [Fork](https://github.com/KatsuteDev/Settings-Repository/fork) this repository and submit a [pull request](https://github.com/KatsuteDev/Settings-Repository/pulls).
-
 ### 💼 License
 
 This extension is released under the [GNU General Public License (GPL) v2.0](https://github.com/KatsuteDev/Settings-Repository/blob/main/LICENSE).

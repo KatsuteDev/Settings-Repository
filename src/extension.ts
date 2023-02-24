@@ -70,7 +70,6 @@ export const activate: (context: vscode.ExtensionContext) => void = (context: vs
     logger.debug(`includeHostnameInCommitMessage: ${config.get("includeHostnameInCommitMessage")}`);
     logger.debug(`authenticated: ${!!auth.authorization()}`);
 
-
     if(config.get("autoSync") === true)
         config.get("repository") && pull(config.get("repository"), true);
 }
