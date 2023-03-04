@@ -114,7 +114,7 @@
     "main": "dist/extension.js",
     "scripts": {
         "// -- dev -- //": "",
-        "clean": "rimraf dist & rimraf dist & rimraf settings-repository-*.vsix",
+        "clean": "rimraf --glob dist & rimraf --glob settings-repository-*.vsix",
         "prune": "npm prune && npm i --package-lock --ignore-scripts",
         "update": "npm update -D && npm i --package-lock --ignore-scripts && npm run prune",
         "// -- build -- //": "",
@@ -144,7 +144,7 @@
         "@types/node": "18.14.0",
         "@types/vscode": "1.76.0",
         "@vscode/vsce": "2.18.0",
-        "rimraf": "3.0.2",
+        "rimraf": "4.3.0",
         "typescript": "4.9.5"
     }
 }
