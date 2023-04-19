@@ -1,5 +1,29 @@
 # Changelog
 
+## 1.0.4
+
+### 📘 Dependencies
+
+* Bump @types/vscode from 1.75.0 to 1.75.1 [#55](https://github.com/KatsuteDev/Settings-Repository/pull/55) ([@dependabot](https://github.com/dependabot))
+* Bump simple-git from 3.16.0 to 3.16.1 [#56](https://github.com/KatsuteDev/Settings-Repository/pull/56) ([@dependabot](https://github.com/dependabot))
+* Bump @types/node from 18.13.0 to 18.14.0 [#57](https://github.com/KatsuteDev/Settings-Repository/pull/57) ([@dependabot](https://github.com/dependabot))
+* Bump @vscode/vsce from 2.17.0 to 2.18.0 [#58](https://github.com/KatsuteDev/Settings-Repository/pull/58) ([@dependabot](https://github.com/dependabot))
+* Bump @types/vscode from 1.75.1 to 1.76.0 [#59](https://github.com/KatsuteDev/Settings-Repository/pull/59) ([@dependabot](https://github.com/dependabot))
+* Bump rimraf from 3.0.2 to 4.3.0 [#60](https://github.com/KatsuteDev/Settings-Repository/pull/60) ([@dependabot](https://github.com/dependabot))
+* Bump simple-git from 3.16.1 to 3.17.0 [#61](https://github.com/KatsuteDev/Settings-Repository/pull/61) ([@dependabot](https://github.com/dependabot))
+* Bump rimraf from 4.3.0 to 4.3.1 [#62](https://github.com/KatsuteDev/Settings-Repository/pull/62) ([@dependabot](https://github.com/dependabot))
+* Bump rimraf from 4.3.1 to 4.4.0 [#63](https://github.com/KatsuteDev/Settings-Repository/pull/63) ([@dependabot](https://github.com/dependabot))
+* Bump @types/node from 18.14.0 to 18.15.0 [#64](https://github.com/KatsuteDev/Settings-Repository/pull/64) ([@dependabot](https://github.com/dependabot))
+* Bump typescript from 4.9.5 to 5.0.2 [#66](https://github.com/KatsuteDev/Settings-Repository/pull/66) ([@dependabot](https://github.com/dependabot))
+* Bump rimraf from 4.4.0 to 4.4.1 [#67](https://github.com/KatsuteDev/Settings-Repository/pull/67) ([@dependabot](https://github.com/dependabot))
+* Bump typescript from 5.0.2 to 5.0.3 [#69](https://github.com/KatsuteDev/Settings-Repository/pull/69) ([@dependabot](https://github.com/dependabot))
+* Bump @types/vscode from 1.76.0 to 1.77.0 [#70](https://github.com/KatsuteDev/Settings-Repository/pull/70) ([@dependabot](https://github.com/dependabot))
+* Bump typescript from 5.0.3 to 5.0.4 [#71](https://github.com/KatsuteDev/Settings-Repository/pull/71) ([@dependabot](https://github.com/dependabot))
+* Bump rimraf from 4.4.1 to 5.0.0 [#73](https://github.com/KatsuteDev/Settings-Repository/pull/73) ([@dependabot](https://github.com/dependabot))
+* Bump @vscode/vsce from 2.18.0 to 2.19.0 [#74](https://github.com/KatsuteDev/Settings-Repository/pull/74) ([@dependabot](https://github.com/dependabot))
+
+**Full Changelog**: [`1.0.3...1.0.4`](https://github.com/KatsuteDev/Settings-Repository/compare/1.0.3...1.0.4)
+
 ## 1.0.3
 
 ### 📘 Dependencies
