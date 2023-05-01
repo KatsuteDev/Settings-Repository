@@ -137,7 +137,7 @@
     "homepage": "https://github.com/KatsuteDev/Settings-Repository#readme",
     "dependencies": {
         "adm-zip": "0.5.10",
-        "simple-git": "3.17.0"
+        "simple-git": "3.18.0"
     },
     "devDependencies": {
         "@types/adm-zip": "0.5.0",
