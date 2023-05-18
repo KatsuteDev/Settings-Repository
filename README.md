@@ -46,6 +46,10 @@ This extension requires [git](https://git-scm.com/downloads) to be installed.
 
 Run `Settings Repository: Choose Settings Repository` and select `Repository` to setup and authenticate with a repository, make sure you have your access token ready.
 
+For classic tokens, make sure you have [**repo**] selected.
+
+For fine grained tokens, make sure you have [**Read** and **Write** access to code] enabled.
+
 By default this extension will use the `main` branch, if you are using a different branch make sure it has already been created before you push.
 
 ## ✨ Features
