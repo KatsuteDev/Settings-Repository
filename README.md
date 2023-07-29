@@ -4,27 +4,15 @@
         <img src="https://raw.githubusercontent.com/KatsuteDev/Settings-Repository/main/assets/icon.png" alt="icon" width="100" height="100">
     </a>
     <h3>Settings Repository</h3>
-    <h5>Sync VSCode settings to a repository</h5>
-    <br>
-    <a href="https://marketplace.visualstudio.com/items?itemName=katsute.settings-repository">Visual Studio Marketplace</a>
-    •
-    <a href="https://github.com/KatsuteDev/Settings-Repository/releases">Releases</a>
-    <br>
-    <br>
-    <a href="https://marketplace.visualstudio.com/items?itemName=katsute.settings-repository"><img src="https://img.shields.io/visual-studio-marketplace/stars/katsute.settings-repository?style=flat-square&color=0098FF"></a>
-    <a href="https://marketplace.visualstudio.com/items?itemName=katsute.settings-repository"><img src="https://img.shields.io/visual-studio-marketplace/i/katsute.settings-repository?style=flat-square&color=0098FF"></a>
+    <h4>Sync VSCode settings to a repository</h4>
+    <a href="https://marketplace.visualstudio.com/items?itemName=katsute.settings-repository"><img src="https://img.shields.io/visual-studio-marketplace/stars/katsute.settings-repository?style=for-the-badge&logo=visualstudiocode&labelColor=252526&color=0098FF"></a>
+    <a href="https://marketplace.visualstudio.com/items?itemName=katsute.settings-repository"><img src="https://img.shields.io/visual-studio-marketplace/i/katsute.settings-repository?style=for-the-badge&logo=visualstudiocode&labelColor=252526&color=0098FF"></a>
+    <a href="https://marketplace.visualstudio.com/items?itemName=katsute.settings-repository"><img src="https://img.shields.io/visual-studio-marketplace/d/katsute.settings-repository?style=for-the-badge&logo=visualstudiocode&labelColor=252526&color=0098FF"></a>
 </div>
 
 <br>
 
 Sync VSCode settings, extensions, keybindings, and more to a git repository.
-
- - [📃 Installation](#-installation)
- - [✨ Features](#-features)
- - [💻 Commands](#-commands)
- - [⚙️ Configuration](#%EF%B8%8F-configuration)
- - [👨‍💻 Contributing](#-contributing)
- - [💼 License](#-license)
 
 ## 📃 Installation
 
