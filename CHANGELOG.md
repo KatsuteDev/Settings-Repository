@@ -1,5 +1,28 @@
 # Changelog
 
+## 1.0.5
+
+### Dependencies
+
+* Bump @types/node from 18.15.0 to 18.16.0 [#77](https://github.com/KatsuteDev/Settings-Repository/pull/77) ([@dependabot](https://github.com/dependabot))
+* Bump simple-git from 3.17.0 to 3.18.0 [#78](https://github.com/KatsuteDev/Settings-Repository/pull/78) ([@dependabot](https://github.com/dependabot))
+* Bump @types/node from 18.16.0 to 20.1.0 [#80](https://github.com/KatsuteDev/Settings-Repository/pull/80) ([@dependabot](https://github.com/dependabot))
+* Bump @types/vscode from 1.77.0 to 1.78.0 [#79](https://github.com/KatsuteDev/Settings-Repository/pull/79) ([@dependabot](https://github.com/dependabot))
+* Bump rimraf from 5.0.0 to 5.0.1 [#83](https://github.com/KatsuteDev/Settings-Repository/pull/83) ([@dependabot](https://github.com/dependabot))
+* Bump @types/node from 20.1.0 to 20.2.3 [#82](https://github.com/KatsuteDev/Settings-Repository/pull/82) ([@dependabot](https://github.com/dependabot))
+* Bump @types/vscode from 1.78.0 to 1.78.1 [#85](https://github.com/KatsuteDev/Settings-Repository/pull/85) ([@dependabot](https://github.com/dependabot))
+* Bump simple-git from 3.18.0 to 3.19.0 [#84](https://github.com/KatsuteDev/Settings-Repository/pull/84) ([@dependabot](https://github.com/dependabot))
+* Bump typescript from 5.0.4 to 5.1.3 [#86](https://github.com/KatsuteDev/Settings-Repository/pull/86) ([@dependabot](https://github.com/dependabot))
+* Bump @types/node from 20.2.3 to 20.3.0 [#87](https://github.com/KatsuteDev/Settings-Repository/pull/87) ([@dependabot](https://github.com/dependabot))
+* Bump @types/vscode from 1.78.1 to 1.79.0 [#88](https://github.com/KatsuteDev/Settings-Repository/pull/88) ([@dependabot](https://github.com/dependabot))
+* Bump @types/vscode from 1.79.0 to 1.79.1 [#89](https://github.com/KatsuteDev/Settings-Repository/pull/89) ([@dependabot](https://github.com/dependabot))
+* Bump simple-git from 3.19.0 to 3.19.1 [#90](https://github.com/KatsuteDev/Settings-Repository/pull/90) ([@dependabot](https://github.com/dependabot))
+* Bump typescript from 5.1.3 to 5.1.6 [#92](https://github.com/KatsuteDev/Settings-Repository/pull/92) ([@dependabot](https://github.com/dependabot))
+* Bump @types/node from 20.3.0 to 20.4.1 [#94](https://github.com/KatsuteDev/Settings-Repository/pull/94) ([@dependabot](https://github.com/dependabot))
+* Bump @types/vscode from 1.79.1 to 1.80.0 [#93](https://github.com/KatsuteDev/Settings-Repository/pull/93) ([@dependabot](https://github.com/dependabot))
+
+**Full Changelog**: [`1.0.4...1.0.5`](https://github.com/KatsuteDev/Settings-Repository/compare/1.0.4...1.0.5)
+
 ## 1.0.4
 
 ### 📘 Dependencies
