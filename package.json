@@ -142,7 +142,7 @@
     "devDependencies": {
         "@types/adm-zip": "0.5.0",
         "@types/node": "20.4.5",
-        "@types/vscode": "1.80.0",
+        "@types/vscode": "1.81.0",
         "@vscode/vsce": "2.20.1",
         "rimraf": "5.0.1",
         "typescript": "5.1.6"
