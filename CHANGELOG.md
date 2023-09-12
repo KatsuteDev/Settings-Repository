@@ -1,5 +1,24 @@
 # Changelog
 
+## 1.0.6
+
+### Optimizations
+
+* Bundle extension with ESBuild [#105](https://github.com/KatsuteDev/Settings-Repository/pull/105) ([@Katsute](https://github.com/Katsute))
+
+### Dependencies
+
+* Bump @vscode/vsce from 2.20.0 to 2.20.1 [#96](https://github.com/KatsuteDev/Settings-Repository/pull/96) ([@dependabot](https://github.com/dependabot))
+* Bump @types/vscode from 1.80.0 to 1.81.0 [#97](https://github.com/KatsuteDev/Settings-Repository/pull/97) ([@dependabot](https://github.com/dependabot))
+* Bump @types/node from 20.4.5 to 20.5.0 [#98](https://github.com/KatsuteDev/Settings-Repository/pull/98) ([@dependabot](https://github.com/dependabot))
+* Bump typescript from 5.1.6 to 5.2.2 [#99](https://github.com/KatsuteDev/Settings-Repository/pull/99) ([@dependabot](https://github.com/dependabot))
+* Bump @vscode/vsce from 2.20.1 to 2.21.0 [#101](https://github.com/KatsuteDev/Settings-Repository/pull/101) ([@dependabot](https://github.com/dependabot))
+* Bump @types/node from 20.5.0 to 20.6.0 [#104](https://github.com/KatsuteDev/Settings-Repository/pull/104) ([@dependabot](https://github.com/dependabot))
+* Bump @types/vscode from 1.81.0 to 1.82.0 [#103](https://github.com/KatsuteDev/Settings-Repository/pull/103) ([@dependabot](https://github.com/dependabot))
+* Bump @types/adm-zip from 0.5.0 to 0.5.1 [#102](https://github.com/KatsuteDev/Settings-Repository/pull/102) ([@dependabot](https://github.com/dependabot))
+
+**Full Changelog**: [`1.0.5...1.0.6`](https://github.com/KatsuteDev/Settings-Repository/compare/1.0.5...1.0.6)
+
 ## 1.0.5
 
 ### Dependencies
