@@ -16,7 +16,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-import * as AdmZip from "adm-zip";
+import AdmZip from "adm-zip";
 
 import * as logger from "../logger";
 import * as files from "../lib/files";

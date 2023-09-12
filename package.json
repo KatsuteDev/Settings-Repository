@@ -8,7 +8,7 @@
         "theme": "dark"
     },
     "publisher": "Katsute",
-    "version": "1.0.5",
+    "version": "1.0.6",
     "private": true,
     "engines": {
         "vscode": "^1.82.0"
@@ -111,7 +111,7 @@
             }
         }
     },
-    "main": "dist/extension.js",
+    "main": "dist/index.js",
     "scripts": {
         "// -- dev -- //": "",
         "clean": "rimraf --glob dist & rimraf --glob settings-repository-*.vsix",
@@ -119,8 +119,9 @@
         "update": "npm update -D && npm i --package-lock --ignore-scripts && npm run prune",
         "// -- build -- //": "",
         "vscode:prepublish": "npm run prepare",
-        "compile": "tsc --outDir dist",
-        "build": "npm run compile",
+        "build:esbuild": "esbuild src/extension.ts --bundle --outfile=dist/index.js --external:vscode --format=cjs --platform=node --minify --legal-comments=none --metafile=meta.json",
+        "build:post": "node build.js",
+        "build": "npm run build:esbuild && npm run build:post",
         "prepare": "npm run clean && npm run build",
         "// -- deploy -- //": "",
         "package": "vsce package"
@@ -135,16 +136,16 @@
         "url": "https://github.com/KatsuteDev/Settings-Repository/issues"
     },
     "homepage": "https://github.com/KatsuteDev/Settings-Repository#readme",
-    "dependencies": {
-        "adm-zip": "0.5.10",
-        "simple-git": "3.19.1"
-    },
     "devDependencies": {
         "@types/adm-zip": "0.5.1",
         "@types/node": "20.6.0",
         "@types/vscode": "1.82.0",
         "@vscode/vsce": "2.21.0",
+        "adm-zip": "0.5.10",
+        "esbuild": "0.19.2",
+        "glob": "10.3.4",
         "rimraf": "5.0.1",
+        "simple-git": "3.19.1",
         "typescript": "5.2.2"
     }
 }
