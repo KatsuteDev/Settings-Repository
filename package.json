@@ -143,7 +143,7 @@
         "@vscode/vsce": "2.21.0",
         "adm-zip": "0.5.10",
         "esbuild": "0.19.3",
-        "glob": "10.3.4",
+        "glob": "10.3.7",
         "rimraf": "5.0.1",
         "simple-git": "3.19.1",
         "typescript": "5.2.2"
