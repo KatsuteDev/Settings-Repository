@@ -145,7 +145,7 @@
         "esbuild": "0.19.3",
         "glob": "10.3.7",
         "rimraf": "5.0.1",
-        "simple-git": "3.19.1",
+        "simple-git": "3.20.0",
         "typescript": "5.2.2"
     }
 }
