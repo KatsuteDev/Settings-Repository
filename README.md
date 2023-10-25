@@ -14,17 +14,17 @@
 
 Sync VSCode settings, extensions, keybindings, and more to a git repository.
 
-## 📃 Installation
+## Installation
 
 > ⚠️ This extension is not compatible with remote distributions of VSCode (ex: Codespaces). Pull your settings from VSCode on desktop then use the [**Settings Sync**](https://code.visualstudio.com/docs/editor/settings-sync) that is included with VSCode.
 
 This extension requires [git](https://git-scm.com/downloads) to be installed.
 
-#### 🛒 VSCode Marketplace (recommended)
+#### VSCode Marketplace (recommended)
 
  1. Install from `katsute.settings-repository` in the extension marketplace in Visual Studio Code or install from the [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=katsute.settings-repository).
 
-#### 📦 Manual
+#### Manual
 
  1. Install the latest release from the [releases](https://github.com/KatsuteDev/Settings-Repository/releases) tab.
  2. Open Visual Studio Code in the folder with the extension.
@@ -40,35 +40,41 @@ For fine grained tokens, make sure you have [**Read** and **Write** access to co
 
 By default this extension will use the `main` branch, if you are using a different branch make sure it has already been created before you push.
 
-## ✨ Features
+Logging information is located in the lower panel under `Output > Settings Repository`.
 
-#### ✨ Extension Sync
+<div align="right"><a href="#top"><code>▲</code></a></div>
+
+## Features
+
+#### Extension Sync
 
 Sync all of the extensions that you use, including disabled ones.
-Currently the enabled/disabled state of extensions can not be toggled (see [Microsoft/vscode#15466](https://github.com/microsoft/vscode/issues/15466#issuecomment-724147661)), extensions will be enabled/disabled based on the local settings.
+Currently the enabled/disabled state of extensions can not be toggled (see [microsoft/vscode#15466](https://github.com/microsoft/vscode/issues/15466#issuecomment-724147661)), extensions will be enabled/disabled based on the local settings.
 
-#### ⚙️ Settings Sync
+#### Settings Sync
 
 Sync your settings and snippets wherever you use VSCode.
 
-#### ⌘ Keybindings Sync
+#### Keybindings Sync
 
 Sync keybindings between Windows and Mac, automatically swaps between <kbd>ctrl</kbd> and <kbd>⌘</kbd>.
 
-#### 🌎 Locale Sync
+#### Locale Sync
 
 Sync the language that VSCode uses. Requires a restart to see changes.
 
-#### ☁️ Repository Sync
+#### Repository Sync
 
 Use any git repository to backup your settings. For private repositories make sure your token is scoped correctly. Branch must already exist.
 
-#### 📦 Import / Export to ZIP
+#### Import / Export to ZIP
 
 Share copies of your settings without needing a repository.
 Use `Settings Repository: Export Settings` to export settings to a zip file and use `Settings Repository: Import Settings` to import settings from a zip file.
 
-## 💻 Commands
+<div align="right"><a href="#top"><code>▲</code></a></div>
+
+## Commands
 
 | Command | Description |
 |---|---|
@@ -80,7 +86,9 @@ Use `Settings Repository: Export Settings` to export settings to a zip file and 
 |`Settings Repository: Import Settings`|Import settings from a zip file.|
 |`Settings Repository: Export Settings`|Export settings to a zip file.|
 
-## ⚙️ Configuration
+<div align="right"><a href="#top"><code>▲</code></a></div>
+
+## Configuration
 
 | Name | Type | Description |
 |---|:-:|---|
@@ -89,7 +97,9 @@ Use `Settings Repository: Export Settings` to export settings to a zip file and 
 |`settings-repository.autoSync`|`boolean`|Automatically sync settings when VSCode closes.|
 |`settings-repository.includeHostnameInCommitMessage`|`boolean`|Include hostname in the commit message.|
 
-## 👨‍💻 Contributing
+<div align="right"><a href="#top"><code>▲</code></a></div>
+
+## &nbsp;
 
 <!-- Copilot -->
 <table>
@@ -100,9 +110,5 @@ Use `Settings Repository: Export Settings` to export settings to a zip file and 
     <p>AI generated code is <b>strictly prohibited</b> on this repository.</p>
 </table>
 <!-- Copilot -->
-
-Logging information is located in the lower panel under `Output > Settings Repository`.
-
-### 💼 License
 
 This extension is released under the [GNU General Public License (GPL) v2.0](https://github.com/KatsuteDev/Settings-Repository/blob/main/LICENSE).
