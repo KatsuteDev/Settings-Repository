@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.0.8
+
+### Dependencies
+
+* Bump esbuild from 0.19.9 to 0.19.10 [#139](https://github.com/KatsuteDev/Settings-Repository/pull/139) ([@dependabot](https://github.com/dependabot))
+* Bump simple-git from 3.21.0 to 3.22.0 [#142](https://github.com/KatsuteDev/Settings-Repository/pull/142) ([@dependabot](https://github.com/dependabot))
+* Bump esbuild from 0.19.10 to 0.19.11 [#141](https://github.com/KatsuteDev/Settings-Repository/pull/141) ([@dependabot](https://github.com/dependabot))
+* Bump @types/node from 20.10.0 to 20.11.1 [#144](https://github.com/KatsuteDev/Settings-Repository/pull/144) ([@dependabot](https://github.com/dependabot))
+* Bump esbuild from 0.19.11 to 0.19.12 [#146](https://github.com/KatsuteDev/Settings-Repository/pull/146) ([@dependabot](https://github.com/dependabot))
+
+**Full Changelog**: [`1.0.7...1.0.8`](https://github.com/KatsuteDev/Settings-Repository/compare/1.0.7...1.0.8)
+
 ## 1.0.7
 
 ### Dependencies
