@@ -157,8 +157,9 @@ ${json.slice(0, -2)}
 
             */
 
-            // not found locally, install this extension
-            vscode.commands.executeCommand("workbench.extensions.installExtension", extension.identifier); // works even if already installed
+            // only install if enabled
+            if(extension.enabled)
+                vscode.commands.executeCommand("workbench.extensions.installExtension", extension.identifier); // works even if already installed
             logger.info(`${logger.check} Installed ${extension.identifier}`);
         }
 
