@@ -90,7 +90,7 @@ export class Distribution {
                                         .filter(f => f.isDirectory())
                                         .map(f => f.name);
 
-        for(const folder of installed.filter(f => !uninstalled.includes(f))){
+        for(const folder of installed.filter(f => !uninstalled.includes(f))){ // get installed extensions
             const pkgFile: string = path.join(this.Extensions!, folder, "package.json");
 
             if(!files.isFile(pkgFile)) continue;
@@ -149,18 +149,8 @@ ${json.slice(0, -2)}
                                         .map(f => f.name);
 
         // compare remote with installed
-        OUTER:
         for(const extension of extensions.filter(e => e.enabled)){ // check remote extensions
             if(isNotNull(vscode.extensions.getExtension(extension.identifier))) continue; // extension exists and is enabled
-
-            /* vscode doesn't remove extension folder on uninstall, see <https://github.com/microsoft/vscode/issues/81046#issuecomment-532317549>
-
-            const match: string = `${extension.identifier.toLocaleLowerCase()}-`;
-
-            for(const local of installed) // check local
-                if(files.isDirectory(path.join(this.Extensions!, local)) && local.toLowerCase().startsWith(match)) continue OUTER; // extension exists but is disabled
-
-            */
 
             vscode.commands.executeCommand("workbench.extensions.installExtension", extension.identifier);
             logger.info(`${logger.check} Installed ${extension.identifier}`);
