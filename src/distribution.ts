@@ -39,6 +39,7 @@ export class Distribution {
             public readonly Snippets: string;
     public readonly dotVscode?: string;
         public readonly Extensions?: string;
+        public readonly ExtensionsObsolete?: string;
         public readonly argv?: string;
 
     public readonly macos: boolean = process.platform === "darwin";
@@ -56,6 +57,7 @@ export class Distribution {
         const exts: vscode.Extension<any>[] = vscode.extensions.all.filter(e => !e.packageJSON.isBuiltin);
 
         this.Extensions = exts[0] ? path.join(exts[0].extensionPath, "../") : undefined;
+        this.ExtensionsObsolete = exts[0] ? path.join(exts[0].extensionPath, "../", ".obsolete") : undefined;
         this.dotVscode  = this.Extensions ? path.join(this.Extensions, "../") : undefined;
         this.argv       = this.dotVscode ? path.join(this.dotVscode, "argv.json") : undefined;
 
@@ -70,6 +72,7 @@ export class Distribution {
     └ Snippets:    ${this.Snippets}
   .vscode: ${this.dotVscode}
   ├  Extensions: ${this.Extensions}
+  ├  ExtensionsObsolete: ${this.ExtensionsObsolete}
   └  argv:       ${this.argv}
   macos: ${this.macos}`);
     }
@@ -77,15 +80,17 @@ export class Distribution {
     public getExtensions(): string | undefined {
         if(!files.isDirectory(this.Extensions)) return undefined;
 
+        const dotObsolete: string = this.ExtensionsObsolete && fs.existsSync(this.ExtensionsObsolete) ? fs.readFileSync(this.ExtensionsObsolete, "utf-8") : "{}";
+        const obsolete: {[id: string]: boolean} = isValidJson(dotObsolete) ? JSON.parse(dotObsolete) : {};
+        const uninstalled: string[] = Object.entries(obsolete).filter(([k, v]) => v).map(([k, v]) => k);
+
         let extensions: {[extension: string]: {version: string, enabled: boolean}} = {};
 
         const installed: string[] = fs.readdirSync(this.Extensions!, {withFileTypes: true})
                                         .filter(f => f.isDirectory())
                                         .map(f => f.name);
 
-        for(const folder of installed){
-            if(!files.isDirectory(path.join(this.Extensions!, folder))) continue;
-
+        for(const folder of installed.filter(f => !uninstalled.includes(f))){ // get installed extensions
             const pkgFile: string = path.join(this.Extensions!, folder, "package.json");
 
             if(!files.isFile(pkgFile)) continue;
@@ -144,22 +149,10 @@ ${json.slice(0, -2)}
                                         .map(f => f.name);
 
         // compare remote with installed
-        OUTER:
-        for(const extension of extensions){ // check remote extensions
+        for(const extension of extensions.filter(e => e.enabled)){ // check remote extensions
             if(isNotNull(vscode.extensions.getExtension(extension.identifier))) continue; // extension exists and is enabled
 
-            /* vscode doesn't remove extension folder on uninstall, see <https://github.com/microsoft/vscode/issues/81046#issuecomment-532317549>
-
-            const match: string = `${extension.identifier.toLocaleLowerCase()}-`;
-
-            for(const local of installed) // check local
-                if(files.isDirectory(path.join(this.Extensions!, local)) && local.toLowerCase().startsWith(match)) continue OUTER; // extension exists but is disabled
-
-            */
-
-            // only install if enabled
-            if(extension.enabled)
-                vscode.commands.executeCommand("workbench.extensions.installExtension", extension.identifier); // works even if already installed
+            vscode.commands.executeCommand("workbench.extensions.installExtension", extension.identifier);
             logger.info(`${logger.check} Installed ${extension.identifier}`);
         }
 

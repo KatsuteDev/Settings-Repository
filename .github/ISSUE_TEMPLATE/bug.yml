@@ -53,7 +53,7 @@ body:
     attributes:
       label: Log
       description: |
-        Logging information, find in the lower panel under Output > Settings Repository.
+        Logging information, find in the lower panel under Output > Settings Repository. Make sure to remove any sensitive information.
     validations:
       required: false
 
