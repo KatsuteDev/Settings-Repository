@@ -1,5 +1,24 @@
 # Changelog
 
+## 1.0.9
+
+### Fixes
+
+* Skip installing disabled extensions [#154](https://github.com/KatsuteDev/Settings-Repository/pull/154) ([@Katsute](https://github.com/Katsute))
+* Fix extensions not being removed on uninstall [#155](https://github.com/KatsuteDev/Settings-Repository/pull/155) ([@Katsute](https://github.com/Katsute))
+* Fix incorrect branch description when canceling [#157](https://github.com/KatsuteDev/Settings-Repository/pull/157) ([@Katsute](https://github.com/Katsute))
+
+### Dependencies
+
+* Bump esbuild from 0.19.12 to 0.20.0 [#147](https://github.com/KatsuteDev/Settings-Repository/pull/147) ([@dependabot](https://github.com/dependabot))
+* Bump @vscode/vsce from 2.22.0 to 2.23.0 [#148](https://github.com/KatsuteDev/Settings-Repository/pull/148) ([@dependabot](https://github.com/dependabot))
+* Bump @types/vscode from 1.85.0 to 1.86.0 [#149](https://github.com/KatsuteDev/Settings-Repository/pull/149) ([@dependabot](https://github.com/dependabot))
+* Bump esbuild from 0.20.0 to 0.20.1 [#151](https://github.com/KatsuteDev/Settings-Repository/pull/151) ([@dependabot](https://github.com/dependabot))
+* Bump @vscode/vsce from 2.23.0 to 2.24.0 [#152](https://github.com/KatsuteDev/Settings-Repository/pull/152) ([@dependabot](https://github.com/dependabot))
+* Bump @types/vscode from 1.86.0 to 1.87.0 [#156](https://github.com/KatsuteDev/Settings-Repository/pull/156) ([@dependabot](https://github.com/dependabot))
+
+**Full Changelog**: [`1.0.8...1.0.9`](https://github.com/KatsuteDev/Settings-Repository/compare/1.0.8...1.0.9)
+
 ## 1.0.8
 
 ### Dependencies
