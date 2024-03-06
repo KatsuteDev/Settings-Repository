@@ -69,13 +69,13 @@ const repository: CommandQuickPickItem = {
                 return null;
             }
         }).then((repo?: string) => {
-            if(!repo) return;
+            if(repo !== undefined){
+                config.update("repository", repo);
+                repository.description = repo;
 
-            config.update("repository", repo);
-            repository.description = repo;
-
-            if(!auth.authorization())
-                auth.authenticate();
+                if(!auth.authorization())
+                    auth.authenticate();
+            }
         });
     })
 }
@@ -94,8 +94,10 @@ const branch: CommandQuickPickItem = {
                     return "Branch can not be blank";
             }
         }).then((s?: string) => {
-            config.update("branch", s);
-            branch.description = s;
+            if(s !== undefined){
+                config.update("branch", s);
+                branch.description = s;
+            }
         });
     })
 }
