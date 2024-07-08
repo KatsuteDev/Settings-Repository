@@ -143,6 +143,6 @@
         "glob": "10.4.2",
         "rimraf": "5.0.8",
         "simple-git": "3.25.0",
-        "typescript": "5.5.2"
+        "typescript": "5.5.3"
     }
 }
