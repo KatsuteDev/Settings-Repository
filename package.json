@@ -138,7 +138,7 @@
         "@types/node": "22.2.0",
         "@types/vscode": "1.92.0",
         "@vscode/vsce": "2.31.1",
-        "adm-zip": "0.5.14",
+        "adm-zip": "0.5.15",
         "esbuild": "0.23.0",
         "glob": "11.0.0",
         "rimraf": "6.0.1",
