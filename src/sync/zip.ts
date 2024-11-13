@@ -89,6 +89,10 @@ export const inport: (fsPath: string) => void = (fsPath: string) => {
                 logger.warn("Snippets not found");
         }
 
+        /* profiles */ {
+            // todo extract profile folder to user dir
+        }
+
         logger.info(`Imported settings from ${fsPath}`, true);
 
         extension.notify();
@@ -146,6 +150,10 @@ export const xport: (fsPath: string) => void = (fsPath: string) => {
                 zip.addLocalFolder(dist.Snippets, "snippets");
             else
                 logger.warn("Snippets not found");
+        }
+
+        /* profiles */ {
+            // todo copy ^ profile files to zip
         }
 
         zip.writeZip(fsPath, (error: Error | null) => {

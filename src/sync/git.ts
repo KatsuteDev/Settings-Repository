@@ -145,6 +145,10 @@ export const pull: (repo: string, skipNotify?: boolean) => void = async (repo: s
                         logger.warn("Snippets not found");
                 }
 
+                /* profiles */ {
+                    // todo extract profile folder to user dir
+                }
+
                 logger.info(`Imported settings from ${config.get("repository")}@${branch}`, true);
 
                 cleanup(temp);
@@ -251,6 +255,10 @@ export const push: (repo: string, ignoreBadAuth?: boolean) => Promise<void> = as
                             files.copyRecursiveSync(dist.Snippets, snippets);
                         else
                             logger.warn("Snippets noit found");
+                    }
+
+                    /* profiles */ {
+                        // todo copy ^ profile files to staging
                     }
                 }catch(error: any){
                     if(error){
