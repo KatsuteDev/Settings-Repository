@@ -78,13 +78,13 @@ Use `Settings Repository: Export Settings` to export settings to a zip file and 
 
 | Command | Description |
 |---|---|
-|`Settings Repository: Options`|Menu to access commands for this extension. Can be accessed by clicking `Settings Repository` on the statusbar.|
-|`Settings Repository: Choose Settings Repository`|Menu to access repository options and commands.|
-|`Settings Repository: Authenticate`|Update git authentication.|
-|`Settings Repository: Overwrite Local`|Overwrite local settings with ones from the git repository.|
-|`Settings Repository: Overwrite Remote`|Overwrite settings on the git repository with ones stored locally.
-|`Settings Repository: Import Settings`|Import settings from a zip file.|
-|`Settings Repository: Export Settings`|Export settings to a zip file.|
+|<kbd>Settings Repository: Options</kbd>|Menu to access commands for this extension. Can be accessed by clicking `Settings Repository` on the statusbar.|
+|<kbd>Settings Repository: Choose Settings Repository</kbd>|Menu to access repository options and commands.|
+|<kbd>Settings Repository: Authenticate</kbd>|Update git authentication.|
+|<kbd>Settings Repository: Overwrite Local</kbd>|Overwrite local settings with ones from the git repository.|
+|<kbd>Settings Repository: Overwrite Remote</kbd>|Overwrite settings on the git repository with ones stored locally.
+|<kbd>Settings Repository: Import Settings</kbd>|Import settings from a zip file.|
+|<kbd>Settings Repository: Export Settings</kbd>|Export settings to a zip file.|
 
 <div align="right"><a href="#top"><code>▲</code></a></div>
 

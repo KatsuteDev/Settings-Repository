@@ -250,7 +250,7 @@ export const push: (repo: string, ignoreBadAuth?: boolean) => Promise<void> = as
                         if(files.isDirectory(dist.Snippets))
                             files.copyRecursiveSync(dist.Snippets, snippets);
                         else
-                            logger.warn("Snippets noit found");
+                            logger.warn("Snippets not found");
                     }
                 }catch(error: any){
                     if(error){
