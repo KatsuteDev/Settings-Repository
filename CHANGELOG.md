@@ -1,5 +1,58 @@
 # Changelog
 
+## 1.0.11
+
+### Fixes
+
+* Fix typo in logging [#230](https://github.com/KatsuteDev/Settings-Repository/pull/230) ([@Katsute](https://github.com/Katsute))
+
+### Dependencies
+
+* Bump simple-git from 3.24.0 to 3.25.0 [#185](https://github.com/KatsuteDev/Settings-Repository/pull/185) ([@dependabot](https://github.com/dependabot))
+* Bump esbuild from 0.21.4 to 0.21.5 [#186](https://github.com/KatsuteDev/Settings-Repository/pull/186) ([@dependabot](https://github.com/dependabot))
+* Bump @azure/identity from 4.2.0 to 4.2.1 [#187](https://github.com/KatsuteDev/Settings-Repository/pull/187) ([@dependabot](https://github.com/dependabot))
+* Bump @azure/msal-node from 2.9.1 to 2.9.2 [#188](https://github.com/KatsuteDev/Settings-Repository/pull/188) ([@dependabot](https://github.com/dependabot))
+* Bump typescript from 5.4.5 to 5.5.2 [#191](https://github.com/KatsuteDev/Settings-Repository/pull/191) ([@dependabot](https://github.com/dependabot))
+* Bump @vscode/vsce from 2.27.0 to 2.29.0 [#190](https://github.com/KatsuteDev/Settings-Repository/pull/190) ([@dependabot](https://github.com/dependabot))
+* Bump glob from 10.4.1 to 10.4.2 [#189](https://github.com/KatsuteDev/Settings-Repository/pull/189) ([@dependabot](https://github.com/dependabot))
+* Bump typescript from 5.5.2 to 5.5.3 [#194](https://github.com/KatsuteDev/Settings-Repository/pull/194) ([@dependabot](https://github.com/dependabot))
+* Bump rimraf from 5.0.7 to 5.0.8 [#197](https://github.com/KatsuteDev/Settings-Repository/pull/197) ([@dependabot](https://github.com/dependabot))
+* Bump glob from 10.4.2 to 10.4.3 [#196](https://github.com/KatsuteDev/Settings-Repository/pull/196) ([@dependabot](https://github.com/dependabot))
+* Bump @types/vscode from 1.90.0 to 1.91.0 [#193](https://github.com/KatsuteDev/Settings-Repository/pull/193) ([@dependabot](https://github.com/dependabot))
+* Bump esbuild from 0.21.5 to 0.23.0 [#195](https://github.com/KatsuteDev/Settings-Repository/pull/195) ([@dependabot](https://github.com/dependabot))
+* Bump @vscode/vsce from 2.29.0 to 2.30.0 [#199](https://github.com/KatsuteDev/Settings-Repository/pull/199) ([@dependabot](https://github.com/dependabot))
+* Bump rimraf from 5.0.8 to 6.0.1 [#198](https://github.com/KatsuteDev/Settings-Repository/pull/198) ([@dependabot](https://github.com/dependabot))
+* Bump glob from 10.4.3 to 11.0.0 [#200](https://github.com/KatsuteDev/Settings-Repository/pull/200) ([@dependabot](https://github.com/dependabot))
+* Bump @vscode/vsce from 2.30.0 to 2.31.1 [#201](https://github.com/KatsuteDev/Settings-Repository/pull/201) ([@dependabot](https://github.com/dependabot))
+* Bump typescript from 5.5.3 to 5.5.4 [#202](https://github.com/KatsuteDev/Settings-Repository/pull/202) ([@dependabot](https://github.com/dependabot))
+* Bump @types/node from 20.14.1 to 22.0.0 [#203](https://github.com/KatsuteDev/Settings-Repository/pull/203) ([@dependabot](https://github.com/dependabot))
+* Bump @types/node from 22.0.0 to 22.1.0 [#205](https://github.com/KatsuteDev/Settings-Repository/pull/205) ([@dependabot](https://github.com/dependabot))
+* Bump @types/vscode from 1.91.0 to 1.92.0 [#204](https://github.com/KatsuteDev/Settings-Repository/pull/204) ([@dependabot](https://github.com/dependabot))
+* Bump @types/node from 22.1.0 to 22.2.0 [#206](https://github.com/KatsuteDev/Settings-Repository/pull/206) ([@dependabot](https://github.com/dependabot))
+* Bump adm-zip from 0.5.14 to 0.5.15 [#207](https://github.com/KatsuteDev/Settings-Repository/pull/207) ([@dependabot](https://github.com/dependabot))
+* Bump @vscode/vsce from 2.31.1 to 3.0.0 [#208](https://github.com/KatsuteDev/Settings-Repository/pull/208) ([@dependabot](https://github.com/dependabot))
+* Bump @types/node from 22.2.0 to 22.4.1 [#209](https://github.com/KatsuteDev/Settings-Repository/pull/209) ([@dependabot](https://github.com/dependabot))
+* Bump esbuild from 0.23.0 to 0.23.1 [#210](https://github.com/KatsuteDev/Settings-Repository/pull/210) ([@dependabot](https://github.com/dependabot))
+* Bump @types/node from 22.4.1 to 22.5.0 [#211](https://github.com/KatsuteDev/Settings-Repository/pull/211) ([@dependabot](https://github.com/dependabot))
+* Bump adm-zip from 0.5.15 to 0.5.16 [#213](https://github.com/KatsuteDev/Settings-Repository/pull/213) ([@dependabot](https://github.com/dependabot))
+* Bump simple-git from 3.25.0 to 3.26.0 [#212](https://github.com/KatsuteDev/Settings-Repository/pull/212) ([@dependabot](https://github.com/dependabot))
+* Bump @types/vscode from 1.92.0 to 1.93.0 [#215](https://github.com/KatsuteDev/Settings-Repository/pull/215) ([@dependabot](https://github.com/dependabot))
+* Bump @vscode/vsce from 3.0.0 to 3.1.0 [#214](https://github.com/KatsuteDev/Settings-Repository/pull/214) ([@dependabot](https://github.com/dependabot))
+* Bump esbuild from 0.23.1 to 0.24.0 [#217](https://github.com/KatsuteDev/Settings-Repository/pull/217) ([@dependabot](https://github.com/dependabot))
+* Bump simple-git from 3.26.0 to 3.27.0 [#218](https://github.com/KatsuteDev/Settings-Repository/pull/218) ([@dependabot](https://github.com/dependabot))
+* Bump @vscode/vsce from 3.1.0 to 3.1.1 [#219](https://github.com/KatsuteDev/Settings-Repository/pull/219) ([@dependabot](https://github.com/dependabot))
+* Bump @types/node from 22.5.0 to 22.7.4 [#220](https://github.com/KatsuteDev/Settings-Repository/pull/220) ([@dependabot](https://github.com/dependabot))
+* Bump @types/vscode from 1.93.0 to 1.94.0 [#221](https://github.com/KatsuteDev/Settings-Repository/pull/221) ([@dependabot](https://github.com/dependabot))
+* Bump typescript from 5.5.4 to 5.6.3 [#222](https://github.com/KatsuteDev/Settings-Repository/pull/222) ([@dependabot](https://github.com/dependabot))
+* Bump @vscode/vsce from 3.1.1 to 3.2.0 [#223](https://github.com/KatsuteDev/Settings-Repository/pull/223) ([@dependabot](https://github.com/dependabot))
+* Bump @types/node from 22.7.4 to 22.8.1 [#226](https://github.com/KatsuteDev/Settings-Repository/pull/226) ([@dependabot](https://github.com/dependabot))
+* Bump @vscode/vsce from 3.2.0 to 3.2.1 [#225](https://github.com/KatsuteDev/Settings-Repository/pull/225) ([@dependabot](https://github.com/dependabot))
+* Bump @types/adm-zip from 0.5.5 to 0.5.6 [#228](https://github.com/KatsuteDev/Settings-Repository/pull/228) ([@dependabot](https://github.com/dependabot))
+* Bump @types/vscode from 1.94.0 to 1.95.0 [#227](https://github.com/KatsuteDev/Settings-Repository/pull/227) ([@dependabot](https://github.com/dependabot))
+* Bump @types/node from 22.8.1 to 22.9.0 [#229](https://github.com/KatsuteDev/Settings-Repository/pull/229) ([@dependabot](https://github.com/dependabot))
+
+**Full Changelog**: [`1.0.10...1.0.11`](https://github.com/KatsuteDev/Settings-Repository/compare/1.0.10...1.0.11)
+
 ## 1.0.10
 
 ### Dependencies
