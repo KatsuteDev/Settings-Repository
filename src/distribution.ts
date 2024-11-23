@@ -36,7 +36,8 @@ export class Distribution {
             public readonly keybindings: string;
             public readonly locale: string;
             public readonly settings: string;
-            public readonly Snippets: string;
+            public readonly snippets: string;
+            public readonly profiles: string;
     public readonly dotVscode?: string;
         public readonly Extensions?: string;
         public readonly ExtensionsObsolete?: string;
@@ -52,7 +53,8 @@ export class Distribution {
         this.keybindings = path.join(this.User, "keybindings.json");
         this.locale      = path.join(this.User, "locale.json");
         this.settings    = path.join(this.User, "settings.json");
-        this.Snippets    = path.join(this.User, "snippets");
+        this.snippets    = path.join(this.User, "snippets");
+        this.profiles    = path.join(this.User, "profiles");
 
         const exts: vscode.Extension<any>[] = vscode.extensions.all.filter(e => !e.packageJSON.isBuiltin);
 
@@ -69,7 +71,8 @@ export class Distribution {
     ├ keybindings: ${this.keybindings}
     ├ locale:      ${this.locale}
     ├ settings:    ${this.settings}
-    └ Snippets:    ${this.Snippets}
+    ├ snippets:    ${this.snippets}
+    └ profiles:    ${this.profiles}
   .vscode: ${this.dotVscode}
   ├  Extensions: ${this.Extensions}
   ├  ExtensionsObsolete: ${this.ExtensionsObsolete}

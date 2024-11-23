@@ -138,9 +138,9 @@ export const pull: (repo: string, skipNotify?: boolean) => void = async (repo: s
 
                     if(files.isDirectory(snippets)){
                         // remove local, use remote copy
-                        fs.rmSync(dist.Snippets, {recursive: true, force: true});
+                        fs.rmSync(dist.snippets, {recursive: true, force: true});
 
-                        files.copyRecursiveSync(snippets, dist.Snippets);
+                        files.copyRecursiveSync(snippets, dist.snippets);
                     }else
                         logger.warn("Snippets not found");
                 }
@@ -251,8 +251,8 @@ export const push: (repo: string, ignoreBadAuth?: boolean) => Promise<void> = as
                         // remove remote, use local copy
                         fs.rmSync(snippets, {recursive: true, force: true});
 
-                        if(files.isDirectory(dist.Snippets))
-                            files.copyRecursiveSync(dist.Snippets, snippets);
+                        if(files.isDirectory(dist.snippets))
+                            files.copyRecursiveSync(dist.snippets, snippets);
                         else
                             logger.warn("Snippets not found");
                     }

@@ -146,8 +146,8 @@ export const xport: (fsPath: string) => void = (fsPath: string) => {
         }
 
         /* snippets */ {
-            if(files.isDirectory(dist.Snippets))
-                zip.addLocalFolder(dist.Snippets, "snippets");
+            if(files.isDirectory(dist.snippets))
+                zip.addLocalFolder(dist.snippets, "snippets");
             else
                 logger.warn("Snippets not found");
         }
