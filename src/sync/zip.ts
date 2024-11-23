@@ -18,6 +18,9 @@
 
 import AdmZip from "adm-zip";
 
+import * as fs from "fs";
+import * as path from "path";
+
 import * as logger from "../logger";
 import * as files from "../lib/files";
 import * as extension from "../extension";
@@ -90,7 +93,14 @@ export const inport: (fsPath: string) => void = (fsPath: string) => {
         }
 
         /* profiles */ {
-            // todo extract profile folder to user dir
+            let hasProfiles: boolean = false;
+            for(const entry of zip.getEntries().filter(f => f.entryName.toLowerCase().startsWith("profiles/")).map(f => f.entryName)){
+                hasProfiles = true;
+                zip.extractEntryTo(entry, dist.User, undefined, true);
+            }
+
+            if(!hasProfiles)
+                logger.warn("Profiles not found");
         }
 
         logger.info(`Imported settings from ${fsPath}`, true);
@@ -153,7 +163,21 @@ export const xport: (fsPath: string) => void = (fsPath: string) => {
         }
 
         /* profiles */ {
-            // todo copy ^ profile files to zip
+            if(files.isDirectory(dist.profiles)){
+                for(const dir of fs.readdirSync(dist.profiles)){
+                    const profile: string = path.join(dist.profiles, dir);
+                    if(files.isDirectory(profile)){
+                        for(const f of ["extensions.json", "keybindings.json", "settings.json"]){
+                            const file = path.join(profile, f);
+                            files.isFile(file) && zip.addLocalFile(file, `profiles/${dir}`);
+                        }
+                        const snippets: string = path.join(profile, "snippets");
+                        if(files.isDirectory(snippets)){
+                            zip.addLocalFolder(snippets, `profiles/${dir}/snippets`);
+                        }
+                    }
+                }
+            }
         }
 
         zip.writeZip(fsPath, (error: Error | null) => {
