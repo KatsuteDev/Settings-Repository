@@ -136,12 +136,9 @@ export const pull: (repo: string, skipNotify?: boolean) => void = async (repo: s
                 /* snippets */ {
                     const snippets: string = path.join(temp, "snippets");
 
-                    if(files.isDirectory(snippets)){
-                        // remove local, use remote copy
-                        fs.rmSync(dist.snippets, {recursive: true, force: true});
-
+                    if(files.isDirectory(snippets))
                         files.copyRecursiveSync(snippets, dist.snippets);
-                    }else
+                    else
                         logger.warn("Snippets not found");
                 }
 
@@ -155,7 +152,12 @@ export const pull: (repo: string, skipNotify?: boolean) => void = async (repo: s
                 }
 
                 /* profiles */ {
-                    // todo extract profile folder to user dir
+                    const profiles: string = path.join(temp, "profiles");
+
+                    if(files.isDirectory(profiles))
+                        files.copyRecursiveSync(profiles, dist.profiles);
+                    else
+                        logger.warn("Snippets not found");
                 }
 
                 logger.info(`Imported settings from ${config.get("repository")}@${branch}`, true);
@@ -276,7 +278,27 @@ export const push: (repo: string, ignoreBadAuth?: boolean) => Promise<void> = as
                     }
 
                     /* profiles */ {
-                        // todo copy ^ profile files to staging
+                        const profiles: string = path.join(temp, "profiles");
+
+                        // remove remote, use local copy
+                        fs.rmSync(profiles, {recursive: true, force: true});
+
+                        if(files.isDirectory(dist.profiles)){
+                            for(const dir of fs.readdirSync(dist.profiles)){
+                                const profile: string = path.join(dist.profiles, dir);
+                                if(files.isDirectory(profile)){
+                                    for(const f of ["extensions.json", "keybindings.json", "settings.json"]){
+                                        const file = path.join(profile, f);
+                                        files.isFile(file) && fs.copyFileSync(file, path.join(profiles, dir, f))
+                                    }
+                                    const snippets: string = path.join(profile, "snippets");
+                                    if(files.isDirectory(snippets)){
+                                        files.copyRecursiveSync(snippets, path.join(profiles, dir, "snippets"));
+                                    }
+                                }
+                            }
+                        }else
+                            logger.warn("Profiles not found");
                     }
                 }catch(error: any){
                     if(error){
