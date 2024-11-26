@@ -37,6 +37,7 @@ export class Distribution {
             public readonly locale: string;
             public readonly settings: string;
             public readonly snippets: string;
+            public readonly storage: string;
             public readonly profiles: string;
     public readonly dotVscode?: string;
         public readonly Extensions?: string;
@@ -54,6 +55,7 @@ export class Distribution {
         this.locale      = path.join(this.User, "locale.json");
         this.settings    = path.join(this.User, "settings.json");
         this.snippets    = path.join(this.User, "snippets");
+        this.storage     = path.join(this.User, "globalStorage", "storage.json");
         this.profiles    = path.join(this.User, "profiles");
 
         const exts: vscode.Extension<any>[] = vscode.extensions.all.filter(e => !e.packageJSON.isBuiltin);
@@ -72,6 +74,7 @@ export class Distribution {
     ├ locale:      ${this.locale}
     ├ settings:    ${this.settings}
     ├ snippets:    ${this.snippets}
+    ├ storage:     ${this.storage}
     └ profiles:    ${this.profiles}
   .vscode: ${this.dotVscode}
   ├  Extensions: ${this.Extensions}
@@ -191,6 +194,12 @@ ${json.slice(0, -2)}
     public getSettings(): string | undefined {
         return files.isFile(this.settings)
             ? fs.readFileSync(this.settings, "utf-8").trim()
+            : undefined;
+    }
+
+    public getStorage(): string | undefined {
+        return files.isFile(this.storage)
+            ? fs.readFileSync(this.storage, "utf-8").trim()
             : undefined;
     }
 

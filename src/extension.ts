@@ -82,7 +82,7 @@ export const deactivate: () => Promise<void> = async () => {
 
 export const notify: () => void = () => {
     const select: string = "Reload";
-    vscode.window.showWarningMessage("Settings have been modified, a reload is required to see changes. Some changes require a full restart.", select, "Ignore").then((value?: string) => {
+    vscode.window.showWarningMessage("Settings have been modified, a reload is required to see changes. Profile changes require a full restart.", select, "Ignore").then((value?: string) => {
         if(value === select)
             vscode.commands.executeCommand("workbench.action.reloadWindow");
     });

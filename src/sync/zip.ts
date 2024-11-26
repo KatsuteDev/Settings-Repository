@@ -92,6 +92,15 @@ export const inport: (fsPath: string) => void = (fsPath: string) => {
                 logger.warn("Snippets not found");
         }
 
+        /* storage */ {
+            const storage: AdmZip.IZipEntry | null = zip.getEntry("storage.json");
+
+            if(storage && !storage.isDirectory)
+                zip.extractEntryTo("storage.json", path.join(dist.User, "globalStorage"), undefined, true);
+            else
+                logger.warn("Storage not found");
+        }
+
         /* profiles */ {
             let hasProfiles: boolean = false;
             for(const entry of zip.getEntries().filter(f => f.entryName.toLowerCase().startsWith("profiles/")).map(f => f.entryName)){
@@ -162,6 +171,15 @@ export const xport: (fsPath: string) => void = (fsPath: string) => {
                 logger.warn("Snippets not found");
         }
 
+        /* storage */ {
+            const storage: string | undefined = dist.getStorage();
+
+            if(storage)
+                zip.addFile("storage.json", Buffer.from(storage, "utf-8"));
+            else
+                logger.warn("Storage not found");
+        }
+
         /* profiles */ {
             if(files.isDirectory(dist.profiles)){
                 for(const dir of fs.readdirSync(dist.profiles)){
@@ -177,7 +195,8 @@ export const xport: (fsPath: string) => void = (fsPath: string) => {
                         }
                     }
                 }
-            }
+            }else
+                logger.warn("Profiles not found");
         }
 
         zip.writeZip(fsPath, (error: Error | null) => {

@@ -145,6 +145,15 @@ export const pull: (repo: string, skipNotify?: boolean) => void = async (repo: s
                         logger.warn("Snippets not found");
                 }
 
+                /* storage */ {
+                    const storage: string = path.join(temp, "storage.json");
+
+                    if(files.isFile(storage))
+                        fs.copyFileSync(storage, dist.settings);
+                    else
+                        logger.warn("Storage not found");
+                }
+
                 /* profiles */ {
                     // todo extract profile folder to user dir
                 }
@@ -255,6 +264,15 @@ export const push: (repo: string, ignoreBadAuth?: boolean) => Promise<void> = as
                             files.copyRecursiveSync(dist.snippets, snippets);
                         else
                             logger.warn("Snippets not found");
+                    }
+
+                    /* storage */ {
+                        const storage: string | undefined = dist.getStorage();
+
+                        if(storage)
+                            fs.writeFileSync(path.join(temp, "storage.json"), storage, "utf-8");
+                        else
+                            logger.warn("Storage not found");
                     }
 
                     /* profiles */ {
