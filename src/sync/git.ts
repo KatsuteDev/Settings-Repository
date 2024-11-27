@@ -24,7 +24,7 @@ import * as path from "path";
 
 import simpleGit, { GitError, SimpleGit } from "simple-git";
 
-import { isNull } from "../lib/is";
+import { isNull, isValidJson } from "../lib/is";
 import * as config from "../config";
 import * as logger from "../logger";
 import * as files from "../lib/files";
@@ -142,22 +142,23 @@ export const pull: (repo: string, skipNotify?: boolean) => void = async (repo: s
                         logger.warn("Snippets not found");
                 }
 
-                /* storage */ {
+                /* profiles */ {
                     const storage: string = path.join(temp, "storage.json");
 
-                    if(files.isFile(storage))
-                        fs.copyFileSync(storage, dist.settings);
-                    else
+                    if(files.isFile(storage)){
+                        const text = fs.readFileSync(storage, {encoding: "utf-8"});
+                        if(isValidJson(text)){
+                            dist.writeProfiles(JSON.parse(text));
+                        }
+                    }else
                         logger.warn("Storage not found");
-                }
 
-                /* profiles */ {
                     const profiles: string = path.join(temp, "profiles");
 
                     if(files.isDirectory(profiles))
                         files.copyRecursiveSync(profiles, dist.profiles);
                     else
-                        logger.warn("Snippets not found");
+                        logger.warn("Profiles not found");
                 }
 
                 logger.info(`Imported settings from ${config.get("repository")}@${branch}`, true);
@@ -230,7 +231,7 @@ export const push: (repo: string, ignoreBadAuth?: boolean) => Promise<void> = as
                     }
 
                     /* keybindings */ {
-                        const keybindings: string | undefined = dist.getKeybindings();
+                        const keybindings: string | undefined = dist.read(dist.keybindings);
 
                         if(keybindings) // force keybindings to be saved as ctrl
                             fs.writeFileSync(path.join(temp, "keybindings.json"), dist.formatKeybindings(keybindings, "ctrl"), "utf-8");
@@ -248,7 +249,7 @@ export const push: (repo: string, ignoreBadAuth?: boolean) => Promise<void> = as
                     }
 
                     /* settings */ {
-                        const settings: string | undefined = dist.getSettings();
+                        const settings: string | undefined = dist.read(dist.settings);
 
                         if(settings)
                             fs.writeFileSync(path.join(temp, "settings.json"), settings, "utf-8");
@@ -268,16 +269,14 @@ export const push: (repo: string, ignoreBadAuth?: boolean) => Promise<void> = as
                             logger.warn("Snippets not found");
                     }
 
-                    /* storage */ {
-                        const storage: string | undefined = dist.getStorage();
+                    /* profiles */ {
+                        const prof = dist.getProfiles();
 
-                        if(storage)
-                            fs.writeFileSync(path.join(temp, "storage.json"), storage, "utf-8");
+                        if(prof)
+                            fs.writeFileSync(path.join(temp, "storage.json"), JSON.stringify(prof, null, 4), "utf-8");
                         else
                             logger.warn("Storage not found");
-                    }
 
-                    /* profiles */ {
                         const profiles: string = path.join(temp, "profiles");
 
                         // remove remote, use local copy
@@ -289,7 +288,7 @@ export const push: (repo: string, ignoreBadAuth?: boolean) => Promise<void> = as
                                 if(files.isDirectory(profile)){
                                     for(const f of ["extensions.json", "keybindings.json", "settings.json"]){
                                         const file = path.join(profile, f);
-                                        files.isFile(file) && fs.copyFileSync(file, path.join(profiles, dir, f))
+                                        files.isFile(file) && fs.copyFileSync(file, path.join(profiles, dir, f));
                                     }
                                     const snippets: string = path.join(profile, "snippets");
                                     if(files.isDirectory(snippets)){

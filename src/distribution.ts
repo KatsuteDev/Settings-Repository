@@ -191,26 +191,36 @@ ${json.slice(0, -2)}
         }
     }
 
-    public getSettings(): string | undefined {
-        return files.isFile(this.settings)
-            ? fs.readFileSync(this.settings, "utf-8").trim()
+    public read(path: string): string | undefined {
+        return files.isFile(path)
+            ? fs.readFileSync(path, {encoding: "utf-8"}).trim()
             : undefined;
     }
 
-    public getStorage(): string | undefined {
-        return files.isFile(this.storage)
-            ? fs.readFileSync(this.storage, "utf-8").trim()
-            : undefined;
+    public getProfiles(): {location: string, name: string}[] | undefined {
+        if(files.isFile(this.storage)){
+            const content = fs.readFileSync(this.storage, {encoding: "utf-8"}).trim();
+            if(isValidJson(content)){
+                const obj = JSON.parse(content).userDataProfiles;
+                return Array.isArray(obj.userDataProfiles) ? obj.userDataProfiles : [];
+            }
+        }
+        return undefined;
+    }
+
+    public writeProfiles(profiles: {location: string, name: string}[]) {
+        if(files.isFile(this.storage)){
+            const content = fs.readFileSync(this.storage, {encoding: "utf-8"}).trim();
+            if(isValidJson(content)){
+                const obj = JSON.parse(content);
+                obj.userDataProfiles = profiles;
+                fs.writeFileSync(this.storage, JSON.stringify(obj, null, 4), {encoding: "utf-8"});
+            }
+        }
     }
 
     private static readonly ctrl: RegExp = /(?<=^\s*"key"\s*:\s*".*)\bctrl\b(?=.*",?$)/gmi; // ⌃ ctrl
     private static readonly cmd:  RegExp = /(?<=^\s*"key"\s*:\s*".*)\bcmd\b(?=.*",?$)/gmi;  // ⌘ cmd
-
-    public getKeybindings(): string | undefined {
-        return files.isFile(this.keybindings)
-            ? fs.readFileSync(this.keybindings, "utf-8").trim()
-            : undefined;
-    }
 
     public formatKeybindings(keybindings: string, ctrl: "ctrl" | "cmd" = "ctrl"): string {
         return keybindings.replace(ctrl === "ctrl" ? Distribution.cmd : Distribution.ctrl, ctrl); // ⌃ ctrl ↔ ⌘ cmd
@@ -232,11 +242,7 @@ ${json.slice(0, -2)}
 
         const match: RegExpExecArray | null = Distribution.locale.exec(argv);
 
-        return match && match.length > 0
-            ? `{
-    "locale": "${match[0]}"
-}`
-            : undefined;
+        return match && match.length > 0 ? JSON.stringify({locale: match[0]}, null, 4) : undefined;
     }
 
     public updateLocale(): void {

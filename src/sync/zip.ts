@@ -25,6 +25,7 @@ import * as logger from "../logger";
 import * as files from "../lib/files";
 import * as extension from "../extension";
 import { Distribution } from "../distribution";
+import { isValidJson } from "../lib/is";
 
 //
 
@@ -92,16 +93,15 @@ export const inport: (fsPath: string) => void = (fsPath: string) => {
                 logger.warn("Snippets not found");
         }
 
-        /* storage */ {
-            const storage: AdmZip.IZipEntry | null = zip.getEntry("storage.json");
-
-            if(storage && !storage.isDirectory)
-                zip.extractEntryTo("storage.json", path.join(dist.User, "globalStorage"), undefined, true);
-            else
-                logger.warn("Storage not found");
-        }
-
         /* profiles */ {
+            const storage: AdmZip.IZipEntry | null = zip.getEntry("storage.json");
+            if(storage && !storage.isDirectory){
+                const text = zip.readAsText("storage.json", "utf-8");
+                if(isValidJson(text)){
+                    dist.writeProfiles(JSON.parse(text));
+                }
+            }
+
             let hasProfiles: boolean = false;
             for(const entry of zip.getEntries().filter(f => f.entryName.toLowerCase().startsWith("profiles/")).map(f => f.entryName)){
                 hasProfiles = true;
@@ -138,7 +138,7 @@ export const xport: (fsPath: string) => void = (fsPath: string) => {
         }
 
         /* keybindings */ {
-            const keybindings: string | undefined = dist.getKeybindings();
+            const keybindings: string | undefined = dist.read(dist.keybindings);
 
             if(keybindings) // force keybindings to be saved as ctrl
                 zip.addFile("keybindings.json", Buffer.from(dist.formatKeybindings(keybindings), "utf-8"));
@@ -156,7 +156,7 @@ export const xport: (fsPath: string) => void = (fsPath: string) => {
         }
 
         /* settings */ {
-            const settings: string | undefined = dist.getSettings();
+            const settings: string | undefined = dist.read(dist.settings);
 
             if(settings)
                 zip.addFile("settings.json", Buffer.from(settings, "utf-8"));
@@ -171,16 +171,13 @@ export const xport: (fsPath: string) => void = (fsPath: string) => {
                 logger.warn("Snippets not found");
         }
 
-        /* storage */ {
-            const storage: string | undefined = dist.getStorage();
-
-            if(storage)
-                zip.addFile("storage.json", Buffer.from(storage, "utf-8"));
+        /* profiles */ {
+            const profiles = dist.getProfiles();
+            if(profiles)
+                zip.addFile("storage.json", Buffer.from(JSON.stringify(profiles, null, 4)));
             else
                 logger.warn("Storage not found");
-        }
 
-        /* profiles */ {
             if(files.isDirectory(dist.profiles)){
                 for(const dir of fs.readdirSync(dist.profiles)){
                     const profile: string = path.join(dist.profiles, dir);
