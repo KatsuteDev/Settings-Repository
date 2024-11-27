@@ -86,7 +86,7 @@ export class Distribution {
     public getExtensions(): string | undefined {
         if(!files.isDirectory(this.Extensions)) return undefined;
 
-        const dotObsolete: string = this.ExtensionsObsolete && fs.existsSync(this.ExtensionsObsolete) ? fs.readFileSync(this.ExtensionsObsolete, "utf-8") : "{}";
+        const dotObsolete: string = this.ExtensionsObsolete && fs.existsSync(this.ExtensionsObsolete) ? fs.readFileSync(this.ExtensionsObsolete, {encoding: "utf-8"}) : "{}";
         const obsolete: {[id: string]: boolean} = isValidJson(dotObsolete) ? JSON.parse(dotObsolete) : {};
         const uninstalled: string[] = Object.entries(obsolete).filter(([k, v]) => v).map(([k, v]) => k);
 
@@ -101,7 +101,7 @@ export class Distribution {
 
             if(!files.isFile(pkgFile)) continue;
 
-            const json: string = fs.readFileSync(pkgFile, "utf-8");
+            const json: string = fs.readFileSync(pkgFile, {encoding: "utf-8"});
 
             if(!isValidJson(json)) continue;
 
@@ -142,7 +142,7 @@ ${json.slice(0, -2)}
     public updateExtensions(): void { // we cannot handle enable/disable at the moment, see <https://github.com/microsoft/vscode/issues/15466#issuecomment-724147661>
         if(!files.isDirectory(this.Extensions) || !files.isFile(this.extensions)) return;
 
-        const json: string = fs.readFileSync(this.extensions, "utf-8");
+        const json: string = fs.readFileSync(this.extensions, {encoding: "utf-8"});
 
         const extensions: [{
             identifier: string,
@@ -169,7 +169,7 @@ ${json.slice(0, -2)}
 
             if(!files.isFile(pkgFile)) continue;
 
-            const json: string = fs.readFileSync(pkgFile, "utf-8");
+            const json: string = fs.readFileSync(pkgFile, {encoding: "utf-8"});
 
             if(!isValidJson(json)) continue;
 
@@ -199,7 +199,7 @@ ${json.slice(0, -2)}
 
     public getProfiles(): {location: string, name: string}[] | undefined {
         if(files.isFile(this.storage)){
-            const content = fs.readFileSync(this.storage, {encoding: "utf-8"}).trim();
+            const content = fs.readFileSync(this.storage,  {encoding: "utf-8"}).trim();
             if(isValidJson(content)){
                 const obj = JSON.parse(content).userDataProfiles;
                 return Array.isArray(obj.userDataProfiles) ? obj.userDataProfiles : [];
@@ -230,7 +230,7 @@ ${json.slice(0, -2)}
         if(!files.isFile(this.keybindings)) return;
 
         // replace local keybindings with OS specific keybinds
-        fs.writeFileSync(this.keybindings, this.formatKeybindings(fs.readFileSync(this.keybindings, "utf-8"), this.macos ? "cmd" : "ctrl"));
+        fs.writeFileSync(this.keybindings, this.formatKeybindings(fs.readFileSync(this.keybindings, {encoding: "utf-8"}), this.macos ? "cmd" : "ctrl"));
     }
 
     private static readonly locale: RegExp = /(?<=^\s*"locale"\s*:\s*")[\w-]+(?=")/mi;
@@ -238,7 +238,7 @@ ${json.slice(0, -2)}
     public getLocale(): string | undefined {
         if(!files.isFile(this.argv)) return undefined;
 
-        const argv: string = fs.readFileSync(this.argv!, "utf-8");
+        const argv: string = fs.readFileSync(this.argv!, {encoding: "utf-8"});
 
         const match: RegExpExecArray | null = Distribution.locale.exec(argv);
 
@@ -248,9 +248,9 @@ ${json.slice(0, -2)}
     public updateLocale(): void {
         if(!files.isFile(this.argv) || !files.isFile(this.locale)) return;
 
-        const argv: string = fs.readFileSync(this.argv!, "utf-8");
+        const argv: string = fs.readFileSync(this.argv!, {encoding: "utf-8"});
 
-        const json: string = fs.readFileSync(this.locale, "utf-8");
+        const json: string = fs.readFileSync(this.locale, {encoding: "utf-8"});
 
         if(!isValidJson(json)) return;
 

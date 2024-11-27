@@ -225,7 +225,7 @@ export const push: (repo: string, ignoreBadAuth?: boolean) => Promise<void> = as
                         const extensions: string | undefined = dist.getExtensions();
 
                         if(extensions)
-                            fs.writeFileSync(path.join(temp, "extensions.json"), extensions, "utf-8");
+                            fs.writeFileSync(path.join(temp, "extensions.json"), extensions, {encoding: "utf-8"});
                         else
                             logger.warn("Extensions not found");
                     }
@@ -234,7 +234,7 @@ export const push: (repo: string, ignoreBadAuth?: boolean) => Promise<void> = as
                         const keybindings: string | undefined = dist.read(dist.keybindings);
 
                         if(keybindings) // force keybindings to be saved as ctrl
-                            fs.writeFileSync(path.join(temp, "keybindings.json"), dist.formatKeybindings(keybindings, "ctrl"), "utf-8");
+                            fs.writeFileSync(path.join(temp, "keybindings.json"), dist.formatKeybindings(keybindings, "ctrl"), {encoding: "utf-8"});
                         else
                             logger.warn("Keybindings not found");
                     }
@@ -243,7 +243,7 @@ export const push: (repo: string, ignoreBadAuth?: boolean) => Promise<void> = as
                         const locale: string | undefined = dist.getLocale();
 
                         if(locale)
-                            fs.writeFileSync(path.join(temp, "locale.json"), locale, "utf-8");
+                            fs.writeFileSync(path.join(temp, "locale.json"), locale, {encoding: "utf-8"});
                         else
                             logger.warn("Locale not found");
                     }
@@ -252,7 +252,7 @@ export const push: (repo: string, ignoreBadAuth?: boolean) => Promise<void> = as
                         const settings: string | undefined = dist.read(dist.settings);
 
                         if(settings)
-                            fs.writeFileSync(path.join(temp, "settings.json"), settings, "utf-8");
+                            fs.writeFileSync(path.join(temp, "settings.json"), settings, {encoding: "utf-8"});
                         else
                             logger.warn("Settings not found");
                     }
@@ -273,7 +273,7 @@ export const push: (repo: string, ignoreBadAuth?: boolean) => Promise<void> = as
                         const prof = dist.getProfiles();
 
                         if(prof)
-                            fs.writeFileSync(path.join(temp, "storage.json"), JSON.stringify(prof, null, 4), "utf-8");
+                            fs.writeFileSync(path.join(temp, "storage.json"), JSON.stringify(prof, null, 4), {encoding: "utf-8"});
                         else
                             logger.warn("Storage not found");
 

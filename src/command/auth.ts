@@ -91,7 +91,7 @@ export const authenticate: () => void = () => {
     "login": "${username}",
     "auth": "${crypt.encrypt(password)}"
 }`,
-                "utf-8");
+                {encoding: "utf-8"});
         });
     });
 }
@@ -101,7 +101,7 @@ export const authorization: () => credentials | undefined = () => {
 
     if(!files.isFile(dist.credentials)) return undefined;
 
-    const json: string = fs.readFileSync(dist.credentials, "utf-8");
+    const json: string = fs.readFileSync(dist.credentials, {encoding: "utf-8"});
 
     if(!isValidJson(json)) return undefined;
 
