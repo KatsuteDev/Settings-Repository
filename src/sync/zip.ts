@@ -38,13 +38,15 @@ export const inport: (fsPath: string) => void = (fsPath: string) => {
     try{ // import from zip
         const zip: AdmZip = new AdmZip(fsPath);
 
+        const extract = (file: string) => zip.extractEntryTo(file, dist.User, undefined, true);
+
         logger.info(`Preparing to import settings from ${fsPath}`);
 
         /* extensions */ {
             const extensions: AdmZip.IZipEntry | null = zip.getEntry("extensions.json");
 
             if(extensions && !extensions.isDirectory){
-                zip.extractEntryTo("extensions.json", dist.User, undefined, true);
+                extract("extensions.json");
 
                 dist.updateExtensions();
             }else
@@ -55,7 +57,7 @@ export const inport: (fsPath: string) => void = (fsPath: string) => {
             const keybindings: AdmZip.IZipEntry | null = zip.getEntry("keybindings.json");
 
             if(keybindings && !keybindings.isDirectory){
-                zip.extractEntryTo("keybindings.json", dist.User, undefined, true);
+                extract("keybindings.json");
 
                 dist.updateKeybindings(); // replace with OS specific keybinds
             }else
@@ -66,7 +68,7 @@ export const inport: (fsPath: string) => void = (fsPath: string) => {
             const locale: AdmZip.IZipEntry | null = zip.getEntry("locale.json");
 
             if(locale && !locale.isDirectory){
-                zip.extractEntryTo("locale.json", dist.User, undefined, true);
+                extract("locale.json");
 
                 dist.updateLocale();
             }else
@@ -77,7 +79,7 @@ export const inport: (fsPath: string) => void = (fsPath: string) => {
             const settings: AdmZip.IZipEntry | null = zip.getEntry("settings.json");
 
             if(settings && !settings.isDirectory)
-                zip.extractEntryTo("settings.json", dist.User, undefined, true);
+                extract("settings.json");
             else
                 logger.warn("Settings not found");
         }
@@ -86,7 +88,7 @@ export const inport: (fsPath: string) => void = (fsPath: string) => {
             let hasSnippets: boolean = false;
             for(const entry of zip.getEntries().filter(f => f.entryName.toLowerCase().startsWith("snippets/")).map(f => f.entryName)){
                 hasSnippets = true;
-                zip.extractEntryTo(entry, dist.User, undefined, true);
+                extract(entry);
             }
 
             if(!hasSnippets)
@@ -97,15 +99,16 @@ export const inport: (fsPath: string) => void = (fsPath: string) => {
             const storage: AdmZip.IZipEntry | null = zip.getEntry("storage.json");
             if(storage && !storage.isDirectory){
                 const text = zip.readAsText("storage.json", "utf-8");
-                if(isValidJson(text)){
+                if(isValidJson(text))
                     dist.writeProfiles(JSON.parse(text));
-                }
+                else
+                    logger.error("Profile json was invalid");
             }
 
             let hasProfiles: boolean = false;
             for(const entry of zip.getEntries().filter(f => f.entryName.toLowerCase().startsWith("profiles/")).map(f => f.entryName)){
                 hasProfiles = true;
-                zip.extractEntryTo(entry, dist.User, undefined, true);
+                extract(entry);
             }
 
             if(!hasProfiles)
@@ -126,22 +129,24 @@ export const xport: (fsPath: string) => void = (fsPath: string) => {
     try{
         const zip: AdmZip = new AdmZip();
 
+        const insert = (file: string, content: string) => zip.addFile(file, Buffer.from(content, "utf-8"));
+
         logger.info(`Preparing to export settings to ${fsPath}`);
 
         /* extensions */ {
             const extensions: string | undefined = dist.getExtensions();
 
             if(extensions)
-                zip.addFile("extensions.json", Buffer.from(extensions, "utf-8"));
+                insert("extensions.json", extensions);
             else
                 logger.warn("Extensions not found");
         }
 
         /* keybindings */ {
-            const keybindings: string | undefined = dist.read(dist.keybindings);
+            const keybindings: string | undefined = files.read(dist.keybindings);
 
             if(keybindings) // force keybindings to be saved as ctrl
-                zip.addFile("keybindings.json", Buffer.from(dist.formatKeybindings(keybindings), "utf-8"));
+                insert("keybindings.json", dist.formatKeybindings(keybindings));
             else
                 logger.warn("Keybindings not found");
         }
@@ -150,16 +155,16 @@ export const xport: (fsPath: string) => void = (fsPath: string) => {
             const locale: string | undefined = dist.getLocale();
 
             if(locale)
-                zip.addFile("locale.json", Buffer.from(locale));
+                insert("locale.json", locale);
             else
                 logger.warn("Locale not found");
         }
 
         /* settings */ {
-            const settings: string | undefined = dist.read(dist.settings);
+            const settings: string | undefined = files.read(dist.settings);
 
             if(settings)
-                zip.addFile("settings.json", Buffer.from(settings, "utf-8"));
+                insert("settings.json", settings);
             else
                 logger.warn("Settings not found");
         }
@@ -174,7 +179,7 @@ export const xport: (fsPath: string) => void = (fsPath: string) => {
         /* profiles */ {
             const profiles = dist.getProfiles();
             if(profiles)
-                zip.addFile("storage.json", Buffer.from(JSON.stringify(profiles, null, 4)));
+                insert("storage.json", JSON.stringify(profiles, null, 4));
             else
                 logger.warn("Storage not found");
 
@@ -184,7 +189,7 @@ export const xport: (fsPath: string) => void = (fsPath: string) => {
                     if(files.isDirectory(profile)){
                         for(const f of ["extensions.json", "keybindings.json", "settings.json"]){
                             const file = path.join(profile, f);
-                            files.isFile(file) && zip.addLocalFile(file, `profiles/${dir}`);
+                            files.isFile(file) && insert(`profiles/${dir}/${f}`, files.read(file)!);
                         }
                         const snippets: string = path.join(profile, "snippets");
                         if(files.isDirectory(snippets)){

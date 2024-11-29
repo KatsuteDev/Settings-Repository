@@ -42,10 +42,25 @@ export const copyRecursiveSync: (src: string | undefined | null, dest: string) =
     for(const file of fs.readdirSync(src!) || []){
         const fsPath: string = path.join(src!, file);
         if(isFile(fsPath))
-            fs.copyFileSync(fsPath, path.join(dest, file));
+            copy(fsPath, path.join(dest, file));
         else if(isDirectory(fsPath)){
             fs.mkdirSync(path.join(dest, file));
             copyRecursiveSync(fsPath, path.join(dest, file));
         }
     }
+}
+
+export const read: (src: string | undefined | null) => string | undefined = (src: string | undefined | null) => {
+    if(isFile(src))
+        return fs.readFileSync(src!, {encoding: "utf-8"});
+    else
+        return undefined;
+}
+
+export const copy: (src: string | undefined | null, dest: string | undefined | null) => void = (src: string | undefined | null, dest: string | undefined | null) => {
+    isFile(src) && isNotNull(dest) && fs.copyFileSync(src!, dest!);
+}
+
+export const write: (src: string | undefined | null, content: string | undefined | null) => void = (src: string | undefined | null, content: string | undefined | null) => {
+    isNotNull(src) && isNotNull(content) && fs.writeFileSync(src!, content!, {encoding: "utf-8"});
 }
