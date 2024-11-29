@@ -18,7 +18,6 @@
 
 import * as vscode from "vscode";
 
-import * as fs from "fs";
 import * as os from "os";
 
 import { isNull, isValidJson } from "../lib/is";
