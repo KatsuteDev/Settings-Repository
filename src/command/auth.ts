@@ -18,7 +18,6 @@
 
 import * as vscode from "vscode";
 
-import * as fs from "fs";
 import * as os from "os";
 
 import { isNull, isValidJson } from "../lib/is";
@@ -85,13 +84,13 @@ export const authenticate: () => void = () => {
 
             logger.info(`Updated authentication: ${username}`);
 
-            fs.writeFileSync(
+            files.write(
                 dist.credentials,
 `{
     "login": "${username}",
     "auth": "${crypt.encrypt(password)}"
-}`,
-                "utf-8");
+}`
+            );
         });
     });
 }
@@ -101,7 +100,7 @@ export const authorization: () => credentials | undefined = () => {
 
     if(!files.isFile(dist.credentials)) return undefined;
 
-    const json: string = fs.readFileSync(dist.credentials, "utf-8");
+    const json: string = files.read(dist.credentials)!;
 
     if(!isValidJson(json)) return undefined;
 
