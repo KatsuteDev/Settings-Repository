@@ -24,7 +24,7 @@ import * as path from "path";
 
 import simpleGit, { GitError, SimpleGit } from "simple-git";
 
-import { isNull } from "../lib/is";
+import { isNull, isValidJson } from "../lib/is";
 import * as config from "../config";
 import * as logger from "../logger";
 import * as files from "../lib/files";
@@ -57,9 +57,9 @@ export const pull: (repo: string, skipNotify?: boolean) => void = async (repo: s
 
     // init directory
 
-    const temp: string = fs.mkdtempSync(path.join(os.tmpdir(), "vscode-settings-repository-"));
+    const staging: string = fs.mkdtempSync(path.join(os.tmpdir(), "vscode-settings-repository-"));
 
-    if(!fs.existsSync(temp)) return logger.error(`Pull failed: unable to create temporary directory '${temp}'`, true);
+    if(!fs.existsSync(staging)) return logger.error(`Pull failed: unable to create temporary directory '${staging}'`, true);
 
     // repo
 
@@ -72,7 +72,7 @@ export const pull: (repo: string, skipNotify?: boolean) => void = async (repo: s
     const gitback: (err: GitError | null) => void = (err: GitError | null) => {
         if(err){
             logger.error(`Failed to pull from ${config.get("repository")}:\n ${auth.mask(err.message, cred)}`, true);
-            cleanup(temp);
+            cleanup(staging);
         }
     };
 
@@ -84,7 +84,7 @@ export const pull: (repo: string, skipNotify?: boolean) => void = async (repo: s
     logger.debug(`Git clone ${auth.mask(remote, cred)}`);
 
     try{
-        const git: SimpleGit = simpleGit(temp);
+        const git: SimpleGit = simpleGit(staging);
 
         // clone repo on branch, omit history (not needed)
         await git.clone(remote, ".", ["-b", branch, "--depth", "1"], (err: GitError | null) => {
@@ -92,10 +92,10 @@ export const pull: (repo: string, skipNotify?: boolean) => void = async (repo: s
 
             if(!err){
                 /* extensions */ {
-                    const extensions: string = path.join(temp, "extensions.json");
+                    const extensions: string = path.join(staging, "extensions.json");
 
                     if(files.isFile(extensions)){
-                        fs.copyFileSync(extensions, dist.extensions);
+                        files.copy(extensions, dist.extensions);
 
                         dist.updateExtensions();
                     }else
@@ -103,10 +103,10 @@ export const pull: (repo: string, skipNotify?: boolean) => void = async (repo: s
                 }
 
                 /* keybindings */ {
-                    const keybindings: string = path.join(temp, "keybindings.json");
+                    const keybindings: string = path.join(staging, "keybindings.json");
 
                     if(files.isFile(keybindings)){
-                        fs.copyFileSync(keybindings, dist.keybindings);
+                        files.copy(keybindings, dist.keybindings);
 
                         dist.updateKeybindings(); // replace with OS specific keybinds
                     }else
@@ -114,10 +114,10 @@ export const pull: (repo: string, skipNotify?: boolean) => void = async (repo: s
                 }
 
                 /* locale */ {
-                    const locale: string = path.join(temp, "locale.json");
+                    const locale: string = path.join(staging, "locale.json");
 
                     if(files.isFile(locale)){
-                        fs.copyFileSync(locale, dist.locale);
+                        files.copy(locale, dist.locale);
 
                         dist.updateLocale();
                     }else
@@ -125,29 +125,45 @@ export const pull: (repo: string, skipNotify?: boolean) => void = async (repo: s
                 }
 
                 /* settings */ {
-                    const settings: string = path.join(temp, "settings.json");
+                    const settings: string = path.join(staging, "settings.json");
 
                     if(files.isFile(settings))
-                        fs.copyFileSync(settings, dist.settings);
+                        files.copy(settings, dist.settings);
                     else
                         logger.warn("Settings not found");
                 }
 
                 /* snippets */ {
-                    const snippets: string = path.join(temp, "snippets");
+                    const snippets: string = path.join(staging, "snippets");
 
-                    if(files.isDirectory(snippets)){
-                        // remove local, use remote copy
-                        fs.rmSync(dist.Snippets, {recursive: true, force: true});
-
-                        files.copyRecursiveSync(snippets, dist.Snippets);
-                    }else
+                    if(files.isDirectory(snippets))
+                        files.copyRecursiveSync(snippets, dist.snippets);
+                    else
                         logger.warn("Snippets not found");
+                }
+
+                /* profiles */ {
+                    const storage: string = path.join(staging, "storage.json");
+
+                    if(files.isFile(storage)){
+                        const text = files.read(storage)!;
+                        if(isValidJson(text)){
+                            dist.writeProfiles(JSON.parse(text));
+                        }
+                    }else
+                        logger.warn("Storage not found");
+
+                    const profiles: string = path.join(staging, "profiles");
+
+                    if(files.isDirectory(profiles))
+                        files.copyRecursiveSync(profiles, dist.profiles);
+                    else
+                        logger.warn("Profiles not found");
                 }
 
                 logger.info(`Imported settings from ${config.get("repository")}@${branch}`, true);
 
-                cleanup(temp);
+                cleanup(staging);
 
                 skipNotify || extension.notify();
             }
@@ -155,7 +171,7 @@ export const pull: (repo: string, skipNotify?: boolean) => void = async (repo: s
     }catch(error: any){
         logger.error(`Push failed: ${auth.mask(error, cred)}`, true);
     }finally{
-        cleanup(temp);
+        cleanup(staging);
     }
 }
 
@@ -169,9 +185,9 @@ export const push: (repo: string, ignoreBadAuth?: boolean) => Promise<void> = as
 
     // init directory
 
-    const temp: string = fs.mkdtempSync(path.join(os.tmpdir(), "vscode-settings-repository-"));
+    const staging: string = fs.mkdtempSync(path.join(os.tmpdir(), "vscode-settings-repository-"));
 
-    if(!fs.existsSync(temp)) return logger.error(`Push failed: unable to create temporary directory '${temp}'`, true);
+    if(!fs.existsSync(staging)) return logger.error(`Push failed: unable to create temporary directory '${staging}'`, true);
 
     // repo
 
@@ -184,7 +200,7 @@ export const push: (repo: string, ignoreBadAuth?: boolean) => Promise<void> = as
     const gitback: (err: GitError | null) => void = (err: GitError | null) => {
         if(err){
             logger.error(`Failed to push to ${config.get("repository")}:\n ${auth.mask(err.message, cred)}`, true);
-            cleanup(temp);
+            cleanup(staging);
         }
     };
 
@@ -197,7 +213,7 @@ export const push: (repo: string, ignoreBadAuth?: boolean) => Promise<void> = as
     logger.debug(`includeHostnameInCommit: ${config.get("includeHostnameInCommitMessage")}`);
 
     try{
-        const git: SimpleGit = simpleGit(temp);
+        const git: SimpleGit = simpleGit(staging);
 
         // clone repo on branch, omit history (not needed)
         await git.clone(remote, ".", ["-b", branch, "--depth", "1"], (err: GitError | null) => {
@@ -209,16 +225,16 @@ export const push: (repo: string, ignoreBadAuth?: boolean) => Promise<void> = as
                         const extensions: string | undefined = dist.getExtensions();
 
                         if(extensions)
-                            fs.writeFileSync(path.join(temp, "extensions.json"), extensions, "utf-8");
+                            files.write(path.join(staging, "extensions.json"), extensions);
                         else
                             logger.warn("Extensions not found");
                     }
 
                     /* keybindings */ {
-                        const keybindings: string | undefined = dist.getKeybindings();
+                        const keybindings: string | undefined = files.read(dist.keybindings);
 
                         if(keybindings) // force keybindings to be saved as ctrl
-                            fs.writeFileSync(path.join(temp, "keybindings.json"), dist.formatKeybindings(keybindings, "ctrl"), "utf-8");
+                            files.write(path.join(staging, "keybindings.json"), dist.formatKeybindings(keybindings, "ctrl"));
                         else
                             logger.warn("Keybindings not found");
                     }
@@ -227,35 +243,63 @@ export const push: (repo: string, ignoreBadAuth?: boolean) => Promise<void> = as
                         const locale: string | undefined = dist.getLocale();
 
                         if(locale)
-                            fs.writeFileSync(path.join(temp, "locale.json"), locale, "utf-8");
+                            files.write(path.join(staging, "locale.json"), locale);
                         else
                             logger.warn("Locale not found");
                     }
 
                     /* settings */ {
-                        const settings: string | undefined = dist.getSettings();
+                        const settings: string | undefined = files.read(dist.settings);
 
                         if(settings)
-                            fs.writeFileSync(path.join(temp, "settings.json"), settings, "utf-8");
+                            files.write(path.join(staging, "settings.json"), settings);
                         else
                             logger.warn("Settings not found");
                     }
 
                     /* snippets */ {
-                        const snippets: string = path.join(temp, "snippets");
+                        const snippets: string = path.join(staging, "snippets");
 
                         // remove remote, use local copy
                         fs.rmSync(snippets, {recursive: true, force: true});
 
-                        if(files.isDirectory(dist.Snippets))
-                            files.copyRecursiveSync(dist.Snippets, snippets);
+                        if(files.isDirectory(dist.snippets))
+                            files.copyRecursiveSync(dist.snippets, snippets);
                         else
                             logger.warn("Snippets not found");
+                    }
+
+                    /* profiles */ {
+                        const prof = dist.getProfiles();
+
+                        if(prof)
+                            files.write(path.join(staging, "storage.json"), JSON.stringify(prof, null, 4));
+                        else
+                            logger.warn("Storage not found");
+
+                        const profiles: string = path.join(staging, "profiles");
+
+                        // remove remote, use local copy
+                        fs.rmSync(profiles, {recursive: true, force: true});
+
+                        if(files.isDirectory(dist.profiles)){
+                            for(const dir of fs.readdirSync(dist.profiles)){
+                                const profile: string = path.join(dist.profiles, dir);
+                                if(files.isDirectory(profile)){
+                                    for(const f of ["extensions.json", "keybindings.json", "settings.json"]){
+                                        files.copy(path.join(profile, f), path.join(profiles, dir, f));
+                                    }
+                                    const snippets: string = path.join(profile, "snippets");
+                                    files.copyRecursiveSync(snippets, path.join(profiles, dir, "snippets"));
+                                }
+                            }
+                        }else
+                            logger.warn("Profiles not found");
                     }
                 }catch(error: any){
                     if(error){
                         logger.error(`Push failed: ${auth.mask(error, cred)}`, true);
-                        cleanup(temp);
+                        cleanup(staging);
                     }
                 }
             }
@@ -269,12 +313,12 @@ export const push: (repo: string, ignoreBadAuth?: boolean) => Promise<void> = as
             gitback(err);
             if(!err){
                 logger.info(`Pushed settings to ${config.get("repository")}@${branch}`, true);
-                cleanup(temp);
+                cleanup(staging);
             }
         });
     }catch(error: any){
         logger.error(`Push failed: ${auth.mask(error, cred)}`, true);
     }finally{
-        cleanup(temp);
+        cleanup(staging);
     }
 }

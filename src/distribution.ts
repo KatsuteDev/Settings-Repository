@@ -27,6 +27,11 @@ import { isNotNull, isNull, isValidJson } from "./lib/is";
 
 //
 
+export type Profile = {
+    location: string;
+    name: string;
+}
+
 export class Distribution {
 
     public readonly Code: string;
@@ -36,7 +41,9 @@ export class Distribution {
             public readonly keybindings: string;
             public readonly locale: string;
             public readonly settings: string;
-            public readonly Snippets: string;
+            public readonly snippets: string;
+            public readonly storage: string;
+            public readonly profiles: string;
     public readonly dotVscode?: string;
         public readonly Extensions?: string;
         public readonly ExtensionsObsolete?: string;
@@ -52,7 +59,9 @@ export class Distribution {
         this.keybindings = path.join(this.User, "keybindings.json");
         this.locale      = path.join(this.User, "locale.json");
         this.settings    = path.join(this.User, "settings.json");
-        this.Snippets    = path.join(this.User, "snippets");
+        this.snippets    = path.join(this.User, "snippets");
+        this.storage     = path.join(this.User, "globalStorage", "storage.json");
+        this.profiles    = path.join(this.User, "profiles");
 
         const exts: vscode.Extension<any>[] = vscode.extensions.all.filter(e => !e.packageJSON.isBuiltin);
 
@@ -69,7 +78,9 @@ export class Distribution {
     ├ keybindings: ${this.keybindings}
     ├ locale:      ${this.locale}
     ├ settings:    ${this.settings}
-    └ Snippets:    ${this.Snippets}
+    ├ snippets:    ${this.snippets}
+    ├ storage:     ${this.storage}
+    └ profiles:    ${this.profiles}
   .vscode: ${this.dotVscode}
   ├  Extensions: ${this.Extensions}
   ├  ExtensionsObsolete: ${this.ExtensionsObsolete}
@@ -80,7 +91,7 @@ export class Distribution {
     public getExtensions(): string | undefined {
         if(!files.isDirectory(this.Extensions)) return undefined;
 
-        const dotObsolete: string = this.ExtensionsObsolete && fs.existsSync(this.ExtensionsObsolete) ? fs.readFileSync(this.ExtensionsObsolete, "utf-8") : "{}";
+        const dotObsolete: string = files.read(this.ExtensionsObsolete) ?? "{}";
         const obsolete: {[id: string]: boolean} = isValidJson(dotObsolete) ? JSON.parse(dotObsolete) : {};
         const uninstalled: string[] = Object.entries(obsolete).filter(([k, v]) => v).map(([k, v]) => k);
 
@@ -95,7 +106,7 @@ export class Distribution {
 
             if(!files.isFile(pkgFile)) continue;
 
-            const json: string = fs.readFileSync(pkgFile, "utf-8");
+            const json: string = files.read(pkgFile) ?? "";
 
             if(!isValidJson(json)) continue;
 
@@ -136,7 +147,7 @@ ${json.slice(0, -2)}
     public updateExtensions(): void { // we cannot handle enable/disable at the moment, see <https://github.com/microsoft/vscode/issues/15466#issuecomment-724147661>
         if(!files.isDirectory(this.Extensions) || !files.isFile(this.extensions)) return;
 
-        const json: string = fs.readFileSync(this.extensions, "utf-8");
+        const json: string = files.read(this.extensions) ?? "";
 
         const extensions: [{
             identifier: string,
@@ -163,7 +174,7 @@ ${json.slice(0, -2)}
 
             if(!files.isFile(pkgFile)) continue;
 
-            const json: string = fs.readFileSync(pkgFile, "utf-8");
+            const json: string = files.read(pkgFile) ?? "";
 
             if(!isValidJson(json)) continue;
 
@@ -185,20 +196,30 @@ ${json.slice(0, -2)}
         }
     }
 
-    public getSettings(): string | undefined {
-        return files.isFile(this.settings)
-            ? fs.readFileSync(this.settings, "utf-8").trim()
-            : undefined;
+    public getProfiles(): Profile[] | undefined {
+        if(files.isFile(this.storage)){
+            const content = (files.read(this.storage) ?? "").trim();
+            if(isValidJson(content)){
+                const obj = JSON.parse(content).userDataProfiles;
+                return Array.isArray(obj.userDataProfiles) ? obj.userDataProfiles : [];
+            }
+        }
+        return undefined;
+    }
+
+    public writeProfiles(profiles: Profile[]) {
+        if(files.isFile(this.storage)){
+            const content = (files.read(this.storage) ?? "").trim();
+            if(isValidJson(content)){
+                const obj: {userDataProfiles: Profile[]} = JSON.parse(content);
+                obj.userDataProfiles = [...obj.userDataProfiles, ...profiles].filter((o, i, s) => s.findIndex(o => o.location === o.location) === i);;
+                files.write(this.storage, JSON.stringify(obj, null, 4));
+            }
+        }
     }
 
     private static readonly ctrl: RegExp = /(?<=^\s*"key"\s*:\s*".*)\bctrl\b(?=.*",?$)/gmi; // ⌃ ctrl
     private static readonly cmd:  RegExp = /(?<=^\s*"key"\s*:\s*".*)\bcmd\b(?=.*",?$)/gmi;  // ⌘ cmd
-
-    public getKeybindings(): string | undefined {
-        return files.isFile(this.keybindings)
-            ? fs.readFileSync(this.keybindings, "utf-8").trim()
-            : undefined;
-    }
 
     public formatKeybindings(keybindings: string, ctrl: "ctrl" | "cmd" = "ctrl"): string {
         return keybindings.replace(ctrl === "ctrl" ? Distribution.cmd : Distribution.ctrl, ctrl); // ⌃ ctrl ↔ ⌘ cmd
@@ -208,7 +229,7 @@ ${json.slice(0, -2)}
         if(!files.isFile(this.keybindings)) return;
 
         // replace local keybindings with OS specific keybinds
-        fs.writeFileSync(this.keybindings, this.formatKeybindings(fs.readFileSync(this.keybindings, "utf-8"), this.macos ? "cmd" : "ctrl"));
+        files.write(this.keybindings, this.formatKeybindings(files.read(this.keybindings)!, this.macos ? "cmd" : "ctrl"));
     }
 
     private static readonly locale: RegExp = /(?<=^\s*"locale"\s*:\s*")[\w-]+(?=")/mi;
@@ -216,30 +237,26 @@ ${json.slice(0, -2)}
     public getLocale(): string | undefined {
         if(!files.isFile(this.argv)) return undefined;
 
-        const argv: string = fs.readFileSync(this.argv!, "utf-8");
+        const argv: string = files.read(this.argv)!;
 
         const match: RegExpExecArray | null = Distribution.locale.exec(argv);
 
-        return match && match.length > 0
-            ? `{
-    "locale": "${match[0]}"
-}`
-            : undefined;
+        return match && match.length > 0 ? JSON.stringify({locale: match[0]}, null, 4) : undefined;
     }
 
     public updateLocale(): void {
         if(!files.isFile(this.argv) || !files.isFile(this.locale)) return;
 
-        const argv: string = fs.readFileSync(this.argv!, "utf-8");
+        const argv: string = files.read(this.argv)!;
 
-        const json: string = fs.readFileSync(this.locale, "utf-8");
+        const json: string = files.read(this.locale)!;
 
         if(!isValidJson(json)) return;
 
         const locale: any = JSON.parse(json);
 
         if(isNotNull(locale.locale))
-            fs.writeFileSync(this.argv!, argv.replace(Distribution.locale, locale.locale).trim());
+            files.write(this.argv!, argv.replace(Distribution.locale, locale.locale).trim());
     }
 
 }

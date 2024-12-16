@@ -22,7 +22,7 @@ const glob = require("glob");
 
 const mp = path.join(__dirname, "meta.json");
 
-const meta = JSON.parse(fs.readFileSync(mp, "utf-8"));
+const meta = JSON.parse(fs.readFileSync(mp, {encoding: "utf-8"}));
 
 let files = [];
 
@@ -42,7 +42,7 @@ let licenses = {};
 // sort so top level (newer) dependency licenses overwrite transient (potentially older) dependency licenses
 for(const license of files.sort((a, b) => b.length - a.length)){
     const name = license.split("node_modules").splice(-1)[0].split('/').slice(0, -1).join('/').substring(1);
-    licenses[name] = fs.readFileSync(license, "utf-8").trim();
+    licenses[name] = fs.readFileSync(license, {encoding: "utf-8"}).trim();
 }
 
 let out = "# Licenses\n\n---";
@@ -53,5 +53,5 @@ for(const k of Object.keys(licenses).sort()){
     out += `\n\n${licenses[k]}`;
 }
 
-fs.writeFileSync(path.join(__dirname, "LICENSES.txt"), out, "utf-8");
+fs.writeFileSync(path.join(__dirname, "LICENSES.txt"), out, {encoding: "utf-8"});
 fs.rmSync(mp);
