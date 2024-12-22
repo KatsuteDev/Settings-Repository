@@ -31,7 +31,7 @@ import * as files from "../lib/files";
 import * as auth from "../command/auth";
 import * as extension from "../extension";
 import * as statusbar from "../statusbar";
-import { Distribution } from "../distribution";
+import { Distribution, Profile } from "../distribution";
 
 //
 
@@ -143,7 +143,7 @@ export const pull: (repo: string, skipNotify?: boolean) => void = async (repo: s
                 }
 
                 /* profiles */ {
-                    const storage: string = path.join(staging, "storage.json");
+                    const storage: string = path.join(staging, "profiles.json");
 
                     if(files.isFile(storage)){
                         const text = files.read(storage)!;
@@ -270,12 +270,12 @@ export const push: (repo: string, ignoreBadAuth?: boolean) => Promise<void> = as
                     }
 
                     /* profiles */ {
-                        const prof = dist.getProfiles();
+                        const prof: Profile[] | undefined = dist.getProfiles();
 
                         if(prof)
-                            files.write(path.join(staging, "storage.json"), JSON.stringify(prof, null, 4));
+                            files.write(path.join(staging, "profiles.json"), JSON.stringify(prof, null, 4));
                         else
-                            logger.warn("Storage not found");
+                            logger.warn("Profiles not found");
 
                         const profiles: string = path.join(staging, "profiles");
 
@@ -294,7 +294,7 @@ export const push: (repo: string, ignoreBadAuth?: boolean) => Promise<void> = as
                                 }
                             }
                         }else
-                            logger.warn("Profiles not found");
+                            logger.warn("Profiles dir not found");
                     }
                 }catch(error: any){
                     if(error){

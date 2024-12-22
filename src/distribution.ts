@@ -201,7 +201,7 @@ ${json.slice(0, -2)}
             const content = (files.read(this.storage) ?? "").trim();
             if(isValidJson(content)){
                 const obj = JSON.parse(content).userDataProfiles;
-                return Array.isArray(obj.userDataProfiles) ? obj.userDataProfiles : [];
+                return Array.isArray(obj) ? obj : [];
             }
         }
         return undefined;
@@ -212,8 +212,10 @@ ${json.slice(0, -2)}
             const content = (files.read(this.storage) ?? "").trim();
             if(isValidJson(content)){
                 const obj: {userDataProfiles: Profile[]} = JSON.parse(content);
-                obj.userDataProfiles = [...obj.userDataProfiles, ...profiles].filter((o, i, s) => s.findIndex(o => o.location === o.location) === i);;
+                obj.userDataProfiles = [...(obj.userDataProfiles ?? []), ...(profiles ?? [])].filter((o, i, s) => s.findIndex(o => o.location === o.location) === i);
                 files.write(this.storage, JSON.stringify(obj, null, 4));
+            }else{
+                logger.error("Storage was malformed");
             }
         }
     }

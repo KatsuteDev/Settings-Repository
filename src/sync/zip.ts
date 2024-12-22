@@ -24,7 +24,7 @@ import * as path from "path";
 import * as logger from "../logger";
 import * as files from "../lib/files";
 import * as extension from "../extension";
-import { Distribution } from "../distribution";
+import { Distribution, Profile } from "../distribution";
 import { isValidJson } from "../lib/is";
 
 //
@@ -96,9 +96,9 @@ export const inport: (fsPath: string) => void = (fsPath: string) => {
         }
 
         /* profiles */ {
-            const storage: AdmZip.IZipEntry | null = zip.getEntry("storage.json");
+            const storage: AdmZip.IZipEntry | null = zip.getEntry("profiles.json");
             if(storage && !storage.isDirectory){
-                const text = zip.readAsText("storage.json", "utf-8");
+                const text = zip.readAsText("profiles.json", "utf-8");
                 if(isValidJson(text))
                     dist.writeProfiles(JSON.parse(text));
                 else
@@ -177,11 +177,11 @@ export const xport: (fsPath: string) => void = (fsPath: string) => {
         }
 
         /* profiles */ {
-            const profiles = dist.getProfiles();
+            const profiles: Profile[] | undefined = dist.getProfiles();
             if(profiles)
-                insert("storage.json", JSON.stringify(profiles, null, 4));
+                insert("profiles.json", JSON.stringify(profiles, null, 4));
             else
-                logger.warn("Storage not found");
+                logger.warn("Profiles not found");
 
             if(files.isDirectory(dist.profiles)){
                 for(const dir of fs.readdirSync(dist.profiles)){
@@ -198,7 +198,7 @@ export const xport: (fsPath: string) => void = (fsPath: string) => {
                     }
                 }
             }else
-                logger.warn("Profiles not found");
+                logger.warn("Profiles dir not found");
         }
 
         zip.writeZip(fsPath, (error: Error | null) => {

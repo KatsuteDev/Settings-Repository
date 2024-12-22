@@ -27,7 +27,7 @@ export const warning: string = '⚠️';
 const logger: vscode.OutputChannel = vscode.window.createOutputChannel("Settings Repository", "log");
 
 const indent: (message: string) => string = (message: string) => {
-    return message.replace(/^/gm, "      ").substring(6)
+    return `${message}`.replace(/^/gm, "      ").substring(6)
 }
 
 export const log: (message: string) => void = (message: string) => {
