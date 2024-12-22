@@ -213,7 +213,10 @@ ${json.slice(0, -2)}
             if(isValidJson(content)){
                 const obj: {userDataProfiles: Profile[]} = JSON.parse(content);
                 obj.userDataProfiles = [...(obj.userDataProfiles ?? []), ...(profiles ?? [])].filter((o, i, s) => s.findIndex(o => o.location === o.location) === i);
-                files.write(this.storage, JSON.stringify(obj, null, 4));
+                setTimeout(() => {
+                    files.write(this.storage, JSON.stringify(obj, null, 4));
+                    logger.info("Finished deferred profile write");
+                }, 1000 * 20);
             }else{
                 logger.error("Storage was malformed");
             }
