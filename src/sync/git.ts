@@ -83,6 +83,9 @@ export const pull: (repo: string, skipNotify?: boolean) => void = async (repo: s
     logger.info(`Preparing to import settings from ${config.get("repository")}@${branch}`);
     logger.debug(`Git clone ${auth.mask(remote, cred)}`);
 
+    // forced delay so git repo can get up-to-date after a fast reload/restart
+    await new Promise<void>((res) => setTimeout(() => res(), 3 * 1000));
+
     try{
         const git: SimpleGit = simpleGit(temp);
 
