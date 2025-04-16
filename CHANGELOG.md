@@ -1,5 +1,38 @@
 # Changelog
 
+## 1.0.12
+
+### Fixes
+
+* Fix git desync when extension host reloaded/restarted [#256](https://github.com/KatsuteDev/Settings-Repository/pull/256) ([@Katsute](https://github.com/Katsute))
+
+### Dependencies
+
+* Bump typescript from 5.6.3 to 5.7.2 [#232](https://github.com/KatsuteDev/Settings-Repository/pull/232) ([@dependabot](https://github.com/dependabot))
+* Bump @types/node from 22.9.0 to 22.10.1 [#233](https://github.com/KatsuteDev/Settings-Repository/pull/233) ([@dependabot](https://github.com/dependabot))
+* Bump @types/adm-zip from 0.5.6 to 0.5.7 [#234](https://github.com/KatsuteDev/Settings-Repository/pull/234) ([@dependabot](https://github.com/dependabot))
+* Bump @types/vscode from 1.95.0 to 1.96.0 [#235](https://github.com/KatsuteDev/Settings-Repository/pull/235) ([@dependabot](https://github.com/dependabot))
+* Bump esbuild from 0.24.0 to 0.24.2 [#236](https://github.com/KatsuteDev/Settings-Repository/pull/236) ([@dependabot](https://github.com/dependabot))
+* Bump typescript from 5.7.2 to 5.7.3 [#238](https://github.com/KatsuteDev/Settings-Repository/pull/238) ([@dependabot](https://github.com/dependabot))
+* Bump glob from 11.0.0 to 11.0.1 [#239](https://github.com/KatsuteDev/Settings-Repository/pull/239) ([@dependabot](https://github.com/dependabot))
+* Bump undici from 6.21.0 to 6.21.1 [#240](https://github.com/KatsuteDev/Settings-Repository/pull/240) ([@dependabot](https://github.com/dependabot))
+* Bump @types/node from 22.10.1 to 22.13.0 [#241](https://github.com/KatsuteDev/Settings-Repository/pull/241) ([@dependabot](https://github.com/dependabot))
+* Bump @vscode/vsce from 3.2.1 to 3.2.2 [#242](https://github.com/KatsuteDev/Settings-Repository/pull/242) ([@dependabot](https://github.com/dependabot))
+* Bump @types/vscode from 1.96.0 to 1.97.0 [#244](https://github.com/KatsuteDev/Settings-Repository/pull/244) ([@dependabot](https://github.com/dependabot))
+* Bump typescript from 5.7.3 to 5.8.2 [#245](https://github.com/KatsuteDev/Settings-Repository/pull/245) ([@dependabot](https://github.com/dependabot))
+* Bump esbuild from 0.24.2 to 0.25.0 [#243](https://github.com/KatsuteDev/Settings-Repository/pull/243) ([@dependabot](https://github.com/dependabot))
+* Bump esbuild from 0.25.0 to 0.25.1 [#247](https://github.com/KatsuteDev/Settings-Repository/pull/247) ([@dependabot](https://github.com/dependabot))
+* Bump @types/vscode from 1.97.0 to 1.98.0 [#246](https://github.com/KatsuteDev/Settings-Repository/pull/246) ([@dependabot](https://github.com/dependabot))
+* Bump @vscode/vsce from 3.2.2 to 3.3.0 [#248](https://github.com/KatsuteDev/Settings-Repository/pull/248) ([@dependabot](https://github.com/dependabot))
+* Bump esbuild from 0.25.1 to 0.25.2 [#250](https://github.com/KatsuteDev/Settings-Repository/pull/250) ([@dependabot](https://github.com/dependabot))
+* Bump @vscode/vsce from 3.3.0 to 3.3.2 [#251](https://github.com/KatsuteDev/Settings-Repository/pull/251) ([@dependabot](https://github.com/dependabot))
+* Bump @types/node from 22.13.0 to 22.14.0 [#253](https://github.com/KatsuteDev/Settings-Repository/pull/253) ([@dependabot](https://github.com/dependabot))
+* Bump typescript from 5.8.2 to 5.8.3 [#254](https://github.com/KatsuteDev/Settings-Repository/pull/254) ([@dependabot](https://github.com/dependabot))
+* Bump @types/vscode from 1.98.0 to 1.99.0 [#255](https://github.com/KatsuteDev/Settings-Repository/pull/255) ([@dependabot](https://github.com/dependabot))
+* Bump @types/vscode from 1.99.0 to 1.99.1 [#257](https://github.com/KatsuteDev/Settings-Repository/pull/257) ([@dependabot](https://github.com/dependabot))
+
+**Full Changelog**: [`1.0.11...1.0.12`](https://github.com/KatsuteDev/Settings-Repository/compare/1.0.11...1.0.12)
+
 ## 1.0.11
 
 ### Fixes
