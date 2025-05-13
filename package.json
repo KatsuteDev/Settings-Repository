@@ -139,7 +139,7 @@
         "@types/vscode": "1.100.0",
         "@vscode/vsce": "3.3.2",
         "adm-zip": "0.5.16",
-        "esbuild": "0.25.3",
+        "esbuild": "0.25.4",
         "glob": "11.0.2",
         "rimraf": "6.0.1",
         "simple-git": "3.27.0",
