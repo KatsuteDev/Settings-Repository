@@ -135,7 +135,7 @@
     "homepage": "https://github.com/KatsuteDev/Settings-Repository#readme",
     "devDependencies": {
         "@types/adm-zip": "0.5.7",
-        "@types/node": "22.15.3",
+        "@types/node": "24.0.2",
         "@types/vscode": "1.100.0",
         "@vscode/vsce": "3.5.0",
         "adm-zip": "0.5.16",
