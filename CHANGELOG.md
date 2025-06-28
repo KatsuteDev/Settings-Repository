@@ -1,5 +1,25 @@
 # Changelog
 
+## 1.0.13
+
+### Dependencies
+
+* Bump esbuild from 0.25.2 to 0.25.3 [#260](https://github.com/KatsuteDev/Settings-Repository/pull/260) ([@dependabot](https://github.com/dependabot))
+* Bump glob from 11.0.1 to 11.0.2 [#258](https://github.com/KatsuteDev/Settings-Repository/pull/258) ([@dependabot](https://github.com/dependabot))
+* Bump @types/node from 22.14.0 to 22.15.3 [#259](https://github.com/KatsuteDev/Settings-Repository/pull/259) ([@dependabot](https://github.com/dependabot))
+* Bump @types/vscode from 1.99.1 to 1.100.0 [#261](https://github.com/KatsuteDev/Settings-Repository/pull/261) ([@dependabot](https://github.com/dependabot))
+* Bump esbuild from 0.25.3 to 0.25.4 [#262](https://github.com/KatsuteDev/Settings-Repository/pull/262) ([@dependabot](https://github.com/dependabot))
+* Bump @vscode/vsce from 3.3.2 to 3.4.1 [#263](https://github.com/KatsuteDev/Settings-Repository/pull/263) ([@dependabot](https://github.com/dependabot))
+* Bump @vscode/vsce from 3.4.1 to 3.4.2 [#264](https://github.com/KatsuteDev/Settings-Repository/pull/264) ([@dependabot](https://github.com/dependabot))
+* Bump esbuild from 0.25.4 to 0.25.5 [#265](https://github.com/KatsuteDev/Settings-Repository/pull/265) ([@dependabot](https://github.com/dependabot))
+* Bump @vscode/vsce from 3.4.2 to 3.5.0 [#267](https://github.com/KatsuteDev/Settings-Repository/pull/267) ([@dependabot](https://github.com/dependabot))
+* Bump simple-git from 3.27.0 to 3.28.0 [#268](https://github.com/KatsuteDev/Settings-Repository/pull/268) ([@dependabot](https://github.com/dependabot))
+* Bump @types/node from 22.15.3 to 24.0.2 [#270](https://github.com/KatsuteDev/Settings-Repository/pull/270) ([@dependabot](https://github.com/dependabot))
+* Bump glob from 11.0.2 to 11.0.3 [#269](https://github.com/KatsuteDev/Settings-Repository/pull/269) ([@dependabot](https://github.com/dependabot))
+* Bump @types/vscode from 1.100.0 to 1.101.0 [#271](https://github.com/KatsuteDev/Settings-Repository/pull/271) ([@dependabot](https://github.com/dependabot))
+
+**Full Changelog**: [`1.0.12...1.0.13`](https://github.com/KatsuteDev/Settings-Repository/compare/1.0.12...1.0.13)
+
 ## 1.0.12
 
 ### Fixes
