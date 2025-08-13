@@ -90,13 +90,13 @@ Use `Settings Repository: Export Settings` to export settings to a zip file and 
 
 ## Configuration
 
-| Name | Type | Description |
-|---|:-:|---|
-|`Repository`|`string`|The git repository to sync settings with.|
-|`Branch`|`string`|The branch to sync settings with. Branch must already exist.|
-|`Auto Sync`|`boolean`|Automatically sync settings when VSCode closes.|
-|`Auto Mode`|`Full Sync` \| `Import Only` \| `Export Only`|Determines auto sync behavior.|
-|`Include Hostname In Commit Message`|`boolean`|Include hostname in the commit message.|
+| Name | Description |
+|---|---|
+|`Repository`|The git repository to sync settings with.|
+|`Branch`|The branch to sync settings with. Branch must already exist.|
+|`Auto Sync`|Automatically sync settings when VSCode closes.|
+|`Auto Mode`|Determines auto sync behavior.|
+|`Include Hostname In Commit Message`|Include hostname in the commit message.|
 
 <div align="right"><a href="#top"><code>▲</code></a></div>
 
