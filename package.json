@@ -11,7 +11,7 @@
     "version": "2.0.0",
     "private": true,
     "engines": {
-        "vscode": "^1.102.0"
+        "vscode": "^1.103.0"
     },
     "categories": [
         "Other"
@@ -152,7 +152,7 @@
     "devDependencies": {
         "@types/adm-zip": "0.5.7",
         "@types/node": "24.3.0",
-        "@types/vscode": "1.102.0",
+        "@types/vscode": "1.103.0",
         "@vscode/vsce": "3.6.0",
         "adm-zip": "0.5.16",
         "esbuild": "0.25.9",

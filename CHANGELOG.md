@@ -1,5 +1,34 @@
 # Changelog
 
+## 2.0.0
+
+### New Features
+
+* Add option to control auto sync behavior [#281](https://github.com/KatsuteDev/Settings-Repository/pull/281) ([@Katsute](https://github.com/Katsute))
+
+  Adds the following option **Auto Sync Mode**:
+
+   * **Full Sync** - Always pull and push changes to repository
+   * **Import Only** - Only pull settings from repository
+   * **Export Only** - Only push settings to repository
+
+  If you are using **Import Only** make sure to manually sync to repo so this settings change is retained.
+
+### Dependencies
+
+* Bump esbuild from 0.25.5 to 0.25.6 [#272](https://github.com/KatsuteDev/Settings-Repository/pull/272) ([@dependabot](https://github.com/dependabot))
+* Bump @types/vscode from 1.101.0 to 1.102.0 [#273](https://github.com/KatsuteDev/Settings-Repository/pull/273) ([@dependabot](https://github.com/dependabot))
+* Bump esbuild from 0.25.6 to 0.25.8 [#274](https://github.com/KatsuteDev/Settings-Repository/pull/274) ([@dependabot](https://github.com/dependabot))
+* Bump @types/node from 24.0.6 to 24.1.0 [#275](https://github.com/KatsuteDev/Settings-Repository/pull/275) ([@dependabot](https://github.com/dependabot))
+* Bump form-data from 4.0.3 to 4.0.4 in the npm_and_yarn group [#276](https://github.com/KatsuteDev/Settings-Repository/pull/276) ([@dependabot](https://github.com/dependabot))
+* Bump typescript from 5.8.3 to 5.9.2 [#277](https://github.com/KatsuteDev/Settings-Repository/pull/277) ([@dependabot](https://github.com/dependabot))
+* Bump @types/node from 24.1.0 to 24.2.0 [#278](https://github.com/KatsuteDev/Settings-Repository/pull/278) ([@dependabot](https://github.com/dependabot))
+* Bump tmp from 0.2.3 to 0.2.4 in the npm_and_yarn group [#279](https://github.com/KatsuteDev/Settings-Repository/pull/279) ([@dependabot](https://github.com/dependabot))
+* Bump @types/node from 24.2.0 to 24.3.0 [#282](https://github.com/KatsuteDev/Settings-Repository/pull/282) ([@dependabot](https://github.com/dependabot))
+* Bump esbuild from 0.25.8 to 0.25.9 [#283](https://github.com/KatsuteDev/Settings-Repository/pull/283) ([@dependabot](https://github.com/dependabot))
+
+**Full Changelog**: [`1.0.13...2.0.0`](https://github.com/KatsuteDev/Settings-Repository/compare/1.0.13...2.0.0)
+
 ## 1.0.13
 
 ### Dependencies
