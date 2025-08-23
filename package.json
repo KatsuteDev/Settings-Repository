@@ -8,7 +8,7 @@
         "theme": "dark"
     },
     "publisher": "Katsute",
-    "version": "1.0.13",
+    "version": "2.0.0",
     "private": true,
     "engines": {
         "vscode": "^1.102.0"
@@ -94,15 +94,31 @@
                     "default": "main"
                 },
                 "settings-repository.autoSync": {
-                    "markdownDescription": "Automatically sync settings when VSCode opens and closes.",
+                    "markdownDescription": "Automatically sync settings with repository, set behavior with `#settings-repository.autoSyncMode#`.",
                     "type": "boolean",
                     "order": 2,
                     "default": true
                 },
+                "settings-repository.autoSyncMode": {
+                    "markdownDescription": "Determines the auto sync behavior, requires `#settings-repository.autoSync#` to be enabled.",
+                    "type": "string",
+                    "order": 3,
+                    "enum": [
+                        "Full Sync",
+                        "Import Only",
+                        "Export Only"
+                    ],
+                    "enumDescriptions": [
+                        "Always pull and push changes to repository",
+                        "Only pull settings from repository",
+                        "Only push settings to repository"
+                    ],
+                    "default": "Full Sync"
+                },
                 "settings-repository.includeHostnameInCommitMessage": {
                     "markdownDescription": "Include hostname in the commit message.",
                     "type": "boolean",
-                    "order": 3,
+                    "order": 4,
                     "default": true
                 }
             }
