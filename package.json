@@ -101,7 +101,7 @@
                 },
                 "settings-repository.autoSyncMode": {
                     "markdownDescription": "Determines the auto sync behavior, requires `#settings-repository.autoSync#` to be enabled.",
-                    "type": "boolean",
+                    "type": "string",
                     "order": 3,
                     "enum": [
                         "Full Sync",
@@ -109,9 +109,9 @@
                         "Export Only"
                     ],
                     "enumDescriptions": [
-                        "$(repo-sync) Always pull and push changes to repository",
-                        "$(repo-pull) Only pull settings from repository",
-                        "$(repo-push) Only push settings to repository"
+                        "Always pull and push changes to repository",
+                        "Only pull settings from repository",
+                        "Only push settings to repository"
                     ],
                     "default": "Full Sync"
                 },
