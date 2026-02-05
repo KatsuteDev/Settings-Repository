@@ -201,7 +201,13 @@ ${json.slice(0, -2)}
     }
 
     public formatKeybindings(keybindings: string, ctrl: "ctrl" | "cmd" = "ctrl"): string {
-        return keybindings.replace(ctrl === "ctrl" ? Distribution.cmd : Distribution.ctrl, ctrl); // ⌃ ctrl ↔ ⌘ cmd
+        return keybindings.replace(
+            /{[\s\S]*?}/g, // { keybinding }
+            kb =>
+                !kb.match(/"command"\s*:\s*"([^"]*)"/)![1].startsWith("-") // if command doesn't start with - (removal)
+                    ? kb.replace(ctrl === "ctrl" ? Distribution.cmd : Distribution.ctrl, ctrl) // ⌃ ctrl ↔ ⌘ cmd
+                    : kb
+        );
     }
 
     public updateKeybindings(): void {
