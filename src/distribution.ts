@@ -191,8 +191,10 @@ ${json.slice(0, -2)}
             : undefined;
     }
 
-    private static readonly ctrl: RegExp = /(?<=^\s*"key"\s*:\s*".*)\bctrl\b(?=.*",?$)/gmi; // ⌃ ctrl
-    private static readonly cmd:  RegExp = /(?<=^\s*"key"\s*:\s*".*)\bcmd\b(?=.*",?$)/gmi;  // ⌘ cmd
+    private static readonly ctrl: RegExp = /(?<=^\s*"key"\s*:\s*".*)\bctrl\b(?=.*",?$)/gmi;      // ctrl
+    private static readonly cmd:  RegExp = /(?<=^\s*"key"\s*:\s*".*)\bcmd\b(?=.*",?$)/gmi;       // ⌘ cmd
+    private static readonly alt:  RegExp = /(?<=^\s*"key"\s*:\s*".*)\balt\b(?=.*",?$)/gmi;       // alt
+    private static readonly option:  RegExp = /(?<=^\s*"key"\s*:\s*".*)\boption\b(?=.*",?$)/gmi; // ⌥ cmd
 
     public getKeybindings(): string | undefined {
         return files.isFile(this.keybindings)
@@ -206,6 +208,7 @@ ${json.slice(0, -2)}
             kb =>
                 !kb.match(/"command"\s*:\s*"([^"]*)"/)![1].startsWith("-") // if command doesn't start with - (removal)
                     ? kb.replace(ctrl === "ctrl" ? Distribution.cmd : Distribution.ctrl, ctrl) // ⌃ ctrl ↔ ⌘ cmd
+                        .replace(ctrl === "ctrl" ? Distribution.option : Distribution.alt, ctrl === "ctrl" ? "alt" : "option") // alt ↔ ⌥ cmd
                     : kb
         );
     }
