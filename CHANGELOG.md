@@ -1,5 +1,49 @@
 # Changelog
 
+## 2.0.1
+
+### Fixes
+
+* Fix keybind removal not working on MacOS [#323](https://github.com/KatsuteDev/Settings-Repository/pull/323) ([@Katsute](https://github.com/Katsute))
+
+### Dependencies
+
+* Bump @types/node from 24.3.0 to 24.4.0 [#285](https://github.com/KatsuteDev/Settings-Repository/pull/285) ([@dependabot](https://github.com/dependabot))
+* Bump @types/vscode from 1.103.0 to 1.104.0 [#286](https://github.com/KatsuteDev/Settings-Repository/pull/286) ([@dependabot](https://github.com/dependabot))
+* Bump esbuild from 0.25.9 to 0.25.10 [#287](https://github.com/KatsuteDev/Settings-Repository/pull/287) ([@dependabot](https://github.com/dependabot))
+* Bump @types/node from 24.4.0 to 24.5.2 [#288](https://github.com/KatsuteDev/Settings-Repository/pull/288) ([@dependabot](https://github.com/dependabot))
+* Bump tar-fs from 2.1.3 to 2.1.4 in the npm_and_yarn group across 1 directory [#289](https://github.com/KatsuteDev/Settings-Repository/pull/289) ([@dependabot](https://github.com/dependabot))
+* Bump @vscode/vsce from 3.6.0 to 3.6.2 [#290](https://github.com/KatsuteDev/Settings-Repository/pull/290) ([@dependabot](https://github.com/dependabot))
+* Bump @types/node from 24.5.2 to 24.6.2 [#291](https://github.com/KatsuteDev/Settings-Repository/pull/291) ([@dependabot](https://github.com/dependabot))
+* Bump typescript from 5.9.2 to 5.9.3 [#292](https://github.com/KatsuteDev/Settings-Repository/pull/292) ([@dependabot](https://github.com/dependabot))
+* Bump @types/node from 24.6.2 to 24.7.2 [#294](https://github.com/KatsuteDev/Settings-Repository/pull/294) ([@dependabot](https://github.com/dependabot))
+* Bump @types/vscode from 1.104.0 to 1.105.0 [#295](https://github.com/KatsuteDev/Settings-Repository/pull/295) ([@kdevbot](https://github.com/KatsuteDev))
+* Bump esbuild from 0.25.10 to 0.25.11 [#297](https://github.com/KatsuteDev/Settings-Repository/pull/297) ([@dependabot](https://github.com/dependabot))
+* Bump @types/node from 24.7.2 to 24.8.1 [#296](https://github.com/KatsuteDev/Settings-Repository/pull/296) ([@dependabot](https://github.com/dependabot))
+* Bump @types/node from 24.8.1 to 24.9.1 [#298](https://github.com/KatsuteDev/Settings-Repository/pull/298) ([@dependabot](https://github.com/dependabot))
+* Bump esbuild from 0.25.11 to 0.25.12 [#300](https://github.com/KatsuteDev/Settings-Repository/pull/300) ([@dependabot](https://github.com/dependabot))
+* Bump @types/node from 24.9.1 to 24.10.0 [#299](https://github.com/KatsuteDev/Settings-Repository/pull/299) ([@dependabot](https://github.com/dependabot))
+* Bump rimraf from 6.0.1 to 6.1.0 [#302](https://github.com/KatsuteDev/Settings-Repository/pull/302) ([@dependabot](https://github.com/dependabot))
+* Bump simple-git from 3.28.0 to 3.30.0 [#301](https://github.com/KatsuteDev/Settings-Repository/pull/301) ([@dependabot](https://github.com/dependabot))
+* Bump esbuild from 0.25.12 to 0.27.0 [#303](https://github.com/KatsuteDev/Settings-Repository/pull/303) ([@dependabot](https://github.com/dependabot))
+* Bump @vscode/vsce from 3.6.2 to 3.7.0 [#304](https://github.com/KatsuteDev/Settings-Repository/pull/304) ([@dependabot](https://github.com/dependabot))
+* Bump the npm_and_yarn group across 1 directory with 1 update [#306](https://github.com/KatsuteDev/Settings-Repository/pull/306) ([@dependabot](https://github.com/dependabot))
+* Bump glob from 11.0.3 to 11.1.0 in the npm_and_yarn group across 1 directory [#307](https://github.com/KatsuteDev/Settings-Repository/pull/307) ([@dependabot](https://github.com/dependabot))
+* Bump @vscode/vsce from 3.7.0 to 3.7.1 [#310](https://github.com/KatsuteDev/Settings-Repository/pull/310) ([@dependabot](https://github.com/dependabot))
+* Bump rimraf from 6.1.0 to 6.1.2 [#308](https://github.com/KatsuteDev/Settings-Repository/pull/308) ([@dependabot](https://github.com/dependabot))
+* Bump @types/vscode from 1.105.0 to 1.106.1 [#311](https://github.com/KatsuteDev/Settings-Repository/pull/311) ([@dependabot](https://github.com/dependabot))
+* Bump glob from 11.1.0 to 13.0.0 [#309](https://github.com/KatsuteDev/Settings-Repository/pull/309) ([@dependabot](https://github.com/dependabot))
+* Bump jws from 3.2.2 to 3.2.3 in the npm_and_yarn group across 1 directory [#312](https://github.com/KatsuteDev/Settings-Repository/pull/312) ([@dependabot](https://github.com/dependabot))
+* Bump @types/node from 24.10.0 to 25.0.3 [#313](https://github.com/KatsuteDev/Settings-Repository/pull/313) ([@dependabot](https://github.com/dependabot))
+* Bump esbuild from 0.27.0 to 0.27.2 [#315](https://github.com/KatsuteDev/Settings-Repository/pull/315) ([@dependabot](https://github.com/dependabot))
+* Bump qs from 6.14.0 to 6.14.1 in the npm_and_yarn group across 1 directory [#316](https://github.com/KatsuteDev/Settings-Repository/pull/316) ([@dependabot](https://github.com/dependabot))
+* Bump @types/vscode from 1.106.1 to 1.107.0 [#314](https://github.com/KatsuteDev/Settings-Repository/pull/314) ([@dependabot](https://github.com/dependabot))
+* Bump lodash from 4.17.21 to 4.17.23 in the npm_and_yarn group across 1 directory [#318](https://github.com/KatsuteDev/Settings-Repository/pull/318) ([@dependabot](https://github.com/dependabot))
+* Bump @types/node from 25.0.3 to 25.1.0 [#319](https://github.com/KatsuteDev/Settings-Repository/pull/319) ([@dependabot](https://github.com/dependabot))
+* Bump @types/vscode from 1.107.0 to 1.108.1 [#321](https://github.com/KatsuteDev/Settings-Repository/pull/321) ([@kdevbot](https://github.com/KatsuteDev))
+
+**Full Changelog**: [`2.0.0...2.0.1`](https://github.com/KatsuteDev/Settings-Repository/compare/2.0.0...2.0.1)
+
 ## 2.0.0
 
 ### New Features
