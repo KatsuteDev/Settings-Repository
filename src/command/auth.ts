@@ -22,12 +22,15 @@ import * as fs from "fs";
 import * as os from "os";
 
 import { isNull, isValidJson } from "../lib/is";
+import * as config from "../config";
 import * as logger from "../logger";
 import * as files from "../lib/files";
+import * as git from "../sync/git";
 import { Crypt } from "../lib/encrypt";
 import * as extension from "../extension";
 import { Distribution } from "../distribution";
 import { CommandQuickPickItem } from "../lib/quickpick";
+import simpleGit from "simple-git";
 
 //
 
@@ -78,22 +81,40 @@ export const authenticate: () => void = () => {
                 if(value.trim().length === 0)
                     return "Token can not be blank";
             }
-        }).then((password?: string) => {
+        }).then(async (password?: string) => {
             if(!password) return;
 
-            // TODO: test credentials
+            const repo: string = config.get("repository");
 
-            const dist: Distribution = extension.distribution();
+            if(repo){
+                const cred: credentials = { login: username, auth: password };
+                const remote: string = git.parseRepo(repo, cred);
 
-            logger.info(`Updated authentication: ${username}`);
+                const err = await simpleGit().listRemote([remote])
+                    .then(() => {
+                        logger.info(`Credentials are valid for ${repo}`);
+                        return null;
+                    })
+                    .catch(e => {
+                        logger.error(`Failed to verify credentials for ${repo}:\n ${mask(e.message, cred)}`);
+                        vscode.window.showErrorMessage("Failed to authenticate with provided credentials, please check your username and token and try again.");
+                        return e;
+                    });
 
-            fs.writeFileSync(
-                dist.credentials,
+                if(!err){
+                    const dist: Distribution = extension.distribution();
+
+                    logger.info(`Updated authentication: ${username}`);
+
+                    fs.writeFileSync(
+                        dist.credentials,
 `{
     "login": "${username}",
     "auth": "${crypt.encrypt(password)}"
 }`,
-                "utf-8");
+                        "utf-8");
+                }
+            }
         });
     });
 }

@@ -31,5 +31,5 @@ export const item: CommandQuickPickItem = {
 }
 
 export const command: vscode.Disposable = vscode.commands.registerCommand("settings-repository.overwriteLocal", () => {
-    config.get("repository") && pull(config.get("repository"));
+    config.get("repository") && pull(config.get("repository"), config.get("branch"));
 });

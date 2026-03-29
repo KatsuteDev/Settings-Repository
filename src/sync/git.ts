@@ -42,12 +42,12 @@ const cleanup: (fsPath: string) => void = (fsPath: string) => {
     statusbar.setActive(false);
 };
 
-const parseRepo: (repo: string, cred: auth.credentials) => string = (repo: string, cred: auth.credentials) => {
+export const parseRepo: (repo: string, cred: auth.credentials) => string = (repo: string, cred: auth.credentials) => {
     const part: string[] = repo.split("://");
     return `${part[0]}://${cred.login}:${cred.auth}@${part.slice(1).join("://")}`;
 }
 
-export const pull: (repo: string, skipNotify?: boolean) => void = async (repo: string, skipNotify: boolean = false) => {
+export const pull: (repo: string, branch: string, skipNotify?: boolean) => void = async (repo: string, branch: string = "main", skipNotify: boolean = false) => {
     if(isNull(repo)) return;
 
     const dist: Distribution = extension.distribution();
@@ -65,13 +65,11 @@ export const pull: (repo: string, skipNotify?: boolean) => void = async (repo: s
 
     const remote: string = parseRepo(repo, cred);
 
-    const branch: string = config.get("branch") ?? "main";
-
     // callback
 
     const gitback: (err: GitError | null) => void = (err: GitError | null) => {
         if(err){
-            logger.error(`Failed to pull from ${config.get("repository")}:\n ${auth.mask(err.message, cred)}`, true);
+            logger.error(`Failed to pull from ${repo}@${branch}:\n ${auth.mask(err.message, cred)}`);
             cleanup(temp);
         }
     };
@@ -80,7 +78,7 @@ export const pull: (repo: string, skipNotify?: boolean) => void = async (repo: s
 
     statusbar.setActive(true);
 
-    logger.info(`Preparing to import settings from ${config.get("repository")}@${branch}`);
+    logger.info(`Preparing to import settings from ${repo}@${branch}`);
     logger.debug(`Git clone ${auth.mask(remote, cred)}`);
 
     // forced delay so git repo can get up-to-date after a fast reload/restart
@@ -148,7 +146,7 @@ export const pull: (repo: string, skipNotify?: boolean) => void = async (repo: s
                         logger.warn("Snippets not found");
                 }
 
-                logger.info(`Imported settings from ${config.get("repository")}@${branch}`, true);
+                logger.info(`Imported settings from ${repo}@${branch}`, true);
 
                 cleanup(temp);
 
@@ -162,7 +160,7 @@ export const pull: (repo: string, skipNotify?: boolean) => void = async (repo: s
     }
 }
 
-export const push: (repo: string, ignoreBadAuth?: boolean) => Promise<void> = async (repo: string, ignoreBadAuth: boolean = false) => {
+export const push: (repo: string, branch: string, ignoreBadAuth?: boolean) => Promise<void> = async (repo: string, branch: string = "main", ignoreBadAuth: boolean = false) => {
     if(isNull(repo)) return;
 
     const dist: Distribution = extension.distribution();
@@ -180,13 +178,11 @@ export const push: (repo: string, ignoreBadAuth?: boolean) => Promise<void> = as
 
     const remote: string = parseRepo(repo, cred);
 
-    const branch: string = config.get("branch") ?? "main";
-
     // callback
 
     const gitback: (err: GitError | null) => void = (err: GitError | null) => {
         if(err){
-            logger.error(`Failed to push to ${config.get("repository")}:\n ${auth.mask(err.message, cred)}`, true);
+            logger.error(`Failed to push to ${repo}@${branch}:\n ${auth.mask(err.message, cred)}`, true);
             cleanup(temp);
         }
     };
@@ -195,7 +191,7 @@ export const push: (repo: string, ignoreBadAuth?: boolean) => Promise<void> = as
 
     statusbar.setActive(true);
 
-    logger.info(`Preparing to export settings to ${config.get("repository")}@${branch}`);
+    logger.info(`Preparing to export settings to ${repo}@${branch}`);
     logger.debug(`Git clone ${auth.mask(remote, cred)}`);
     logger.debug(`includeHostnameInCommit: ${config.get("includeHostnameInCommitMessage")}`);
 
@@ -271,7 +267,7 @@ export const push: (repo: string, ignoreBadAuth?: boolean) => Promise<void> = as
         .push(["-u", "origin", "HEAD"], (err: GitError | null) => {
             gitback(err);
             if(!err){
-                logger.info(`Pushed settings to ${config.get("repository")}@${branch}`, true);
+                logger.info(`Pushed settings to ${repo}@${branch}`, true);
                 cleanup(temp);
             }
         });
