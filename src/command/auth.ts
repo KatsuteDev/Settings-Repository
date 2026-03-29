@@ -81,6 +81,8 @@ export const authenticate: () => void = () => {
         }).then((password?: string) => {
             if(!password) return;
 
+            // TODO: test credentials
+
             const dist: Distribution = extension.distribution();
 
             logger.info(`Updated authentication: ${username}`);

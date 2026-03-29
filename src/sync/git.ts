@@ -156,7 +156,7 @@ export const pull: (repo: string, skipNotify?: boolean) => void = async (repo: s
             }
         });
     }catch(error: any){
-        logger.error(`Push failed: ${auth.mask(error, cred)}`, true);
+        logger.error(`Pull failed: ${auth.mask(error, cred)}`, true);
     }finally{
         cleanup(temp);
     }
