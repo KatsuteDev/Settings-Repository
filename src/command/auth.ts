@@ -93,12 +93,9 @@ export const authenticate: () => void = () => {
                 await simpleGit().listRemote([remote])
                     .then(() => {
                         logger.info(`Credentials are valid for ${repo}`);
-                        return null;
                     })
                     .catch(e => {
-                        logger.error(`Failed to verify credentials for ${repo}:\n ${mask(e.message, cred)}`);
-                        vscode.window.showErrorMessage("Failed to authenticate with provided credentials, please check your username and token and try again.");
-                        return e;
+                        logger.error(`Failed to verify credentials for ${repo}:\n ${mask(e.message, cred)}`, true);
                     });
             }
 
