@@ -109,7 +109,8 @@ export const authenticate: () => void = () => {
     "login": "${username}",
     "auth": "${crypt.encrypt(password)}"
 }`,
-            "utf-8");
+                "utf-8"
+            );
         });
     });
 }
