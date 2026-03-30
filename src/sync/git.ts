@@ -47,13 +47,13 @@ export const parseRepo: (repo: string, cred: auth.credentials) => string = (repo
     return `${part[0]}://${cred.login}:${cred.auth}@${part.slice(1).join("://")}`;
 }
 
-export const pull: (repo: string, branch: string, skipNotify?: boolean) => void = async (repo: string, branch: string = "main", skipNotify: boolean = false) => {
+export const pull: (repo: string, branch?: string, skipNotify?: boolean) => Promise<void> = async (repo: string, branch: string = "main", skipNotify: boolean = false) => {
     if(isNull(repo)) return;
 
     const dist: Distribution = extension.distribution();
     const cred: auth.credentials | undefined = auth.authorization();
 
-    if(!cred) return skipNotify || auth.authenticate();
+    if(!cred) return (skipNotify || auth.authenticate()) as void;
 
     // init directory
 
@@ -69,7 +69,7 @@ export const pull: (repo: string, branch: string, skipNotify?: boolean) => void 
 
     const gitback: (err: GitError | null) => void = (err: GitError | null) => {
         if(err){
-            logger.error(`Failed to pull from ${repo}@${branch}:\n ${auth.mask(err.message, cred)}`);
+            logger.error(`Failed to pull from ${repo}@${branch}:\n ${auth.mask(err.message, cred)}`, true);
             cleanup(temp);
         }
     };

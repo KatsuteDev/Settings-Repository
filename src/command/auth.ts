@@ -90,7 +90,7 @@ export const authenticate: () => void = () => {
                 const cred: credentials = { login: username, auth: password };
                 const remote: string = git.parseRepo(repo, cred);
 
-                const err = await simpleGit().listRemote([remote])
+                await simpleGit().listRemote([remote])
                     .then(() => {
                         logger.info(`Credentials are valid for ${repo}`);
                         return null;
@@ -100,21 +100,19 @@ export const authenticate: () => void = () => {
                         vscode.window.showErrorMessage("Failed to authenticate with provided credentials, please check your username and token and try again.");
                         return e;
                     });
+            }
 
-                if(!err){
-                    const dist: Distribution = extension.distribution();
+            const dist: Distribution = extension.distribution();
 
-                    logger.info(`Updated authentication: ${username}`);
+            logger.info(`Updated authentication: ${username}`);
 
-                    fs.writeFileSync(
-                        dist.credentials,
+            fs.writeFileSync(
+                dist.credentials,
 `{
     "login": "${username}",
     "auth": "${crypt.encrypt(password)}"
 }`,
-                        "utf-8");
-                }
-            }
+            "utf-8");
         });
     });
 }
