@@ -42,7 +42,7 @@ const cleanup: (fsPath: string) => void = (fsPath: string) => {
     statusbar.setActive(false);
 };
 
-export const parseRepo: (repo: string, cred: auth.credentials) => string = (repo: string, cred: auth.credentials) => {
+const parseRepo: (repo: string, cred: auth.credentials) => string = (repo: string, cred: auth.credentials) => {
     const part: string[] = repo.split("://");
     return `${part[0]}://${cred.login}:${cred.auth}@${part.slice(1).join("://")}`;
 }

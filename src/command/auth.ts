@@ -25,7 +25,6 @@ import { isNull, isValidJson } from "../lib/is";
 import * as config from "../config";
 import * as logger from "../logger";
 import * as files from "../lib/files";
-import * as git from "../sync/git";
 import { Crypt } from "../lib/encrypt";
 import * as extension from "../extension";
 import { Distribution } from "../distribution";
@@ -54,6 +53,11 @@ export type credentials = {
 const crypt: Crypt = new Crypt(os.hostname());
 
 //
+
+const parseRepo: (repo: string, cred: credentials) => string = (repo: string, cred: credentials) => {
+    const part: string[] = repo.split("://");
+    return `${part[0]}://${cred.login}:${cred.auth}@${part.slice(1).join("://")}`;
+}
 
 export const mask: (s: string, c: credentials) => string = (s: string, c: credentials) => {
     return s.replace(new RegExp(c.auth, "gm"), "***");
@@ -88,14 +92,14 @@ export const authenticate: () => void = () => {
 
             if(repo){
                 const cred: credentials = { login: username, auth: password };
-                const remote: string = git.parseRepo(repo, cred);
+                const remote: string = parseRepo(repo, cred);
 
                 const err = await simpleGit().listRemote([remote])
                     .then(() => {
                         logger.info(`Credentials are valid for ${repo}`);
                     })
                     .catch(e => {
-                        logger.error(`Failed to verify credentials for ${repo}:\n ${mask(e.message, cred)}`, true);
+                        logger.error(`Failed to verify credentials for ${repo}:\n ${mask(String(e?.message ?? e), cred)}`, true);
                         return e;
                     });
 
