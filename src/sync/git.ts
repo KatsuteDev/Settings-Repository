@@ -53,7 +53,10 @@ export const pull: (repo: string, branch?: string, skipNotify?: boolean) => Prom
     const dist: Distribution = extension.distribution();
     const cred: auth.credentials | undefined = auth.authorization();
 
-    if(!cred) return (skipNotify || auth.authenticate()) as void;
+    if(!cred) {
+        skipNotify || auth.authenticate();
+        return;
+    }
 
     // init directory
 
@@ -154,13 +157,13 @@ export const pull: (repo: string, branch?: string, skipNotify?: boolean) => Prom
             }
         });
     }catch(error: any){
-        logger.error(`Pull failed: ${auth.mask(error, cred)}`, true);
+        logger.error(`Pull failed: ${auth.mask(String(error?.message ?? error), cred)}`, true);
     }finally{
         cleanup(temp);
     }
 }
 
-export const push: (repo: string, branch: string, ignoreBadAuth?: boolean) => Promise<void> = async (repo: string, branch: string = "main", ignoreBadAuth: boolean = false) => {
+export const push: (repo: string, branch?: string, ignoreBadAuth?: boolean) => Promise<void> = async (repo: string, branch: string = "main", ignoreBadAuth: boolean = false) => {
     if(isNull(repo)) return;
 
     const dist: Distribution = extension.distribution();
@@ -253,7 +256,7 @@ export const push: (repo: string, branch: string, ignoreBadAuth?: boolean) => Pr
                     }
                 }catch(error: any){
                     if(error){
-                        logger.error(`Push failed: ${auth.mask(error, cred)}`, true);
+                        logger.error(`Push failed: ${auth.mask(String(error), cred)}`, true);
                         cleanup(temp);
                     }
                 }
@@ -272,7 +275,7 @@ export const push: (repo: string, branch: string, ignoreBadAuth?: boolean) => Pr
             }
         });
     }catch(error: any){
-        logger.error(`Push failed: ${auth.mask(error, cred)}`, true);
+        logger.error(`Push failed: ${auth.mask(String(error?.message ?? error), cred)}`, true);
     }finally{
         cleanup(temp);
     }

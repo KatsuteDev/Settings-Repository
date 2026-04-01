@@ -90,13 +90,16 @@ export const authenticate: () => void = () => {
                 const cred: credentials = { login: username, auth: password };
                 const remote: string = git.parseRepo(repo, cred);
 
-                await simpleGit().listRemote([remote])
+                const err = await simpleGit().listRemote([remote])
                     .then(() => {
                         logger.info(`Credentials are valid for ${repo}`);
                     })
                     .catch(e => {
                         logger.error(`Failed to verify credentials for ${repo}:\n ${mask(e.message, cred)}`, true);
+                        return e;
                     });
+
+                if(err) return;
             }
 
             const dist: Distribution = extension.distribution();
