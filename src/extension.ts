@@ -68,16 +68,16 @@ export const activate: (context: vscode.ExtensionContext) => void = (context: vs
     logger.debug(`branch: ${config.get("branch")}`);
     logger.debug(`autoSync: ${config.get("autoSync")}`);
     logger.debug(`includeHostnameInCommitMessage: ${config.get("includeHostnameInCommitMessage")}`);
-    logger.debug(`authenticated: ${!!auth.authorization()}`);
+    logger.debug(`has credentials: ${!!auth.authorization()}`);
 
     if(config.get("autoSync") === true && config.get("autoSyncMode") !== "Export Only")
-        config.get("repository") && pull(config.get("repository"), true);
+        config.get("repository") && pull(config.get("repository"), config.get("branch"), true);
 }
 
 // must be async, otherwise vscode closes without waiting
 export const deactivate: () => Promise<void> = async () => {
     if(config.get("autoSync") === true && config.get("autoSyncMode") !== "Import Only")
-        config.get("repository") && await push(config.get("repository"), true);
+        config.get("repository") && await push(config.get("repository"), config.get("branch"), true);
 }
 
 export const notify: () => void = () => {
