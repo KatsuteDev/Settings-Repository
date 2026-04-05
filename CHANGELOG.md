@@ -1,5 +1,32 @@
 # Changelog
 
+## 2.0.2
+
+### Fixes
+
+* Fix missing error messages in invalid or expired git credentials [#335](https://github.com/KatsuteDev/Settings-Repository/pull/335) ([@Katsute](https://github.com/Katsute))
+
+### Dependencies
+
+* Bump simple-git from 3.30.0 to 3.32.3 [#331](https://github.com/KatsuteDev/Settings-Repository/pull/331) ([@dependabot](https://github.com/dependabot))
+* Bump glob from 13.0.0 to 13.0.6 [#328](https://github.com/KatsuteDev/Settings-Repository/pull/328) ([@dependabot](https://github.com/dependabot))
+* Bump @types/node from 25.1.0 to 25.3.3 [#326](https://github.com/KatsuteDev/Settings-Repository/pull/326) ([@dependabot](https://github.com/dependabot))
+* Bump esbuild from 0.27.2 to 0.27.3 [#330](https://github.com/KatsuteDev/Settings-Repository/pull/330) ([@dependabot](https://github.com/dependabot))
+* Bump rimraf from 6.1.2 to 6.1.3 [#327](https://github.com/KatsuteDev/Settings-Repository/pull/327) ([@dependabot](https://github.com/dependabot))
+* Bump the npm_and_yarn group across 1 directory with 2 updates [#325](https://github.com/KatsuteDev/Settings-Repository/pull/325) ([@dependabot](https://github.com/dependabot))
+* Bump @types/vscode from 1.108.1 to 1.109.0 [#329](https://github.com/KatsuteDev/Settings-Repository/pull/329) ([@dependabot](https://github.com/dependabot))
+* Bump undici from 7.15.0 to 7.24.1 in the npm_and_yarn group across 1 directory [#332](https://github.com/KatsuteDev/Settings-Repository/pull/332) ([@dependabot](https://github.com/dependabot))
+* Bump picomatch from 2.3.1 to 2.3.2 in the npm_and_yarn group across 1 directory [#333](https://github.com/KatsuteDev/Settings-Repository/pull/333) ([@dependabot](https://github.com/dependabot))
+* Bump @types/adm-zip from 0.5.7 to 0.5.8 [#339](https://github.com/KatsuteDev/Settings-Repository/pull/339) ([@dependabot](https://github.com/dependabot))
+* Bump simple-git from 3.32.3 to 3.33.0 [#340](https://github.com/KatsuteDev/Settings-Repository/pull/340) ([@dependabot](https://github.com/dependabot))
+* Bump @types/node from 25.3.3 to 25.5.0 [#341](https://github.com/KatsuteDev/Settings-Repository/pull/341) ([@dependabot](https://github.com/dependabot))
+* Bump typescript from 5.9.3 to 6.0.2 [#336](https://github.com/KatsuteDev/Settings-Repository/pull/336) ([@dependabot](https://github.com/dependabot))
+* Bump esbuild from 0.27.3 to 0.27.4 [#337](https://github.com/KatsuteDev/Settings-Repository/pull/337) ([@dependabot](https://github.com/dependabot))
+* Bump @types/vscode from 1.109.0 to 1.110.0 [#342](https://github.com/KatsuteDev/Settings-Repository/pull/342) ([@kdevbot](https://github.com/KatsuteDev))
+* Bump lodash from 4.17.23 to 4.18.1 in the npm_and_yarn group across 1 directory [#343](https://github.com/KatsuteDev/Settings-Repository/pull/343) ([@dependabot](https://github.com/dependabot))
+
+**Full Changelog**: [`2.0.1...2.0.2`](https://github.com/KatsuteDev/Settings-Repository/compare/2.0.1...2.0.2)
+
 ## 2.0.1
 
 ### Fixes
