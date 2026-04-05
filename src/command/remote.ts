@@ -31,5 +31,5 @@ export const item: CommandQuickPickItem = {
 }
 
 export const command: vscode.Disposable = vscode.commands.registerCommand("settings-repository.overwriteRemote", () => {
-    config.get("repository") && push(config.get("repository"));
+    config.get("repository") && push(config.get("repository"), config.get("branch"));
 });
