@@ -1,5 +1,21 @@
 # Changelog
 
+## 2.0.3
+
+### Dependencies
+
+* Bump @vscode/vsce from 3.7.1 to 3.9.1 [#344](https://github.com/KatsuteDev/Settings-Repository/pull/344) ([@dependabot](https://github.com/dependabot))
+* Bump simple-git from 3.33.0 to 3.36.0 [#346](https://github.com/KatsuteDev/Settings-Repository/pull/346) ([@dependabot](https://github.com/dependabot))
+* Bump esbuild from 0.27.4 to 0.28.0 [#347](https://github.com/KatsuteDev/Settings-Repository/pull/347) ([@dependabot](https://github.com/dependabot))
+* Bump uuid from 8.3.2 to removed in the npm_and_yarn group across 1 directory [#351](https://github.com/KatsuteDev/Settings-Repository/pull/351) ([@dependabot](https://github.com/dependabot))
+* Bump typescript from 6.0.2 to 6.0.3 [#348](https://github.com/KatsuteDev/Settings-Repository/pull/348) ([@dependabot](https://github.com/dependabot))
+* Bump @types/node from 25.5.0 to 25.6.0 [#349](https://github.com/KatsuteDev/Settings-Repository/pull/349) ([@dependabot](https://github.com/dependabot))
+* Bump adm-zip from 0.5.16 to 0.5.17 [#345](https://github.com/KatsuteDev/Settings-Repository/pull/345) ([@dependabot](https://github.com/dependabot))
+* Bump @types/vscode from 1.110.0 to 1.118.0 [#350](https://github.com/KatsuteDev/Settings-Repository/pull/350) ([@dependabot](https://github.com/dependabot))
+* Bump fast-uri from 3.0.6 to 3.1.2 in the npm_and_yarn group across 1 directory [#352](https://github.com/KatsuteDev/Settings-Repository/pull/352) ([@dependabot](https://github.com/dependabot))
+
+**Full Changelog**: [`2.0.2...2.0.3`](https://github.com/KatsuteDev/Settings-Repository/compare/2.0.2...2.0.3)
+
 ## 2.0.2
 
 ### Fixes

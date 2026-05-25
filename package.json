@@ -8,10 +8,10 @@
         "theme": "dark"
     },
     "publisher": "Katsute",
-    "version": "2.0.2",
+    "version": "2.0.3",
     "private": true,
     "engines": {
-        "vscode": "^1.118.0"
+        "vscode": "^1.121.0"
     },
     "categories": [
         "Other"
@@ -151,8 +151,8 @@
     "homepage": "https://github.com/KatsuteDev/Settings-Repository#readme",
     "devDependencies": {
         "@types/adm-zip": "0.5.8",
-        "@types/node": "25.6.0",
-        "@types/vscode": "1.118.0",
+        "@types/node": "25.9.1",
+        "@types/vscode": "1.120.0",
         "@vscode/vsce": "3.9.1",
         "adm-zip": "0.5.17",
         "esbuild": "0.28.0",

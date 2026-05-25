@@ -5,9 +5,6 @@
     </a>
     <h3>Settings Repository</h3>
     <h4>Sync VSCode settings to a repository</h4>
-    <a href="https://marketplace.visualstudio.com/items?itemName=katsute.settings-repository"><img src="https://img.shields.io/visual-studio-marketplace/stars/katsute.settings-repository?style=for-the-badge&logo=visualstudiocode&labelColor=252526&color=0098FF"></a>
-    <a href="https://marketplace.visualstudio.com/items?itemName=katsute.settings-repository"><img src="https://img.shields.io/visual-studio-marketplace/i/katsute.settings-repository?style=for-the-badge&logo=visualstudiocode&labelColor=252526&color=0098FF"></a>
-    <a href="https://marketplace.visualstudio.com/items?itemName=katsute.settings-repository"><img src="https://img.shields.io/visual-studio-marketplace/d/katsute.settings-repository?style=for-the-badge&logo=visualstudiocode&labelColor=252526&color=0098FF"></a>
 </div>
 
 <br>
