@@ -1,5 +1,23 @@
 # Changelog
 
+## 2.0.4
+
+### Fixes
+
+* Abort git push when clone did not succeed [#363](https://github.com/KatsuteDev/Settings-Repository/pull/363) ([@Katsute](https://github.com/Katsute))
+* Fix keybindings not working with args [#365](https://github.com/KatsuteDev/Settings-Repository/pull/365) ([@Katsute](https://github.com/Katsute))
+
+### Dependencies
+
+* Bump the npm_and_yarn group across 1 directory with 2 updates [#355](https://github.com/KatsuteDev/Settings-Repository/pull/355) ([@dependabot](https://github.com/dependabot))
+* Bump @types/node from 25.9.1 to 26.0.1 [#358](https://github.com/KatsuteDev/Settings-Repository/pull/358) ([@dependabot](https://github.com/dependabot))
+* Bump @vscode/vsce from 3.9.1 to 3.9.2 [#360](https://github.com/KatsuteDev/Settings-Repository/pull/360) ([@dependabot](https://github.com/dependabot))
+* Bump @types/vscode from 1.120.0 to 1.125.0 [#359](https://github.com/KatsuteDev/Settings-Repository/pull/359) ([@dependabot](https://github.com/dependabot))
+* Bump the npm_and_yarn group across 1 directory with 3 updates [#356](https://github.com/KatsuteDev/Settings-Repository/pull/356) ([@dependabot](https://github.com/dependabot))
+* Bump adm-zip from 0.5.17 to 0.5.18 [#357](https://github.com/KatsuteDev/Settings-Repository/pull/357) ([@dependabot](https://github.com/dependabot))
+
+**Full Changelog**: [`2.0.3...2.0.4`](https://github.com/KatsuteDev/Settings-Repository/compare/2.0.3...2.0.4)
+
 ## 2.0.3
 
 ### Dependencies

@@ -8,7 +8,7 @@
         "theme": "dark"
     },
     "publisher": "Katsute",
-    "version": "2.0.3",
+    "version": "2.0.4",
     "private": true,
     "engines": {
         "vscode": "^1.125.0"
@@ -154,7 +154,7 @@
         "@types/node": "26.0.1",
         "@types/vscode": "1.125.0",
         "@vscode/vsce": "3.9.2",
-        "adm-zip": "0.5.18",
+        "adm-zip": "0.6.0",
         "esbuild": "0.28.1",
         "glob": "13.0.6",
         "rimraf": "6.1.3",
