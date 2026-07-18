@@ -37,8 +37,12 @@ import { Distribution } from "../distribution";
 
 const version: string = `VS-${vscode.version}`;
 
-const cleanup: (fsPath: string) => void = (fsPath: string) => {
-    !fs.existsSync(fsPath) || fs.rmSync(fsPath, {recursive: true, force: true, retryDelay: 1000, maxRetries: 10});
+const cleanup: (fsPath: string) => void = (dir: string) => {
+    try{
+        fs.existsSync(dir) && fs.rmSync(dir, {recursive: true, force: true, retryDelay: 1000, maxRetries: 10});
+    }catch(error: any){
+        logger.debug(`Failed to cleanup '${dir}': ${error?.message ?? error}`);
+    }
     statusbar.setActive(false);
 };
 
@@ -181,15 +185,6 @@ export const push: (repo: string, branch?: string, ignoreBadAuth?: boolean) => P
 
     const remote: string = parseRepo(repo, cred);
 
-    // callback
-
-    const gitback: (err: GitError | null) => void = (err: GitError | null) => {
-        if(err){
-            logger.error(`Failed to push to ${repo}@${branch}:\n ${auth.mask(err.message, cred)}`, true);
-            cleanup(temp);
-        }
-    };
-
     // push
 
     statusbar.setActive(true);
@@ -202,78 +197,61 @@ export const push: (repo: string, branch?: string, ignoreBadAuth?: boolean) => P
         const git: SimpleGit = simpleGit(temp);
 
         // clone repo on branch, omit history (not needed)
-        await git.clone(remote, ".", ["-b", branch, "--depth", "1"], (err: GitError | null) => {
-            gitback(err);
+        await git.clone(remote, ".", ["-b", branch, "--depth", "1"]);
 
-            if(!err){
-                try{
-                    /* extensions */ {
-                        const extensions: string | undefined = dist.getExtensions();
+        /* extensions */ {
+            const extensions: string | undefined = dist.getExtensions();
 
-                        if(extensions)
-                            fs.writeFileSync(path.join(temp, "extensions.json"), extensions, "utf-8");
-                        else
-                            logger.warn("Extensions not found");
-                    }
+            if(extensions)
+                fs.writeFileSync(path.join(temp, "extensions.json"), extensions, "utf-8");
+            else
+                logger.warn("Extensions not found");
+        }
 
-                    /* keybindings */ {
-                        const keybindings: string | undefined = dist.getKeybindings();
+        /* keybindings */ {
+            const keybindings: string | undefined = dist.getKeybindings();
 
-                        if(keybindings) // force keybindings to be saved as ctrl
-                            fs.writeFileSync(path.join(temp, "keybindings.json"), dist.formatKeybindings(keybindings, "ctrl"), "utf-8");
-                        else
-                            logger.warn("Keybindings not found");
-                    }
+            if(keybindings) // force keybindings to be saved as ctrl
+                fs.writeFileSync(path.join(temp, "keybindings.json"), dist.formatKeybindings(keybindings, "ctrl"), "utf-8");
+            else
+                logger.warn("Keybindings not found");
+        }
 
-                    /* locale */ {
-                        const locale: string | undefined = dist.getLocale();
+        /* locale */ {
+            const locale: string | undefined = dist.getLocale();
 
-                        if(locale)
-                            fs.writeFileSync(path.join(temp, "locale.json"), locale, "utf-8");
-                        else
-                            logger.warn("Locale not found");
-                    }
+            if(locale)
+                fs.writeFileSync(path.join(temp, "locale.json"), locale, "utf-8");
+            else
+                logger.warn("Locale not found");
+        }
 
-                    /* settings */ {
-                        const settings: string | undefined = dist.getSettings();
+        /* settings */ {
+            const settings: string | undefined = dist.getSettings();
 
-                        if(settings)
-                            fs.writeFileSync(path.join(temp, "settings.json"), settings, "utf-8");
-                        else
-                            logger.warn("Settings not found");
-                    }
+            if(settings)
+                fs.writeFileSync(path.join(temp, "settings.json"), settings, "utf-8");
+            else
+                logger.warn("Settings not found");
+        }
 
-                    /* snippets */ {
-                        const snippets: string = path.join(temp, "snippets");
+        /* snippets */ {
+            const snippets: string = path.join(temp, "snippets");
 
-                        // remove remote, use local copy
-                        fs.rmSync(snippets, {recursive: true, force: true});
+            // remove remote, use local copy
+            fs.rmSync(snippets, {recursive: true, force: true});
 
-                        if(files.isDirectory(dist.Snippets))
-                            files.copyRecursiveSync(dist.Snippets, snippets);
-                        else
-                            logger.warn("Snippets not found");
-                    }
-                }catch(error: any){
-                    if(error){
-                        logger.error(`Push failed: ${auth.mask(String(error), cred)}`, true);
-                        cleanup(temp);
-                    }
-                }
-            }
-        })
-        // add files
-        .add(".", gitback)
-        // commit changes
-        .commit(`${version} ${config.get("includeHostnameInCommitMessage") ? `<${os.userInfo().username}@${os.hostname()}> ` : ""} Update settings repository`, gitback)
-        // push to remote
-        .push(["-u", "origin", "HEAD"], (err: GitError | null) => {
-            gitback(err);
-            if(!err){
-                logger.info(`Pushed settings to ${repo}@${branch}`, true);
-                cleanup(temp);
-            }
-        });
+            if(files.isDirectory(dist.Snippets))
+                files.copyRecursiveSync(dist.Snippets, snippets);
+            else
+                logger.warn("Snippets not found");
+        }
+
+        await git.add(".");
+        await git.commit(`${version} ${config.get("includeHostnameInCommitMessage") ? `<${os.userInfo().username}@${os.hostname()}> ` : ""} Update settings repository`);
+        await git.push(["-u", "origin", "HEAD"]);
+
+        logger.info(`Pushed settings to ${repo}@${branch}`, true);
     }catch(error: any){
         logger.error(`Push failed: ${auth.mask(String(error?.message ?? error), cred)}`, true);
     }finally{
