@@ -204,12 +204,14 @@ ${json.slice(0, -2)}
 
     public formatKeybindings(keybindings: string, ctrl: "ctrl" | "cmd" = "ctrl"): string {
         return keybindings.replace(
-            /{[\s\S]*?}/g, // { keybinding }
-            kb =>
-                !kb.match(/"command"\s*:\s*"([^"]*)"/)![1].startsWith("-") // if command doesn't start with - (removal)
+            /\{(?:[^{}]|\{(?:[^{}]|\{(?:[^{}]|\{(?:[^{}]|\{(?:[^{}]|\{(?:[^{}]|\{[^{}]*\})*\})*\})*\})*\})*\})*\}/g, // { keybinding } 8x depth for args
+            kb => {
+                const match: RegExpMatchArray | null = kb.match(/"command"\s*:\s*"([^"]*)"/);
+                return isNull(match) || !match![1].startsWith("-") // if command doesn't match, or doesn't start with - (removal)
                     ? kb.replace(ctrl === "ctrl" ? Distribution.cmd : Distribution.ctrl, ctrl) // ⌃ ctrl ↔ ⌘ cmd
                         .replace(ctrl === "ctrl" ? Distribution.option : Distribution.alt, ctrl === "ctrl" ? "alt" : "option") // alt ↔ ⌥ cmd
-                    : kb
+                    : kb;
+            }
         );
     }
 
