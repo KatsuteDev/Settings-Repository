@@ -154,7 +154,7 @@
         "@types/node": "26.4.0",
         "@types/vscode": "1.134.0",
         "@vscode/vsce": "3.9.2",
-        "adm-zip": "0.6.0",
+        "adm-zip": "0.6.1",
         "esbuild": "0.28.2",
         "glob": "13.0.6",
         "rimraf": "6.1.3",
