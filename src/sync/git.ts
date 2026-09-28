@@ -51,6 +51,17 @@ const parseRepo: (repo: string, cred: auth.credentials) => string = (repo: strin
     return `${part[0]}://${cred.login}:${cred.auth}@${part.slice(1).join("://")}`;
 }
 
+const isPrivate: (repo: string) => Promise<boolean | undefined> = async (repo: string) => {
+    try{
+        const res: Response = await fetch(`${repo}/info/refs?service=git-upload-pack`, { method: "GET" });
+        logger.debug(`Anonymous access to ${repo} returned ${res.status}`);
+        return res.status === 401 || res.status === 403 || res.status === 404;
+    }catch(error: any){
+        logger.error(`Push failed: unable to verify that ${repo} is private: ${error?.cause?.message ?? error?.message ?? error}`, true);
+        return undefined;
+    }
+}
+
 export const pull: (repo: string, branch?: string, skipNotify?: boolean) => Promise<void> = async (repo: string, branch: string = "main", skipNotify: boolean = false) => {
     if(isNull(repo)) return;
 
@@ -174,6 +185,8 @@ export const push: (repo: string, branch?: string, ignoreBadAuth?: boolean) => P
     const cred: auth.credentials | undefined = auth.authorization();
 
     if(!cred) return ignoreBadAuth ? undefined : auth.authenticate();
+
+    if(!await isPrivate(repo)) return logger.error(`Push blocked: ${repo} is not a private repository`, true);
 
     // init directory
 
