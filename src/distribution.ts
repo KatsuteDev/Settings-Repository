@@ -133,16 +133,19 @@ ${json.slice(0, -2)}
         : undefined;
     }
 
-    public updateExtensions(): void { // we cannot handle enable/disable at the moment, see <https://github.com/microsoft/vscode/issues/15466#issuecomment-724147661>
-        if(!files.isDirectory(this.Extensions) || !files.isFile(this.extensions)) return;
-
-        const json: string = fs.readFileSync(this.extensions, "utf-8");
-
-        const extensions: [{
+    public updateExtensions(json: string): void { // we cannot handle enable/disable at the moment, see <https://github.com/microsoft/vscode/issues/15466#issuecomment-724147661>
+        const extensions: {
             identifier: string,
             version: string,
             enabled: boolean
-        }] = isValidJson(json) ? JSON.parse(json) : [];
+        }[] | undefined = isValidJson(json) ? JSON.parse(json) : undefined;
+
+        if(!Array.isArray(extensions) || !extensions.every(e => isNotNull(e) && typeof e.identifier === "string" && e.identifier.trim() !== ""))
+            return logger.warn("Skipped updating extensions: extensions.json is malformed", true);
+
+        fs.writeFileSync(this.extensions, json, {encoding: "utf-8"});
+
+        if(!files.isDirectory(this.Extensions)) return;
 
         const installed: string[] = fs.readdirSync(this.Extensions!, {withFileTypes: true})
                                         .filter(f => f.isDirectory())
@@ -152,8 +155,10 @@ ${json.slice(0, -2)}
         for(const extension of extensions.filter(e => e.enabled)){ // check remote extensions
             if(isNotNull(vscode.extensions.getExtension(extension.identifier))) continue; // extension exists and is enabled
 
-            vscode.commands.executeCommand("workbench.extensions.installExtension", extension.identifier);
-            logger.info(`${logger.check} Installed ${extension.identifier}`);
+            vscode.commands.executeCommand("workbench.extensions.installExtension", extension.identifier).then(
+                () => logger.info(`${logger.check} Installed ${extension.identifier}`),
+                (error: any) => logger.warn(`Failed to install ${extension.identifier}: ${error?.message ?? error}`)
+            );
         }
 
         // compare installed with remote
@@ -178,10 +183,10 @@ ${json.slice(0, -2)}
                     continue OUTER; // extension exists on remote
 
             // not found on remote, uninstall this extension
-            try{
-                vscode.commands.executeCommand("workbench.extensions.uninstallExtension", identifier);
-            }finally{} // ignore failed uninstall (already uninstalled)
-            logger.info(`${logger.x} Uninstalled ${identifier}`);
+            vscode.commands.executeCommand("workbench.extensions.uninstallExtension", identifier).then(
+                () => logger.info(`${logger.x} Uninstalled ${identifier}`),
+                (error: any) => logger.debug(`Failed to uninstall ${identifier}: ${error?.message ?? error}`) // ignore failed uninstall (already uninstalled)
+            );
         }
     }
 
