@@ -55,7 +55,7 @@ export const pull: (repo: string, branch?: string, skipNotify?: boolean) => Prom
     if(isNull(repo)) return;
 
     const dist: Distribution = extension.distribution();
-    const cred: auth.credentials | undefined = auth.authorization();
+    const cred: auth.credentials | undefined = await auth.authorization();
 
     if(!cred) {
         skipNotify || auth.authenticate();
@@ -171,7 +171,7 @@ export const push: (repo: string, branch?: string, ignoreBadAuth?: boolean) => P
     if(isNull(repo)) return;
 
     const dist: Distribution = extension.distribution();
-    const cred: auth.credentials | undefined = auth.authorization();
+    const cred: auth.credentials | undefined = await auth.authorization();
 
     if(!cred) return ignoreBadAuth ? undefined : auth.authenticate();
 

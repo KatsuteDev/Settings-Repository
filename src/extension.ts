@@ -18,9 +18,12 @@
 
 import * as vscode from "vscode";
 
+import * as fs from "fs";
+
 import * as config from "./config";
 import * as logger from "./logger";
 import * as auth from "./command/auth";
+import * as files from "./lib/files";
 import { statusbar } from "./statusbar";
 import { pull, push } from "./sync/git";
 import * as local from "./command/local";
@@ -64,11 +67,20 @@ export const activate: (context: vscode.ExtensionContext) => void = (context: vs
 
     logger.info("Added distribution");
 
+    if(files.isFile(dist.credentials)){
+        try{
+            fs.rmSync(dist.credentials, {force: true});
+            logger.info("Removed legacy credentials file");
+        }catch(error: any){
+            logger.warn(`Failed to remove legacy credentials file: ${error?.message ?? error}`);
+        }
+    }
+
     logger.debug(`repo: ${config.get("repository")}`);
     logger.debug(`branch: ${config.get("branch")}`);
     logger.debug(`autoSync: ${config.get("autoSync")}`);
     logger.debug(`includeHostnameInCommitMessage: ${config.get("includeHostnameInCommitMessage")}`);
-    logger.debug(`has credentials: ${!!auth.authorization()}`);
+    auth.authorization().then(cred => logger.debug(`has credentials: ${!!cred}`));
 
     if(config.get("autoSync") === true && config.get("autoSyncMode") !== "Export Only")
         config.get("repository") && pull(config.get("repository"), config.get("branch"), true);
