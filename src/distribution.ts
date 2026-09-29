@@ -224,6 +224,9 @@ ${json.slice(0, -2)}
 
     private static readonly locale: RegExp = /(?<=^\s*"locale"\s*:\s*")[\w-]+(?=")/mi;
 
+    // strict locale values
+    private static readonly validLocale: RegExp = /^[a-z]{2,3}(-[a-z0-9]+)*$/i;
+
     public getLocale(): string | undefined {
         if(!files.isFile(this.argv)) return undefined;
 
@@ -249,8 +252,10 @@ ${json.slice(0, -2)}
 
         const locale: any = JSON.parse(json);
 
-        if(isNotNull(locale.locale))
-            fs.writeFileSync(this.argv!, argv.replace(Distribution.locale, locale.locale).trim());
+        if(typeof locale.locale === "string" && Distribution.validLocale.test(locale.locale))
+            fs.writeFileSync(this.argv!, argv.replace(Distribution.locale, () => locale.locale).trim());
+        else if(isNotNull(locale.locale))
+            logger.warn(`Invalid locale: ${JSON.stringify(locale.locale)}`);
     }
 
 }
