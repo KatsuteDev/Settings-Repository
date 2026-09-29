@@ -60,12 +60,16 @@ export const git: (cred: credentials, baseDir?: string) => SimpleGit = (cred: cr
     return simpleGit({ baseDir, unsafe: { allowUnsafeConfigEnvCount: true, allowUnsafeCredentialHelper: true } }).env({
         ...Object.fromEntries(Object.entries(process.env).filter(([k]) => !unsafeEnv.test(k.trim()))),
         GIT_TERMINAL_PROMPT: "0",
-        GIT_CONFIG_COUNT: "2",
+        GIT_CONFIG_COUNT: "3",
+        // auth
         GIT_CONFIG_KEY_0: "http.extraHeader",
         GIT_CONFIG_VALUE_0: `Authorization: Basic ${Buffer.from(`${cred.login}:${cred.auth}`).toString("base64")}`,
-        // to not fallback to local credentials
+        // no local creds
         GIT_CONFIG_KEY_1: "credential.helper",
-        GIT_CONFIG_VALUE_1: ""
+        GIT_CONFIG_VALUE_1: "",
+        // disable symlinks
+        GIT_CONFIG_KEY_2: "core.symlinks",
+        GIT_CONFIG_VALUE_2: "false"
     });
 }
 
