@@ -155,10 +155,8 @@ ${json.slice(0, -2)}
         for(const extension of extensions.filter(e => e.enabled)){ // check remote extensions
             if(isNotNull(vscode.extensions.getExtension(extension.identifier))) continue; // extension exists and is enabled
 
-            vscode.commands.executeCommand("workbench.extensions.installExtension", extension.identifier).then(
-                () => logger.info(`${logger.check} Installed ${extension.identifier}`),
-                (error: any) => logger.warn(`Failed to install ${extension.identifier}: ${error?.message ?? error}`)
-            );
+            vscode.commands.executeCommand("workbench.extensions.installExtension", extension.identifier);
+            logger.info(`${logger.check} Installed ${extension.identifier}`);
         }
 
         // compare installed with remote
@@ -183,10 +181,10 @@ ${json.slice(0, -2)}
                     continue OUTER; // extension exists on remote
 
             // not found on remote, uninstall this extension
-            vscode.commands.executeCommand("workbench.extensions.uninstallExtension", identifier).then(
-                () => logger.info(`${logger.x} Uninstalled ${identifier}`),
-                (error: any) => logger.debug(`Failed to uninstall ${identifier}: ${error?.message ?? error}`) // ignore failed uninstall (already uninstalled)
-            );
+            try{
+                vscode.commands.executeCommand("workbench.extensions.uninstallExtension", identifier);
+            }finally{} // ignore failed uninstall (already uninstalled)
+            logger.info(`${logger.x} Uninstalled ${identifier}`);
         }
     }
 
