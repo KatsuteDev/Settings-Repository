@@ -102,11 +102,9 @@ export const pull: (repo: string, branch?: string, skipNotify?: boolean) => Prom
                 /* extensions */ {
                     const extensions: string = path.join(temp, "extensions.json");
 
-                    if(files.isFile(extensions)){
-                        fs.copyFileSync(extensions, dist.extensions);
-
-                        dist.updateExtensions();
-                    }else
+                    if(files.isFile(extensions))
+                        dist.updateExtensions(fs.readFileSync(extensions, {encoding: "utf-8"}));
+                    else
                         logger.warn("Extensions not found");
                 }
 

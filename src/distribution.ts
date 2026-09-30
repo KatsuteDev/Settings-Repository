@@ -133,16 +133,19 @@ ${json.slice(0, -2)}
         : undefined;
     }
 
-    public updateExtensions(): void { // we cannot handle enable/disable at the moment, see <https://github.com/microsoft/vscode/issues/15466#issuecomment-724147661>
-        if(!files.isDirectory(this.Extensions) || !files.isFile(this.extensions)) return;
-
-        const json: string = fs.readFileSync(this.extensions, "utf-8");
-
-        const extensions: [{
+    public updateExtensions(json: string): void { // we cannot handle enable/disable at the moment, see <https://github.com/microsoft/vscode/issues/15466#issuecomment-724147661>
+        const extensions: {
             identifier: string,
             version: string,
             enabled: boolean
-        }] = isValidJson(json) ? JSON.parse(json) : [];
+        }[] | undefined = isValidJson(json) ? JSON.parse(json) : undefined;
+
+        if(!Array.isArray(extensions) || !extensions.every(e => isNotNull(e) && typeof e.identifier === "string" && e.identifier.trim() !== ""))
+            return logger.warn("Skipped updating extensions: extensions.json is malformed", true);
+
+        fs.writeFileSync(this.extensions, json, {encoding: "utf-8"});
+
+        if(!files.isDirectory(this.Extensions)) return;
 
         const installed: string[] = fs.readdirSync(this.Extensions!, {withFileTypes: true})
                                         .filter(f => f.isDirectory())
