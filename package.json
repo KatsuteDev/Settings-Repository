@@ -152,7 +152,7 @@
     "devDependencies": {
         "@types/adm-zip": "0.5.8",
         "@types/node": "26.4.0",
-        "@types/vscode": "1.134.0",
+        "@types/vscode": "1.138.0",
         "@vscode/vsce": "3.9.2",
         "adm-zip": "0.6.1",
         "esbuild": "0.28.2",
