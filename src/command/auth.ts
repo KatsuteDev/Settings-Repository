@@ -18,16 +18,10 @@
 
 import * as vscode from "vscode";
 
-import * as fs from "fs";
-import * as os from "os";
-
 import { isNull, isValidJson } from "../lib/is";
 import * as config from "../config";
 import * as logger from "../logger";
-import * as files from "../lib/files";
-import { Crypt } from "../lib/encrypt";
 import * as extension from "../extension";
-import { Distribution } from "../distribution";
 import { CommandQuickPickItem } from "../lib/quickpick";
 import simpleGit from "simple-git";
 
@@ -50,7 +44,7 @@ export type credentials = {
     auth: string
 };
 
-const crypt: Crypt = new Crypt(os.hostname());
+const secret: string = "settings-repository.credentials";
 
 //
 
@@ -63,8 +57,8 @@ export const mask: (s: string, c: credentials) => string = (s: string, c: creden
     return s.replace(new RegExp(c.auth, "gm"), "***");
 }
 
-export const authenticate: () => void = () => {
-    const auth: credentials | undefined = authorization();
+export const authenticate: () => Promise<void> = async () => {
+    const auth: credentials | undefined = await authorization();
     vscode.window.showInputBox({
         title: "Username",
         value: auth ? auth.login : undefined,
@@ -106,30 +100,15 @@ export const authenticate: () => void = () => {
                 if(err) return;
             }
 
-            const dist: Distribution = extension.distribution();
+            await extension.context().secrets.store(secret, JSON.stringify({ login: username, auth: password }));
 
             logger.info(`Updated authentication: ${username}`);
-
-            fs.writeFileSync(
-                dist.credentials,
-`{
-    "login": "${username}",
-    "auth": "${crypt.encrypt(password)}"
-}`,
-                "utf-8"
-            );
         });
     });
 }
 
-export const authorization: () => credentials | undefined = () => {
-    const dist: Distribution = extension.distribution();
-
-    if(!files.isFile(dist.credentials)) return undefined;
-
-    const json: string = fs.readFileSync(dist.credentials, "utf-8");
-
-    if(!isValidJson(json)) return undefined;
+const parse: (json?: string) => credentials | undefined = (json?: string) => {
+    if(!json || !isValidJson(json)) return undefined;
 
     const credentials: credentials = JSON.parse(json);
 
@@ -137,6 +116,8 @@ export const authorization: () => credentials | undefined = () => {
 
     return {
         login: credentials.login,
-        auth: crypt.decrypt(credentials.auth)
+        auth: credentials.auth
     };
 }
+
+export const authorization: () => Promise<credentials | undefined> = async () => parse(await extension.context().secrets.get(secret));
