@@ -22,7 +22,7 @@ import * as fs from "fs";
 import * as os from "os";
 import * as path from "path";
 
-import simpleGit, { GitError, SimpleGit } from "simple-git";
+import { GitError, simpleGit, SimpleGit } from "simple-git";
 
 import { isNull } from "../lib/is";
 import * as config from "../config";
