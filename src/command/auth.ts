@@ -29,7 +29,7 @@ import { Crypt } from "../lib/encrypt";
 import * as extension from "../extension";
 import { Distribution } from "../distribution";
 import { CommandQuickPickItem } from "../lib/quickpick";
-import simpleGit from "simple-git";
+import { simpleGit } from "simple-git";
 
 //
 
