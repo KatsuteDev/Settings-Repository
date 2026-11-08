@@ -29,7 +29,7 @@ import { Crypt } from "../lib/encrypt";
 import * as extension from "../extension";
 import { Distribution } from "../distribution";
 import { CommandQuickPickItem } from "../lib/quickpick";
-import simpleGit from "simple-git";
+import simpleGit, { SimpleGit } from "simple-git";
 
 //
 
@@ -54,9 +54,23 @@ const crypt: Crypt = new Crypt(os.hostname());
 
 //
 
-const parseRepo: (repo: string, cred: credentials) => string = (repo: string, cred: credentials) => {
-    const part: string[] = repo.split("://");
-    return `${part[0]}://${cred.login}:${cred.auth}@${part.slice(1).join("://")}`;
+const unsafeEnv: RegExp = /^(EDITOR|PAGER|PREFIX|SSH_ASKPASS|GIT_(ASKPASS|CONFIG|CONFIG_GLOBAL|CONFIG_SYSTEM|CONFIG_COUNT|CONFIG_KEY_\d+|CONFIG_VALUE_\d+|EDITOR|EXEC_PATH|EXTERNAL_DIFF|PAGER|PROXY_COMMAND|TEMPLATE_DIR|SEQUENCE_EDITOR|SSH|SSH_COMMAND))$/i;
+
+export const git: (cred: credentials, baseDir?: string) => SimpleGit = (cred: credentials, baseDir?: string) => {
+    return simpleGit({ baseDir, unsafe: { allowUnsafeConfigEnvCount: true, allowUnsafeCredentialHelper: true } }).env({
+        ...Object.fromEntries(Object.entries(process.env).filter(([k]) => !unsafeEnv.test(k.trim()))),
+        GIT_TERMINAL_PROMPT: "0",
+        GIT_CONFIG_COUNT: "3",
+        // auth
+        GIT_CONFIG_KEY_0: "http.extraHeader",
+        GIT_CONFIG_VALUE_0: `Authorization: Basic ${Buffer.from(`${cred.login}:${cred.auth}`).toString("base64")}`,
+        // no local creds
+        GIT_CONFIG_KEY_1: "credential.helper",
+        GIT_CONFIG_VALUE_1: "",
+        // disable symlinks
+        GIT_CONFIG_KEY_2: "core.symlinks",
+        GIT_CONFIG_VALUE_2: "false"
+    });
 }
 
 export const mask: (s: string, c: credentials) => string = (s: string, c: credentials) => {
@@ -92,9 +106,8 @@ export const authenticate: () => void = () => {
 
             if(repo){
                 const cred: credentials = { login: username, auth: password };
-                const remote: string = parseRepo(repo, cred);
 
-                const err = await simpleGit().listRemote([remote])
+                const err = await git(cred).listRemote([repo])
                     .then(() => {
                         logger.info(`Credentials are valid for ${repo}`);
                     })

@@ -22,7 +22,7 @@ import * as fs from "fs";
 import * as os from "os";
 import * as path from "path";
 
-import simpleGit, { GitError, SimpleGit } from "simple-git";
+import { GitError, SimpleGit } from "simple-git";
 
 import { isNull } from "../lib/is";
 import * as config from "../config";
@@ -46,11 +46,6 @@ const cleanup: (fsPath: string) => void = (dir: string) => {
     statusbar.setActive(false);
 };
 
-const parseRepo: (repo: string, cred: auth.credentials) => string = (repo: string, cred: auth.credentials) => {
-    const part: string[] = repo.split("://");
-    return `${part[0]}://${cred.login}:${cred.auth}@${part.slice(1).join("://")}`;
-}
-
 export const pull: (repo: string, branch?: string, skipNotify?: boolean) => Promise<void> = async (repo: string, branch: string = "main", skipNotify: boolean = false) => {
     if(isNull(repo)) return;
 
@@ -68,10 +63,6 @@ export const pull: (repo: string, branch?: string, skipNotify?: boolean) => Prom
 
     if(!fs.existsSync(temp)) return logger.error(`Pull failed: unable to create temporary directory '${temp}'`, true);
 
-    // repo
-
-    const remote: string = parseRepo(repo, cred);
-
     // callback
 
     const gitback: (err: GitError | null) => void = (err: GitError | null) => {
@@ -86,16 +77,16 @@ export const pull: (repo: string, branch?: string, skipNotify?: boolean) => Prom
     statusbar.setActive(true);
 
     logger.info(`Preparing to import settings from ${repo}@${branch}`);
-    logger.debug(`Git clone ${auth.mask(remote, cred)}`);
+    logger.debug(`Git clone ${repo}`);
 
     // forced delay so git repo can get up-to-date after a fast reload/restart
     await new Promise<void>((res) => setTimeout(() => res(), 3 * 1000));
 
     try{
-        const git: SimpleGit = simpleGit(temp);
+        const git: SimpleGit = auth.git(cred, temp);
 
         // clone repo on branch, omit history (not needed)
-        await git.clone(remote, ".", ["-b", branch, "--depth", "1"], (err: GitError | null) => {
+        await git.clone(repo, ".", ["-b", branch, "--depth", "1"], (err: GitError | null) => {
             gitback(err);
 
             if(!err){
@@ -179,23 +170,19 @@ export const push: (repo: string, branch?: string, ignoreBadAuth?: boolean) => P
 
     if(!fs.existsSync(temp)) return logger.error(`Push failed: unable to create temporary directory '${temp}'`, true);
 
-    // repo
-
-    const remote: string = parseRepo(repo, cred);
-
     // push
 
     statusbar.setActive(true);
 
     logger.info(`Preparing to export settings to ${repo}@${branch}`);
-    logger.debug(`Git clone ${auth.mask(remote, cred)}`);
+    logger.debug(`Git clone ${repo}`);
     logger.debug(`includeHostnameInCommit: ${config.get("includeHostnameInCommitMessage")}`);
 
     try{
-        const git: SimpleGit = simpleGit(temp);
+        const git: SimpleGit = auth.git(cred, temp);
 
         // clone repo on branch, omit history (not needed)
-        await git.clone(remote, ".", ["-b", branch, "--depth", "1"]);
+        await git.clone(repo, ".", ["-b", branch, "--depth", "1"]);
 
         /* extensions */ {
             const extensions: string | undefined = dist.getExtensions();
