@@ -39,11 +39,9 @@ export const inport: (fsPath: string) => void = (fsPath: string) => {
         /* extensions */ {
             const extensions: AdmZip.IZipEntry | null = zip.getEntry("extensions.json");
 
-            if(extensions && !extensions.isDirectory){
-                zip.extractEntryTo("extensions.json", dist.User, undefined, true);
-
-                dist.updateExtensions();
-            }else
+            if(extensions && !extensions.isDirectory)
+                dist.updateExtensions(extensions.getData().toString("utf-8"));
+            else
                 logger.warn("Extensions not found");
         }
 

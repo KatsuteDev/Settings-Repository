@@ -23,7 +23,7 @@ import * as config from "../config";
 import * as logger from "../logger";
 import * as extension from "../extension";
 import { CommandQuickPickItem } from "../lib/quickpick";
-import simpleGit from "simple-git";
+import { simpleGit } from "simple-git";
 
 //
 

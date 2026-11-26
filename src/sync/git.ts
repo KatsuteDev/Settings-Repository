@@ -22,7 +22,7 @@ import * as fs from "fs";
 import * as os from "os";
 import * as path from "path";
 
-import simpleGit, { GitError, SimpleGit } from "simple-git";
+import { GitError, simpleGit, SimpleGit } from "simple-git";
 
 import { isNull } from "../lib/is";
 import * as config from "../config";
@@ -102,11 +102,9 @@ export const pull: (repo: string, branch?: string, skipNotify?: boolean) => Prom
                 /* extensions */ {
                     const extensions: string = path.join(temp, "extensions.json");
 
-                    if(files.isFile(extensions)){
-                        fs.copyFileSync(extensions, dist.extensions);
-
-                        dist.updateExtensions();
-                    }else
+                    if(files.isFile(extensions))
+                        dist.updateExtensions(fs.readFileSync(extensions, {encoding: "utf-8"}));
+                    else
                         logger.warn("Extensions not found");
                 }
 
