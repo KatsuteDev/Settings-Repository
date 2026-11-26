@@ -68,12 +68,12 @@ const repository: CommandQuickPickItem = {
                     return "Repository url should end with '.git'";
                 return null;
             }
-        }).then((repo?: string) => {
+        }).then(async (repo?: string) => {
             if(repo !== undefined){
                 config.update("repository", repo);
                 repository.description = repo;
 
-                if(!auth.authorization())
+                if(!await auth.authorization())
                     auth.authenticate();
             }
         });
